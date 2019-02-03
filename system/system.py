@@ -8,8 +8,8 @@ from image_processing.image_processing import *
 # Return two videos to view: Original and processing videos
 def system_main():
     # Get video
-    # video1 = Camera().get_frame()
-    video1 = teste()
+    video1 = Camera().get_frame()
+    # video1 = teste()
     # Processing video
     video2 = video_processing(video1)
     # Action PiCar-V (controller send commands to Picar-V)
@@ -19,7 +19,7 @@ def system_main():
 # Video processing
 # Return the processing video
 def video_processing(video):
-    return fit_lines(video)
+    return grayscale(video)
 
 
 def return_videos(video_original, video_processed):

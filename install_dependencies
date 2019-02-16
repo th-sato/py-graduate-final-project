@@ -1,6 +1,7 @@
 #!/bin/bash
 dir_path =`pwd`
 
+sudo apt-get install python-virtualenv
 pip install virtualenv
 virtualenv -p python2 venv-tcc
 source venv-tcc/bin/activate

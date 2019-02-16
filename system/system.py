@@ -8,8 +8,8 @@ from image_processing.image_processing import *
 # Return two videos to view: Original and processing videos
 def system_main():
     # Get video
-    video1 = Camera().get_frame()
-    # video1 = teste()
+    # video1 = Camera().get_frame()
+    video1 = teste()
     # Processing video
     video2 = video_processing(video1)
     # Action PiCar-V (controller send commands to Picar-V)
@@ -18,8 +18,10 @@ def system_main():
 
 # Video processing
 # Return the processing video
+# Color image loaded by OpenCV is in BGR mode.
 def video_processing(video):
-    return grayscale(video)
+    video_hsv = cv2.cvtColor(video, cv2.COLOR_BGR2HSV)
+    return lane_tracking(video_hsv)
 
 
 def return_videos(video_original, video_processed):
@@ -33,4 +35,4 @@ def show_html(img):
 
 def teste():
     static_path = os.path.join(os.getcwd(), 'static/images')
-    return cv2.imread(os.path.join(static_path, 'straight_lines1.jpg'))
+    return cv2.imread(os.path.join(static_path, 'pista-camera.jpg'))

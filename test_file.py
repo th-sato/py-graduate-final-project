@@ -11,3 +11,6 @@ cv2.destroyAllWindows()
 # Controlar o esterçamento das rodas
 # fw.turning_max = valor
 # Criar uma função para realizar a curva
+
+# sudo make install
+# sudo ldconfig

@@ -26,6 +26,17 @@ def binary_img(image, condition_thresh):
     return image
 
 
+def yellow_range_color():
+    return np.array([20, 100, 100]), np.array([30, 255, 255])
+
+
+def lane_tracking(image_hsv):
+    # define range of color in HSV
+    lower_color, upper_color = yellow_range_color()
+    # Threshold the HSV image to get only blue colors
+    return cv2.inRange(image_hsv, lower_color, upper_color)
+
+
 def add_text_to_image(img, left_cur, right_cur, center):
     cur = (left_cur + right_cur)/2.
 

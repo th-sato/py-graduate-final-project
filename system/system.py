@@ -12,7 +12,7 @@ def system_main():
     video1 = teste()
     # Processing video
     video2 = video_processing(video1)
-    # Action PiCar-V (controller send commands to Picar-V)
+    # Action PiCar-V (controller send commands to Picar-V)s
     return return_videos(video1, video2)
 
 
@@ -20,8 +20,12 @@ def system_main():
 # Return the processing video
 # Color image loaded by OpenCV is in BGR mode.
 def video_processing(video):
-    video_hsv = cv2.cvtColor(video, cv2.COLOR_BGR2HSV)
-    return lane_tracking(video_hsv)
+    video_hsv = cv.cvtColor(video, cv.COLOR_BGR2HSV)
+    # return lane_tracking(video_hsv)
+    # return lane_detector(video_hsv)
+    _, img_bin = lane_detector(video_hsv)
+    teste = fit_lines(img_bin)
+    return img_bin
 
 
 def return_videos(video_original, video_processed):
@@ -35,4 +39,4 @@ def show_html(img):
 
 def teste():
     static_path = os.path.join(os.getcwd(), 'static/images')
-    return cv2.imread(os.path.join(static_path, 'pista-camera.jpg'))
+    return cv.imread(os.path.join(static_path, 'pista-camera.jpg'))

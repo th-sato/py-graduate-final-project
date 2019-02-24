@@ -1,16 +1,24 @@
-import cv2
+import matplotlib.pyplot as plt
+import cv2 as cv
 import os
+
 img_path = os.path.join(os.getcwd(), 'static/images')
-img = cv2.imread(os.path.join(img_path, 'straight_lines1.jpg'))
-cv2.rectangle(img, (0,0), (100, 100), (255, 255, 255), 2)
-cv2.imshow('image', img)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+img = cv.imread(os.path.join(img_path, 'pista-camera.jpg'))
+
+for i in range(100):
+    if i % 2 == 0:
+        img2 = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    else:
+        img2 = img
+    cv.imshow('Image', img2)
+    tecla = cv.waitKey(10) & 0xFF
+    if tecla == 27:
+        break
 
 
-# Controlar o esterçamento das rodas
+# Controlar o estercamento das rodas
 # fw.turning_max = valor
-# Criar uma função para realizar a curva
+# Criar uma funcao para realizar a curva
 
 # sudo make install
 # sudo ldconfig

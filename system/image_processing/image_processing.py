@@ -1,6 +1,7 @@
 import cv2 as cv
 import os.path
 import numpy as np
+import system.constants.constants as Constants
 
 # Global variables
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory
@@ -14,13 +15,14 @@ def add_text_to_image(img, left_cur, right_cur, center):
     cur = (left_cur + right_cur)/2.
 
     font = cv.FONT_HERSHEY_SIMPLEX
-    cv.putText(img, 'Radius of Curvature = %d(m)' % cur, (50, 50), font, 1, (255, 255, 255), 2)
+    cv.putText(img, 'Radius of Curvature = %d(m)' % cur, (50, 50), font, 0.7, (255, 255, 255), 1)
 
     left_or_right = "left" if center < 0 else "right"
-    cv.putText(img, 'Vehicle is %.2fm %s of center' % (np.abs(center), left_or_right), (50, 100), font, 1,
-                (255, 255, 255), 2)
+    cv.putText(img, 'Vehicle is %.2fcm %s of center' % (np.abs(center), left_or_right), (50, 100), font, 0.7,
+                (255, 255, 255), 1)
 
 
+# img_binary contains only 0 or 255
 def threshold_yellow_street(img_hsv):
     yellow_range = np.array([20, 100, 100]), np.array([30, 255, 255])
     # define range of color (yellow) in HSV
@@ -30,166 +32,53 @@ def threshold_yellow_street(img_hsv):
     return img_lane
 
 
-# Applies a Gaussian Noise kernel
-def gaussian_blur(img, kernel_size=5):
-    return cv.GaussianBlur(img, (kernel_size, kernel_size), 0)
+# Alterar
+# Considerar os seguintes casos:
+# 1) Parar a execucao ao encontrar o primeiro 255.
+#       a) Do 0 ate o fim
+#       b) Do fim ate o zero
+# 2) E se houver somente um dos lados da pista na imagem?
+# 3) E se nao houver pista na imagem? Ou no range tratado.
+# Distance from the center
+def distance_center(img):
+    # Found the start and the end of lane in axis X
+    start = end = 0
+    already_found = False
+    for i in range(Constants.WIDTH_IMAGE):
+        if img[Constants.STRAIGHT_CENTER_ANALYSIS][i] == Constants.WHITE:
+            end = i
+            if not already_found:
+                start = i
+                already_found = True
+
+    # Calculate the distance from the center. Measure: meters / pixel
+    dist = end - start
+    if dist != 0:
+        scale = Constants.WIDTH_LANE / dist
+    else:
+        scale = 0
+    center = (start + end) / 2
+    distance_centimeters = (Constants.WIDTH_IMAGE/2 - center)*scale
+
+    return distance_centimeters
 
 
-def lane_detector(img):
-    kernel_size = 5
-    img_gaussian = gaussian_blur(img, kernel_size)
-    # img_binary contains only 0 or 255
-    img_binary = threshold_yellow_street(img)
-    return img_gaussian, img_binary
+# Alterar
+def lane_detector(img_orig, img_processed):
+    img_orig[img_processed == Constants.WHITE] = Constants.BLUE
+
+    for i in range(Constants.HEIGHT_IMAGE):
+        lane = True
+        for j in range(Constants.WIDTH_IMAGE):
+            if j-1 >= 0:
+                if ((img_orig[i][j-1] == Constants.GREEN).all()) and (img_processed[i][j] == Constants.BLACK):
+                    img_orig[i][j] = Constants.GREEN
+                elif (img_processed[i][j-1] == Constants.WHITE) and (img_processed[i][j] == Constants.BLACK):
+                    if lane:
+                        img_orig[i][j] = Constants.GREEN
+                        lane = False
 
 
-# Functions for drawing lines
-def fit_lines(img):
-    binary_warped = img.copy()
-    # Assuming you have created a warped binary image called "binary_warped"
-    # Take a histogram of the bottom half of the image
-    histogram = np.sum(binary_warped[binary_warped.shape[0] / 2:, :], axis=0)
-    # Create an output image to draw on and  visualize the result
-    out_img = np.dstack((binary_warped, binary_warped, binary_warped)) * 255
-    # Find the peak of the left and right halves of the histogram
-    # These will be the starting point for the left and right lines
-    # Make this more robust
-    midpoint = np.int(histogram.shape[0] / 4)  # lanes aren't always centered in the image
-    leftx_base = np.argmax(histogram[150:midpoint]) + 150  # Left lane shouldn't be searched from zero
-    rightx_base = np.argmax(histogram[midpoint: midpoint + 500]) + midpoint
-
-    # Choose the number of sliding windows
-    nwindows = 9
-    # Set height of windows
-    window_height = np.int(binary_warped.shape[0] / nwindows)
-    # Identify the x and y positions of all nonzero pixels in the image
-    nonzero = binary_warped.nonzero()
-    nonzeroy = np.array(nonzero[0])
-    nonzerox = np.array(nonzero[1])
-    # Current positions to be updated for each window
-    leftx_current = leftx_base
-    rightx_current = rightx_base
-    # Set the width of the windows +/- margin
-    margin = 80
-    # Set minimum number of pixels found to recenter window
-    minpix = 70
-    # Create empty lists to receive left and right lane pixel indices
-    left_lane_inds = []
-    right_lane_inds = []
-
-    # Step through the windows one by one
-    for window in range(nwindows):
-        # Identify window boundaries in x and y (and right and left)
-        win_y_low = binary_warped.shape[0] - (window + 1) * window_height
-        win_y_high = binary_warped.shape[0] - window * window_height
-        win_xleft_low = leftx_current - margin
-        win_xleft_high = leftx_current + margin
-        win_xright_low = rightx_current - margin
-        win_xright_high = rightx_current + margin
-        # Identify the nonzero pixels in x and y within the window
-        good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xleft_low) & (
-                    nonzerox < win_xleft_high)).nonzero()[0]
-        good_right_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xright_low) & (
-                    nonzerox < win_xright_high)).nonzero()[0]
-        # Append these indices to the lists
-        left_lane_inds.append(good_left_inds)
-        right_lane_inds.append(good_right_inds)
-        # If you found > minpix pixels, recenter next window on their mean position
-        if len(good_left_inds) > minpix:
-            leftx_current = np.int(np.mean(nonzerox[good_left_inds]))
-        if len(good_right_inds) > minpix:
-            rightx_current = np.int(np.mean(nonzerox[good_right_inds]))
-
-    # Concatenate the arrays of indices
-    left_lane_inds = np.concatenate(left_lane_inds)
-    right_lane_inds = np.concatenate(right_lane_inds)
-
-    # Extract left and right line pixel positions
-    leftx = nonzerox[left_lane_inds]
-    lefty = nonzeroy[left_lane_inds]
-    rightx = nonzerox[right_lane_inds]
-    righty = nonzeroy[right_lane_inds]
-
-    # Fit a second order polynomial to each
-    left_fit = np.polyfit(lefty, leftx, 2)
-    right_fit = np.polyfit(righty, rightx, 2)
-
-    return left_fit, right_fit
-
-
-#Calculate Curvature
-def curvature(left_fit, right_fit, binary_warped):
-    ploty = np.linspace(0, binary_warped.shape[0] - 1, binary_warped.shape[0])
-    # Define y-value where we want radius of curvature
-    # I'll choose the maximum y-value, corresponding to the bottom of the image
-    y_eval = np.max(ploty)
-
-    ym_per_pix = 30 / 720  # meters per pixel in y dimension
-    xm_per_pix = 3.7 / 700  # meters per pixel in x dimension
-
-    # Define left and right lanes in pixels
-    leftx = left_fit[0] * ploty ** 2 + left_fit[1] * ploty + left_fit[2]
-    rightx = right_fit[0] * ploty ** 2 + right_fit[1] * ploty + right_fit[2]
-
-    # Identify new coefficients in metres
-    left_fit_cr = np.polyfit(ploty * ym_per_pix, leftx * xm_per_pix, 2)
-    right_fit_cr = np.polyfit(ploty * ym_per_pix, rightx * xm_per_pix, 2)
-
-    # Calculate the new radii of curvature
-    left_curverad = ((1 + (2 * left_fit_cr[0] * y_eval * ym_per_pix + left_fit_cr[1]) ** 2) ** 1.5) / np.absolute(
-        2 * left_fit_cr[0])
-    right_curverad = ((1 + (2 * right_fit_cr[0] * y_eval * ym_per_pix + right_fit_cr[1]) ** 2) ** 1.5) / np.absolute(
-        2 * right_fit_cr[0])
-
-    # Calculation of center
-    # left_lane and right lane bottom in pixels
-    left_lane_bottom = (left_fit[0] * y_eval) ** 2 + left_fit[0] * y_eval + left_fit[2]
-    right_lane_bottom = (right_fit[0] * y_eval) ** 2 + right_fit[0] * y_eval + right_fit[2]
-    # Lane center as mid of left and right lane bottom
-
-    lane_center = (left_lane_bottom + right_lane_bottom) / 2.
-    center_image = 640
-    center = (lane_center - center_image) * xm_per_pix  # Convert to meters
-
-    return left_curverad, right_curverad, center
-
-
-def draw_lines(undist, warped, left_fit, right_fit, left_cur, right_cur, center):
-    # Create an image to draw the lines on
-    warp_zero = np.zeros_like(warped).astype(np.uint8)
-    color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
-
-    ploty = np.linspace(0, warped.shape[0] - 1, warped.shape[0])
-    # Fit new polynomials to x,y in world space
-    left_fitx = left_fit[0] * ploty ** 2 + left_fit[1] * ploty + left_fit[2]
-    right_fitx = right_fit[0] * ploty ** 2 + right_fit[1] * ploty + right_fit[2]
-
-    # Recast the x and y points into usable format for cv2.fillPoly()
-    pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])
-    pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
-    pts = np.hstack((pts_left, pts_right))
-
-    # Draw the lane onto the warped blank image
-    cv.fillPoly(color_warp, np.int_([pts]), (0, 255, 0))
-
-    # Warp the blank back to original image space using inverse perspective matrix (Minv)
-    newwarp = cv.warpPerspective(color_warp, m_inv, (color_warp.shape[1], color_warp.shape[0]))
-    # Combine the result with the original image
-    result = cv.addWeighted(undist, 1, newwarp, 0.3, 0)
-    add_text_to_image(result, left_cur, right_cur, center)
-
-    return result
-
-# add_text_to_image(img_binary, 1, 1, 1)
-
-
-# left_fit, right_fit, left_fit_null, right_fit_null, out_img = fit_lines(s_binary, 0, plot=False)
-# left_cur, right_cur, center, curve, left_fit_null, right_fit_null = curvature(left_fit, right_fit, left_fit_null,
-#                                                                               right_fit_null, s_binary,
-#                                                                               print_data=False)
-# if abs(curve) > 500 and (right_fit_null == 0 or left_fit_null == 0):
-#     left_fit, right_fit, left_fit_null, right_fit_null, out_img = fit_lines(s_binary, 1, plot=False)
-#     left_cur, right_cur, center, curve, left_fit_null, right_fit_null = curvature(left_fit, right_fit, left_fit_null,
-#                                                                                   right_fit_null, s_binary,
-#                                                                                   print_data=False)
-# result = draw_lines(undist, s_binary, left_fit, right_fit, curve, center, left_fit_null, right_fit_null, show_img=False)
+# Determine the distance from the center and the curvature
+def center_curvature(img):
+    return 0, 0

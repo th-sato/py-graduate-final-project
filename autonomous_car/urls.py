@@ -20,5 +20,6 @@ from app import views
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
     url(r'^$', views.home),
-    url(r'^camera/$', views.camera),
+    url(r'^images/$', views.images),
+    url(r'^autonomous_car/$', views.autonomous_car),
 ]

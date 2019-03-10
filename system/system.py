@@ -1,18 +1,17 @@
 import base64
-from camera.camera import Camera
-from controller.controller import controller
 from image_processing.image_processing import *
+from camera.camera import Camera
+import constants.constants as const
+
+camera = Camera()
 
 
 # Calling functions to control the robot by image processing
 # Return two videos to view: Original and processing videos
 def system_main():
-    # Get video
-    # video1 = Camera().get_frame()
-    video1 = teste()
-    # Processing video
+    video1 = camera.get_frame()
+    # video1 = teste()
     video2 = video_processing(video1)
-    # Action PiCar-V (controller send commands to Picar-V)s
     return return_videos(video1, video2)
 
 
@@ -21,15 +20,26 @@ def system_main():
 # Color image loaded by OpenCV is in BGR mode.
 def video_processing(video):
     video_hsv = cv.cvtColor(video, cv.COLOR_BGR2HSV)
-    # return lane_tracking(video_hsv)
-    # return lane_detector(video_hsv)
-    _, img_bin = lane_detector(video_hsv)
-    teste = fit_lines(img_bin)
-    return img_bin
+
+    video_processed = detect_yellow_street(video_hsv)
+
+    try:
+        left_fit, right_fit, video_processed = fit_lines(video_processed)
+        left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
+
+        add_text_to_image(video_processed, left_cur, right_cur, center)
+    except Exception as e:
+        print str(e)
+    finally:
+        return video_processed
+
+
+def return_video(video_original):
+    return const.HTML_IMAGE_HEADER + show_html(video_original)
 
 
 def return_videos(video_original, video_processed):
-    return {"video_original": show_html(video_original), "video_processed": show_html(video_processed)}
+    return {"video_original": return_video(video_original), "video_processed": return_video(video_processed)}
 
 
 def show_html(img):

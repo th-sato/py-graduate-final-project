@@ -1,19 +1,26 @@
 import matplotlib.pyplot as plt
 import cv2 as cv
+import numpy as np
 import os
 
 img_path = os.path.join(os.getcwd(), 'static/images')
 img = cv.imread(os.path.join(img_path, 'pista-camera.jpg'))
 
-for i in range(100):
-    if i % 2 == 0:
-        img2 = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    else:
-        img2 = img
-    cv.imshow('Image', img2)
-    tecla = cv.waitKey(10) & 0xFF
-    if tecla == 27:
-        break
+print(img)
+
+teste = np.sum(img[150:,:], axis=0)
+
+print(teste)
+
+#for i in range(100):
+#    if i % 2 == 0:
+#        img2 = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+#    else:
+#        img2 = img
+#    cv.imshow('Image', img2)
+#    tecla = cv.waitKey(10) & 0xFF
+#    if tecla == 27:
+#        break
 
 
 # Controlar o estercamento das rodas

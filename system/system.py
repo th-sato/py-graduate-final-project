@@ -28,6 +28,7 @@ def video_processing(video):
         left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
 
         add_text_to_image(video_processed, left_cur, right_cur, center)
+
     except Exception as e:
         print str(e)
     finally:

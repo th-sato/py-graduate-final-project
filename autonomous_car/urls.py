@@ -21,5 +21,6 @@ urlpatterns = [
     # url(r'^admin/', admin.site.urls),
     url(r'^$', views.home),
     url(r'^images/$', views.images),
+    url(r'^commands_by_request/$', views.commands_by_request),
     url(r'^autonomous_car/$', views.autonomous_car),
 ]

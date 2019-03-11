@@ -29,6 +29,7 @@ def detect_yellow_street(img_hsv):
     lower_color, upper_color = yellow_range
     # Threshold the HSV image to get only the selected colors
     img_lane = cv.inRange(img_hsv, lower_color, upper_color)
+    # img_lane[img_lane == 255] = 1
     return img_lane
 
 

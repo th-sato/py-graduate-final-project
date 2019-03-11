@@ -2,15 +2,17 @@ import base64
 from image_processing.image_processing import *
 from camera.camera import Camera
 import constants.constants as const
+# from picar_v.picar_v import PicarV
 
 camera = Camera()
+# picar_v = PicarV()
 
 
 # Calling functions to control the robot by image processing
 # Return two videos to view: Original and processing videos
 def system_main():
-    video1 = camera.get_frame()
-    # video1 = teste()
+    # video1 = camera.get_frame()
+    video1 = teste()
     video2 = video_processing(video1)
     return return_videos(video1, video2)
 
@@ -31,6 +33,7 @@ def video_processing(video):
 
     except Exception as e:
         print str(e)
+
     finally:
         return video_processed
 
@@ -50,4 +53,4 @@ def show_html(img):
 
 def teste():
     static_path = os.path.join(os.getcwd(), 'static/images')
-    return cv.imread(os.path.join(static_path, 'pista-camera.jpg'))
+    return cv.imread(os.path.join(static_path, 'pista-camera2.jpg'))

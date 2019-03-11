@@ -24,7 +24,7 @@ def commands_to_picar(request):
 
     elif 'turn_left' in request.GET:
         turn = -(int(request.GET['turn_left']))
-        print "turn: " + turn
+        print ("turn: ", turn)
         picar_v.turn(turn)
 
     elif 'turn_right' in request.GET:

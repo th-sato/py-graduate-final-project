@@ -19,8 +19,12 @@ def commands_to_picar(request):
         speed = int(request.GET['speed'])
         picar_v.speed(speed)
 
+    elif 'turn_straight' in request.GET:
+        picar_v.turn_straight()
+
     elif 'turn_left' in request.GET:
         turn = -(int(request.GET['turn_left']))
+        print "turn: " + turn
         picar_v.turn(turn)
 
     elif 'turn_right' in request.GET:

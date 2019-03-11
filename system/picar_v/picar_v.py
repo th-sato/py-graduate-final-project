@@ -42,6 +42,9 @@ class PicarV:
         self.bw_status = -1
         self.bw.backward()
 
+    def turn_straight(self):
+        self.fw.turn_straight()
+
     # angle < 0: turn left
     # angle > 0: turn right
     # angle = 0: straight

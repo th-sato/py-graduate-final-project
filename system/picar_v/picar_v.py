@@ -52,4 +52,8 @@ class PicarV:
         print("Angle", angle, type(angle))
         self.fw.turn(angle)
 
+    def turn_left(self):
+        self.fw.turn_left()
 
+    def turn_right(self):
+        self.fw.turn_right()

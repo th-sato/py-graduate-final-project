@@ -44,12 +44,12 @@ function command_to_car(input){
     var keyChar = String.fromCharCode(input.which);
     switch(keyChar) {
         case 'W':
-            set_speed(10);
             run_action('forward');
+            set_speed(10);
             break;
         case 'S':
-            set_speed(10);
             run_action('backward');
+            set_speed(10);
             break;
         case 'O':
             run_action('restart');

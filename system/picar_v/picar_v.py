@@ -49,7 +49,7 @@ class PicarV:
     # angle > 0: turn right
     # angle = 0: straight
     def turn(self, angle):
-        print("Angle", angle)
+        print("Angle", angle, type(angle))
         self.fw.turn(angle)
 
 

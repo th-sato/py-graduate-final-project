@@ -32,12 +32,12 @@ function set_speed(value){
     return requestHttp("speed", value);
 }
 
-function set_turn_left(value){
-    return requestHttp("turn_left", value);
+function set_turn(value){
+    return requestHttp("turn", value);
 }
 
-function set_turn_right(value){
-    return requestHttp("turn_right", value);
+function calibration_back_wheel(wheel) {
+    return requestHttp("cali_wheel", wheel);
 }
 
 function command_to_car(input){
@@ -51,17 +51,23 @@ function command_to_car(input){
             run_action('backward');
             set_speed(10);
             break;
+        case 'A': //Left
+            set_turn(-45);
+            break;
+        case 'D': //Right
+            set_turn(45);
+            break;
         case 'O':
             run_action('restart');
             break;
         case 'P':
             run_action('stop');
             break;
-        case 'A':
-            set_turn_left(45);
+        case 'L':
+            calibration_back_wheel('left');
             break;
-        case 'D':
-            set_turn_right(45);
+        case 'Ç':
+            calibration_back_wheel('right');
             break;
         default:
             break;

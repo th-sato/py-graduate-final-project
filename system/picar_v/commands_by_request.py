@@ -19,15 +19,10 @@ def commands_to_picar(request):
         speed = int(request.GET['speed'])
         picar_v.speed(speed)
 
-    elif 'turn_straight' in request.GET:
-        picar_v.turn_straight()
-
-    elif 'turn_left' in request.GET:
-        turn = -(int(request.GET['turn_left']))
+    elif 'turn' in request.GET:
+        turn = (int(request.GET['turn']))
         picar_v.turn(turn)
-        # picar_v.turn_left()
 
-    elif 'turn_right' in request.GET:
-        turn = int(request.GET['turn_right'])
-        picar_v.turn(turn)
-        # picar_v.turn_right()
+    elif 'cali_wheel' in request.GET:
+        cali_wheel = request.GET['cali_wheel']
+        picar_v.calibration_back_wheel(cali_wheel)

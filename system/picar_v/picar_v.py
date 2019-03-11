@@ -7,7 +7,7 @@ class PicarV:
     def __init__(self):
         picar.setup()
         db_file = "system/controller/picar_v/config"
-        self.fw = front_wheels.Front_Wheels(debug=True, db=db_file)
+        self.fw = front_wheels.Front_Wheels(debug=False, db=db_file)
         self.bw = back_wheels.Back_Wheels(debug=False, db=db_file)
         self.bw.ready()
         self.fw.ready()
@@ -42,9 +42,6 @@ class PicarV:
         self.bw_status = -1
         self.bw.backward()
 
-    def turn_straight(self):
-        self.fw.turn_straight()
-
     # angle < 0: turn left
     # angle > 0: turn right
     # angle = 0: straight
@@ -52,3 +49,9 @@ class PicarV:
         angle = STRAIGHT_ANGLE + angle
         print("Angle", angle, type(angle))
         self.fw.turn(angle)
+
+    def calibration_back_wheel(self, wheel):
+        if wheel == 'left':
+            self.fw.cali_left()
+        if wheel == 'right':
+            self.fw.cali_right()

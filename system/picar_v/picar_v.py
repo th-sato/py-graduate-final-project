@@ -52,6 +52,6 @@ class PicarV:
 
     def calibration_back_wheel(self, wheel):
         if wheel == 'left':
-            self.fw.cali_left()
+            self.bw.cali_left()
         if wheel == 'right':
-            self.fw.cali_right()
+            self.bw.cali_right()

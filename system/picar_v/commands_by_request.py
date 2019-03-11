@@ -20,7 +20,7 @@ def commands_to_picar(request):
         picar_v.speed(speed)
 
     elif 'turn_left' in request.GET:
-        turn = int(request.GET['turn_left'])
+        turn = -(int(request.GET['turn_left']))
         picar_v.turn(turn)
 
     elif 'turn_right' in request.GET:

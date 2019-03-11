@@ -15,10 +15,14 @@ def commands_to_picar(request):
         elif action == 'stop':
             picar_v.stop_car()
 
-    if 'speed' in request.GET:
+    elif 'speed' in request.GET:
         speed = int(request.GET['speed'])
         picar_v.speed(speed)
 
-    if 'turn' in request.GET:
-        turn = int(request.GET['turn'])
+    elif 'turn_left' in request.GET:
+        turn = int(request.GET['turn_left'])
+        picar_v.turn(turn)
+
+    elif 'turn_right' in request.GET:
+        turn = int(request.GET['turn_right'])
         picar_v.turn(turn)

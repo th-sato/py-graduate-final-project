@@ -32,8 +32,12 @@ function set_speed(value){
     return requestHttp("speed", value);
 }
 
-function set_turn(value){
-    return requestHttp("turn", value);
+function set_turn_left(value){
+    return requestHttp("turn_left", value);
+}
+
+function set_turn_right(value){
+    return requestHttp("turn_right", value);
 }
 
 function command_to_car(input){
@@ -53,11 +57,11 @@ function command_to_car(input){
         case 'P':
             run_action('stop');
             break;
-        case 'D':
-            set_turn(45);
-            break;
         case 'A':
-            set_turn(-45);
+            set_turn_left(45);
+            break;
+        case 'D':
+            set_turn_right(45);
             break;
         default:
             break;

@@ -57,7 +57,7 @@ function command_to_car(input){
             set_turn(45);
             break;
         case 'A':
-            set_turn(45);
+            set_turn(-45);
             break;
         default:
             break;

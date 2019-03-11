@@ -1,4 +1,5 @@
 from picar import back_wheels, front_wheels
+from system.constants.constants import STRAIGHT_ANGLE
 import picar
 
 
@@ -8,7 +9,6 @@ class PicarV:
         db_file = "system/controller/picar_v/config"
         self.fw = front_wheels.Front_Wheels(debug=True, db=db_file)
         self.bw = back_wheels.Back_Wheels(debug=False, db=db_file)
-        # self.fw.turning_max = 45
         self.bw.ready()
         self.fw.ready()
         self.bw_status = 0
@@ -49,11 +49,6 @@ class PicarV:
     # angle > 0: turn right
     # angle = 0: straight
     def turn(self, angle):
+        angle = STRAIGHT_ANGLE + angle
         print("Angle", angle, type(angle))
         self.fw.turn(angle)
-
-    def turn_left(self):
-        self.fw.turn_left()
-
-    def turn_right(self):
-        self.fw.turn_right()

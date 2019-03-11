@@ -6,7 +6,7 @@ class PicarV:
     def __init__(self):
         picar.setup()
         db_file = "system/controller/picar_v/config"
-        self.fw = front_wheels.Front_Wheels(debug=False, db=db_file)
+        self.fw = front_wheels.Front_Wheels(debug=True, db=db_file)
         self.bw = back_wheels.Back_Wheels(debug=False, db=db_file)
         # self.fw.turning_max = 45
         self.bw.ready()

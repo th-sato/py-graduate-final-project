@@ -63,11 +63,17 @@ function command_to_car(input){
         case 'P':
             run_action('stop');
             break;
-        case 'L':
+        case '1':
+            calibration_back_wheel('calibration');
+            break;
+        case '2':
             calibration_back_wheel('left');
             break;
-        case 'Ç':
+        case '3':
             calibration_back_wheel('right');
+            break;
+        case '4':
+            calibration_back_wheel('calibration_ok');
             break;
         default:
             break;

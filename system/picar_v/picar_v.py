@@ -51,7 +51,11 @@ class PicarV:
         self.fw.turn(angle)
 
     def calibration_back_wheel(self, wheel):
-        if wheel == 'left':
+        if wheel == 'calibration':
+            self.bw.calibration()
+        elif wheel == 'left':
             self.bw.cali_left()
-        if wheel == 'right':
+        elif wheel == 'right':
             self.bw.cali_right()
+        elif wheel == 'calibration_ok':
+            self.bw.cali_ok()

@@ -11,8 +11,8 @@ camera = Camera()
 # Calling functions to control the robot by image processing
 # Return two videos to view: Original and processing videos
 def system_main():
-    # video1 = camera.get_frame()
-    video1 = teste()
+    video1 = camera.get_frame()
+    # video1 = teste()
     video2 = video_processing(video1)
     return return_videos(video1, video2)
 

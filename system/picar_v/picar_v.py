@@ -1,13 +1,11 @@
 from picar import back_wheels, front_wheels
 from system.constants.constants import STRAIGHT_ANGLE
-import os.path
 import picar
 
 
 class PicarV:
     def __init__(self):
         picar.setup()
-        # db_file = os.path.join(os.getcwd(), "system/picar_v/config")
         db_file = "system/picar_v/config"
         self.fw = front_wheels.Front_Wheels(debug=False, db=db_file)
         self.bw = back_wheels.Back_Wheels(debug=False, db=db_file)

@@ -45,17 +45,17 @@ function command_to_car(input){
     switch(keyChar) {
         case 'W':
             run_action('forward');
-            set_speed(10);
+            set_speed(30);
             break;
         case 'S':
             run_action('backward');
-            set_speed(10);
+            set_speed(30);
             break;
         case 'A': //Left
-            set_turn(-45);
+            set_turn(-35);
             break;
         case 'D': //Right
-            set_turn(45);
+            set_turn(35);
             break;
         case 'O':
             run_action('restart');

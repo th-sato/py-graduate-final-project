@@ -1,7 +1,7 @@
 import base64
 from image_processing.image_processing import *
 from camera.camera import Camera
-import constants.constants as const
+from constants.constants import HTML_IMAGE_HEADER
 # from picar_v.picar_v import PicarV
 
 camera = Camera()
@@ -21,9 +21,8 @@ def system_main():
 # Return the processing video
 # Color image loaded by OpenCV is in BGR mode.
 def video_processing(video):
-    video_hsv = cv.cvtColor(video, cv.COLOR_BGR2HSV)
 
-    video_processed = detect_yellow_street(video_hsv)
+    video_processed = detect_street(video)
 
     try:
         left_fit, right_fit, video_processed = fit_lines(video_processed)
@@ -39,7 +38,7 @@ def video_processing(video):
 
 
 def return_video(video_original):
-    return const.HTML_IMAGE_HEADER + show_html(video_original)
+    return HTML_IMAGE_HEADER + show_html(video_original)
 
 
 def return_videos(video_original, video_processed):

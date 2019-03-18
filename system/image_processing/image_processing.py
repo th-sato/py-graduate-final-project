@@ -1,7 +1,7 @@
 import cv2 as cv
 import os.path
 import numpy as np
-import system.constants.constants as CONSTANTS
+from system.constants.constants import AXIS_X_METERS_PER_PIXEL, AXIS_Y_METERS_PER_PIXEL
 
 # Global variables
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory
@@ -24,20 +24,28 @@ def add_text_to_image(img, left_cur, right_cur, center):
 
 # img_binary contains only 0 or 255
 def detect_yellow_street(img_hsv):
-    yellow_range = np.array([20, 100, 100]), np.array([30, 255, 255])
     # define range of color (yellow) in HSV
-    lower_color, upper_color = yellow_range
+    lower_color, upper_color = np.array([20, 0, 100]), np.array([30, 255, 255])
+    # lower_color, upper_color = np.array([20, 100, 100]), np.array([30, 255, 255])
     # Threshold the HSV image to get only the selected colors
     img_lane = cv.inRange(img_hsv, lower_color, upper_color)
     # img_lane[img_lane == 255] = 1
     return img_lane
 
 
+def detect_street(img):
+    interval = img.shape[0] / 2, int(img.shape[0] * (1.0 - 1.0 / 8.0))
+    img_hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
+    # img_processed = detect_yellow_street(img_hsv)
+    img_processed = detect_yellow_street(img_hsv[interval[0]:interval[1], :])
+    return img_processed
+
+
 # Functions for drawing lines
 def fit_lines(binary_img):
-    nwindows = 10  # Choose the number of sliding windows
-    margin = 80  # Set the width of the windows +/- margin
-    minpix = 70  # Set minimum number of pixels found to recenter window
+    nwindows = 50  # Choose the number of sliding windows
+    margin = 30  # Set the width of the windows +/- margin
+    minpix = 10  # Set minimum number of pixels found to recenter window
     # Create empty lists to receive left and right lane pixel indices
     left_lane_inds = []
     right_lane_inds = []
@@ -113,8 +121,8 @@ def fit_lines(binary_img):
 
 # Calculate Curvature
 def curvature(left_fit, right_fit, binary_warped):
-    xm_per_pix = CONSTANTS.axis_x_meters_per_pixel  # meters per pixel in x dimension
-    ym_per_pix = CONSTANTS.axis_y_meters_per_pixel  # meters per pixel in y dimension
+    xm_per_pix = AXIS_X_METERS_PER_PIXEL  # meters per pixel in x dimension
+    ym_per_pix = AXIS_Y_METERS_PER_PIXEL  # meters per pixel in y dimension
     height_img = binary_warped.shape[0]
     center_image = height_img / 2
 

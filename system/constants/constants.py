@@ -11,8 +11,8 @@ STRAIGHT_ANGLE = 90
 WIDTH_LANE = 22.0  # Centimeters
 
 # Measures
-axis_x_meters_per_pixel = 30.0/720
-axis_y_meters_per_pixel = 3.7/700
+AXIS_X_METERS_PER_PIXEL = 30.0/720
+AXIS_Y_METERS_PER_PIXEL = 3.7/700
 
 # Colors
 WHITE = 255

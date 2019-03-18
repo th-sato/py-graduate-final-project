@@ -36,8 +36,8 @@ def detect_yellow_street(img_hsv):
 def detect_street(img):
     interval = img.shape[0] / 2, int(img.shape[0] * (1.0 - 1.0 / 8.0))
     img_hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-    # img_processed = detect_yellow_street(img_hsv)
-    img_processed = detect_yellow_street(img_hsv[interval[0]:interval[1], :])
+    img_processed = detect_yellow_street(img_hsv)
+    # img_processed = detect_yellow_street(img_hsv[interval[0]:interval[1], :])
     return img_processed
 
 

@@ -52,10 +52,10 @@ function command_to_car(input){
             set_speed(30);
             break;
         case 'A': //Left
-            set_turn(-35);
+            set_turn(-45);
             break;
         case 'D': //Right
-            set_turn(35);
+            set_turn(45);
             break;
         case 'O':
             run_action('restart');

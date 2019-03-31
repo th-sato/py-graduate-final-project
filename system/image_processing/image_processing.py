@@ -7,6 +7,12 @@ from system.constants.constants import AXIS_X_METERS_PER_PIXEL, AXIS_Y_METERS_PE
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory
 
 
+def show_image(img):
+    cv.imshow('image', img)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+
 def encode_img_jpg(img):
     return cv.imencode('.jpg', img)
 

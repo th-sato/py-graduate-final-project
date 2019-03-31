@@ -1,20 +1,18 @@
 import base64
 from image_processing.image_processing import *
 from camera.camera import Camera
-from constants.constants import HTML_IMAGE_HEADER
 # from picar_v.picar_v import PicarV
 
-camera = Camera()
+# camera = Camera()
 # picar_v = PicarV()
 
 
 # Calling functions to control the robot by image processing
 # Return two videos to view: Original and processing videos
 def system_main():
-    video1 = camera.get_frame()
-    # video1 = teste()
-    video2 = video_processing(video1)
-    return return_videos(video1, video2)
+    # video1 = camera.get_frame()
+    video1 = teste()
+    video_processing(video1)
 
 
 # Video processing
@@ -34,22 +32,9 @@ def video_processing(video):
         print str(e)
 
     finally:
-        return video_processed
-
-
-def return_video(video_original):
-    return HTML_IMAGE_HEADER + show_html(video_original)
-
-
-def return_videos(video_original, video_processed):
-    return {"video_original": return_video(video_original), "video_processed": return_video(video_processed)}
-
-
-def show_html(img):
-    ret, jpg = encode_img_jpg(img)
-    return base64.b64encode(jpg)
+        show_image(video_processed)
 
 
 def teste():
-    static_path = os.path.join(os.getcwd(), 'static/images')
+    static_path = os.path.join(os.getcwd(), 'images-test/2019-03-25')
     return cv.imread(os.path.join(static_path, 'pista-camera2.jpg'))

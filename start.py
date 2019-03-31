@@ -11,7 +11,8 @@ import os
 # S: 0 - 255
 # V: 0 - 255
 
-image_name = 'pista-camera2.jpg'
+static_path = 'static/images/'
+image_name = 'straight_lines2.jpg'
 
 
 def detect_yellow_street(img_hsv):
@@ -131,7 +132,7 @@ def show_image(img):
 
 
 def main():
-    img_path = os.path.join(os.getcwd(), 'static/images/2019-03-25')
+    img_path = os.path.join(os.getcwd(), static_path)
     img = cv.imread(os.path.join(img_path, image_name))
     img_processed = detect_street(img)
     # Shape of image is accessed by img.shape.

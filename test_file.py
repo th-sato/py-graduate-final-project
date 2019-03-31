@@ -35,7 +35,7 @@ def detect_yellow_street(img_hsv):
 
 
 def detect_street(img):
-    interval = img.shape[0]/2, int(img.shape[0]*(1.0 - 1.0/8.0))
+    interval = img.shape[0]//2, int(img.shape[0]*(1.0 - 1.0/8.0))
     img_hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     # img_processed = detect_yellow_street(img_hsv)
     img_processed = detect_yellow_street(img_hsv[interval[0]:interval[1], :])
@@ -131,7 +131,7 @@ def show_image(img):
 
 
 def main():
-    img_path = os.path.join(os.getcwd(), 'static/images')
+    img_path = os.path.join(os.getcwd(), 'static/images/2019-03-25')
     img = cv.imread(os.path.join(img_path, image_name))
     img_processed = detect_street(img)
     # Shape of image is accessed by img.shape.

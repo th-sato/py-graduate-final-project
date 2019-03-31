@@ -1,5 +1,3 @@
-# Image
-HTML_IMAGE_HEADER = "data:image/png;base64, "
 # Picar-V
 STRAIGHT_ANGLE = 90
 

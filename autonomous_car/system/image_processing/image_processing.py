@@ -1,7 +1,7 @@
 import cv2 as cv
 import os.path
 import numpy as np
-from system.constants.constants import AXIS_X_METERS_PER_PIXEL, AXIS_Y_METERS_PER_PIXEL
+from constants.constants import AXIS_X_METERS_PER_PIXEL, AXIS_Y_METERS_PER_PIXEL
 
 # Global variables
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory
@@ -17,11 +17,9 @@ def encode_img_jpg(img):
     return cv.imencode('.jpg', img)
 
 
-def add_text_to_image(img, left_cur, right_cur, center):
-    cur = (left_cur + right_cur)/2.
-
+def add_text_to_image(img, curv, center):
     font = cv.FONT_HERSHEY_SIMPLEX
-    cv.putText(img, 'Radius of Curvature = %d(m)' % cur, (50, 50), font, 0.7, (255, 255, 255), 1)
+    cv.putText(img, 'Radius of Curvature = %d(m)' % curv, (50, 50), font, 0.7, (255, 255, 255), 1)
 
     left_or_right = "left" if center < 0 else "right"
     cv.putText(img, 'Vehicle is %.2fcm %s of center' % (np.abs(center), left_or_right), (50, 100), font, 0.7,
@@ -161,3 +159,35 @@ def curvature(left_fit, right_fit, binary_warped):
     center = (lane_center - center_image) * xm_per_pix  # Convert to meters
 
     return left_curverad, right_curverad, center
+
+
+def draw_lines(undist, left_fit, right_fit, left_cur, right_cur, center):
+    src = np.float32([[800, 510], [1150, 700], [270, 700], [510, 510]])
+    dst = np.float32([[650, 470], [640, 700], [270, 700], [270, 510]])
+    # inverse
+    Minv = cv.getPerspectiveTransform(dst, src)
+
+    # Create an image to draw the lines on
+    warp_zero = np.zeros_like(undist).astype(np.uint8)
+    color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
+
+    ploty = np.linspace(0, undist.shape[0] - 1, undist.shape[0])
+    # Fit new polynomials to x,y in world space
+    left_fitx = left_fit[0] * ploty ** 2 + left_fit[1] * ploty + left_fit[2]
+    right_fitx = right_fit[0] * ploty ** 2 + right_fit[1] * ploty + right_fit[2]
+
+    # Recast the x and y points into usable format for cv2.fillPoly()
+    pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])
+    pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
+    pts = np.hstack((pts_left, pts_right))
+
+    # Draw the lane onto the warped blank image
+    cv.fillPoly(color_warp, np.int_([pts]), (0, 255, 0))
+
+    # # Warp the blank back to original image space using inverse perspective matrix (Minv)
+    # newwarp = cv.warpPerspective(color_warp, Minv, (color_warp.shape[1], color_warp.shape[0]))
+    # # Combine the result with the original image
+    # result = cv.addWeighted(undist, 1, newwarp, 0.3, 0)
+    # add_text_to_image(result, left_cur, right_cur, center)
+
+    # return result

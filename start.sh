@@ -3,6 +3,6 @@
 if [ "$1" = "" ]
 then
 	echo "Processo iniciado!"
-	python start_system.py
+	python autonomous_car/start_autonomous_car.py
 	echo "Processo finalizado!"
 fi

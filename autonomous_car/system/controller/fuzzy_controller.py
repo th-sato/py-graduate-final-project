@@ -33,5 +33,6 @@ class FuzzyController:
     #     self.angle_ctrl = ctrl.ControlSystem(self.rules)
     #     self.angle_LF = ctrl.ControlSystemSimulation(self.angle_ctrl)
 
-    def teste(self):
-        a = 1
+    @staticmethod
+    def teste():
+        print "static method fuzzy"

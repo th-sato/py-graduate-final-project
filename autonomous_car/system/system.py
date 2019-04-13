@@ -2,48 +2,48 @@ from constants.constants import FUZZY_CONTROLLER, PROPORCIONAL_CONTROLLER
 from image_processing.image_processing import *
 from controller.fuzzy_controller import FuzzyController
 
-fuzzy_controller = FuzzyController()
 
+class System:
+    def __init__(self, controller):
+        self._controller = controller
 
-def system(video, controller):
-    video_processed, center, curv = video_processing(video)
-    speed, angle = control(controller, center, curv)
-    return video_processed, speed, angle
+    def output(self, video):
+        video_processed, center, curv = self.video_processing(video)
+        speed, angle = self.control(center, curv)
+        return video_processed, speed, angle
 
+    # Video processing
+    # Return the processing video
+    # Color image loaded by OpenCV is in BGR mode.
+    @staticmethod
+    def video_processing(video):
+        video_street = detect_street(video)
+        try:
+            a = 1
+            # left_fit, right_fit, video_processed = fit_lines(video_street)
+            # left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
+            #
+            # curv = (left_cur + right_cur) / 2
+            # add_text_to_image(video_processed, curv, center)
+            # # draw_lines()
 
-# Video processing
-# Return the processing video
-# Color image loaded by OpenCV is in BGR mode.
-def video_processing(video):
-    video_street = detect_street(video)
+        except Exception as e:
+            print str(e)
 
-    try:
-        a = 1
-        # left_fit, right_fit, video_processed = fit_lines(video_street)
-        # left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
-        #
-        # curv = (left_cur + right_cur) / 2
-        # add_text_to_image(video_processed, curv, center)
-        # # draw_lines()
+        finally:
+            return video_street, 1, 1
+            # return video_processed, center, curv
 
-    except Exception as e:
-        print str(e)
+    # Define which controller to use
+    # Return speed, angle
+    def control(self, center, curv):
+        if self._controller == FUZZY_CONTROLLER:
+            FuzzyController.teste()
 
-    finally:
-        return video_street, 1, 1
-        # return video_processed, center, curv
+        elif self._controller == PROPORCIONAL_CONTROLLER:
+            print "Controller"
 
+        else:
+            print "Controller not found"
 
-# Define which controller to use
-# Return speed, angle
-def control(controller, center, curv):
-    if controller == FUZZY_CONTROLLER:
-        fuzzy_controller.teste()
-
-    elif controller == PROPORCIONAL_CONTROLLER:
-        print "Controller"
-
-    else:
-        print "Controller not found"
-
-    return 1, 2
+        return 1, 2

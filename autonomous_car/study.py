@@ -1,8 +1,11 @@
-import os
 from system.image_processing.image_processing import *
+from constants.constants import FUZZY_CONTROLLER, PROPORCIONAL_CONTROLLER
+from autonomous_car import AutonomousCar
+import os
 
-static_path = 'images-test/2019-03-25/'
+static_path = '../images-test/2019-03-25/'
 image_name = 'pista-camera1.jpg'
+autonomous_car = AutonomousCar(FUZZY_CONTROLLER)
 
 
 def get_image():
@@ -13,9 +16,6 @@ def get_image():
 def main():
     img = get_image()
     img_processed = detect_street(img)
-    # Shape of image is accessed by img.shape.
-    # It returns a tuple of number of rows, columns and channels (if image is color)
-    # height, width = img.shape
     _, _, img_processed = fit_lines(img_processed)
     show_image(img_processed)
 

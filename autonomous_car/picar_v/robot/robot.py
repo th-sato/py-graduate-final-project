@@ -3,7 +3,7 @@ from constants.constants import STRAIGHT_ANGLE
 import picar
 
 
-class PicarV:
+class Robot:
     def __init__(self):
         picar.setup()
         db_file = "autonomous_car/picar_v/config"

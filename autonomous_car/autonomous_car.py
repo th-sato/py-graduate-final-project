@@ -1,19 +1,20 @@
 from constants.constants import VIDEO_CAPTURE
 from threading import Thread
-from system.system import system
-from camera.camera import Camera
-# from picar_v.picar_v import PicarV
+from system.system import System
+from picar_v.camera.camera import Camera
+# from picar_v.robot.robot import Robot
 import os
 import cv2 as cv
 
 
 class AutonomousCar:
     def __init__(self, controller):
+        print "Automous Car"
         self._stop_car = False
         self._controller = controller
         self._video_processed = None
         self._video_original = None
-        # self.picar_v = PicarV()
+        # self.robot = Robot()
         self._camera = Camera(VIDEO_CAPTURE)
         self._camera.start()
 
@@ -38,12 +39,13 @@ class AutonomousCar:
         return self._video_processed
 
     def update(self):
+        system = System(self._controller)
         while not self._stop_car:
             self._video_original = self.image_test()
             # self._video_original = self._camera.frame
-            self._video_processed, speed, angle = system(self._video_original, self._controller)
-            # self.picar_v.speed(speed)
-            # self.picar_v.turn(angle)
+            self._video_processed, speed, angle = system.output(self._video_original)
+            # self.robot.speed(speed)
+            # self.robot.turn(angle)
 
     def image_test(self):
         static_path = os.path.join(os.getcwd(), 'images-test/2019-03-25')

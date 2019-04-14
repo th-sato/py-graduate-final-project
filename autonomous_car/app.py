@@ -3,6 +3,8 @@ from picar_v.calibration.calibration import calibration
 from flask import Flask
 from autonomous_car import AutonomousCar
 
+HOST = '0.0.0.0'
+PORT = 5000
 app = Flask(__name__)
 # autonomous_car = AutonomousCar(FUZZY_CONTROLLER)
 
@@ -37,8 +39,8 @@ def before_first_request():
 
 
 if __name__ == "__main__":
-    # app.run(debug=False)
-    app.run(debug=True)
+    #app.run(host=HOST, port=PORT, debug=False)
+    app.run(host=HOST, port=PORT, debug=True)
 
 
 # Intervalo para considerar da imagem

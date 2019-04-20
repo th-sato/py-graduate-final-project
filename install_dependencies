@@ -11,3 +11,4 @@ pip install opencv-python
 pip install matplotlib
 pip install scikit-fuzzy
 sudo apt-get install python-tk
+pip install redis

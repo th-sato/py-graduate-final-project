@@ -8,10 +8,11 @@ class System:
         self._controller = controller
 
     def output(self, video):
-        video_processed, center, curv = self.video_processing(video)
-        # show_image(video_processed)
-        speed, angle = self.control(center, curv)
-        return video_processed, speed, angle
+        # video_processed, center, curv = self.video_processing(video)
+        # # show_image(video_processed)
+        # speed, angle = self.control(center, curv)
+        # return video_processed, speed, angle
+        return video, 1, 1
 
     # Video processing
     # Return the processing video

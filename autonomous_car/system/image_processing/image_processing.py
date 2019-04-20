@@ -3,8 +3,6 @@ import os.path
 import numpy as np
 from constants.constants import AXIS_X_METERS_PER_PIXEL, AXIS_Y_METERS_PER_PIXEL, RED, BLUE, GREEN
 
-import matplotlib.pyplot as plt
-
 # Global variables
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory
 

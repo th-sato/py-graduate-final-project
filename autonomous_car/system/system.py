@@ -9,7 +9,7 @@ class System:
 
     def output(self, video):
         video_processed, center, curv = self.video_processing(video)
-        show_image(video_processed)
+        # show_image(video_processed)
         speed, angle = self.control(center, curv)
         return video_processed, speed, angle
 
@@ -21,7 +21,7 @@ class System:
         video_street = detect_street(video)
         try:
             left_fit, right_fit, video_processed = fit_lines(video_street)
-            show_image(video_processed)
+            # show_image(video_processed)
             left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
 
             curv = (left_cur + right_cur) / 2

@@ -1,4 +1,5 @@
 import cv2 as cv
+import base64
 import os.path
 import numpy as np
 from constants.constants import AXIS_X_METERS_PER_PIXEL, AXIS_Y_METERS_PER_PIXEL, RED, BLUE, GREEN
@@ -14,8 +15,9 @@ def show_image(img):
     # cv.destroyAllWindows()
 
 
-def encode_img_jpg(img):
-    return cv.imencode('.jpg', img)
+def jpgimg_to_base64(img):
+    ret, jpg = cv.imencode('.jpg', img)
+    return base64.b64encode(jpg)
 
 
 def add_text_to_image(img, curv, center):

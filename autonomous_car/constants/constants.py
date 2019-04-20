@@ -11,6 +11,7 @@ PROPORCIONAL_CONTROLLER = "Proporcional"
 # Network
 HOST = '0.0.0.0'
 PORT = 5000
+URL_BACK = 'http://192.168.1.189:8081/redis-image'
 
 # Image dimensions
 # WIDTH_IMAGE = 432   # Pixels

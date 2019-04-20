@@ -1,6 +1,8 @@
-from constants.constants import VIDEO_CAPTURE
+from constants.constants import VIDEO_CAPTURE, URL_BACK
 from threading import Thread
+import requests
 from system.system import System
+from system.image_processing.image_processing import jpgimg_to_base64
 from picar_v.camera.camera import Camera
 # from picar_v.robot import Robot
 import os
@@ -40,9 +42,11 @@ class AutonomousCar:
     def update(self):
         system = System(self._controller)
         while not self._stop_car:
-            self._video_original = self.image_test()
-            # self._video_original = self._camera.frame
+            # self._video_original = self.image_test()
+            self._video_original = self._camera.frame
             self._video_processed, speed, angle = system.output(self._video_original)
+
+            requests.post(URL_BACK, json={"IMG", jpgimg_to_base64(self._video_processed)})
             # self.robot.speed(speed)
             # self.robot.turn(angle)
 

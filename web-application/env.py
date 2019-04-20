@@ -1,0 +1,8 @@
+FLASK_HOST = 'localhost'
+FLASK_PORT = 8081
+
+REDIS_IP = "172.17.0.2"
+REDIS_PORT = 6379
+REDIS_KEY_IMAGE = "IMG"
+
+HTML_IMAGE_HEADER = "data:image/png;base64, "

@@ -27,7 +27,7 @@ class Camera:
 
     def update(self):
         while not self._stop:
-            _, self._frame = self.video.read()
+            _, self._frame = self._video.read()
 
     def stop(self):
         self._stop = True

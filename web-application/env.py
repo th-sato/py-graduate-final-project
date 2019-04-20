@@ -1,4 +1,4 @@
-FLASK_HOST = 'localhost'
+FLASK_HOST = '0.0.0.0'
 FLASK_PORT = 8081
 
 REDIS_IP = "172.17.0.2"

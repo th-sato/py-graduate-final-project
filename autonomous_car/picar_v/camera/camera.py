@@ -18,12 +18,12 @@ class Camera:
     def __del__(self):
         self._video.release()
 
-    def start(self):
+    def __start(self):
         Thread(target=self.update, args=()).start()
 
-    def restart(self):
+    def start(self):
         self._stop = False
-        self.start()
+        self.__start()
 
     def update(self):
         while not self.stop:

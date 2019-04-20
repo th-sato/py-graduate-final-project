@@ -1,7 +1,9 @@
 import cv2 as cv
 import os.path
 import numpy as np
-from constants.constants import AXIS_X_METERS_PER_PIXEL, AXIS_Y_METERS_PER_PIXEL
+from constants.constants import AXIS_X_METERS_PER_PIXEL, AXIS_Y_METERS_PER_PIXEL, RED, BLUE, GREEN
+
+import matplotlib.pyplot as plt
 
 # Global variables
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory
@@ -118,8 +120,8 @@ def fit_lines(binary_img):
     left_fit = np.polyfit(left_y, left_x, 2)
     right_fit = np.polyfit(right_y, right_x, 2)
 
-    out_img[nonzero_y[left_lane_inds], nonzero_x[left_lane_inds]] = [255, 0, 0]
-    out_img[nonzero_y[right_lane_inds], nonzero_x[right_lane_inds]] = [0, 0, 255]
+    out_img[nonzero_y[left_lane_inds], nonzero_x[left_lane_inds]] = RED
+    out_img[nonzero_y[right_lane_inds], nonzero_x[right_lane_inds]] = BLUE
 
     return left_fit, right_fit, out_img
 
@@ -140,11 +142,11 @@ def curvature(left_fit, right_fit, binary_warped):
     left_x = left_fit[0] * plot_y ** 2 + left_fit[1] * plot_y + left_fit[2]
     right_x = right_fit[0] * plot_y ** 2 + right_fit[1] * plot_y + right_fit[2]
 
-    # Identify new coefficients in metres
+    # Identify new coefficients in meters
     left_fit_cr = np.polyfit(plot_y * ym_per_pix, left_x * xm_per_pix, 2)
     right_fit_cr = np.polyfit(plot_y * ym_per_pix, right_x * xm_per_pix, 2)
 
-    # Calculate the new radii of curvature
+    # Calculate the new radius of curvature
     left_curverad = ((1 + (2 * left_fit_cr[0] * y_eval * ym_per_pix + left_fit_cr[1]) ** 2) ** 1.5) / np.absolute(
         2 * left_fit_cr[0])
     right_curverad = ((1 + (2 * right_fit_cr[0] * y_eval * ym_per_pix + right_fit_cr[1]) ** 2) ** 1.5) / np.absolute(
@@ -156,23 +158,18 @@ def curvature(left_fit, right_fit, binary_warped):
     right_lane_bottom = (right_fit[0] * y_eval) ** 2 + right_fit[0] * y_eval + right_fit[2]
     # Lane center as mid of left and right lane bottom
 
+    # xm_per_pix = PISTA / (right_lane_bottom - left_lane_bottom)
     lane_center = (left_lane_bottom + right_lane_bottom) / 2.
     center = (lane_center - center_image) * xm_per_pix  # Convert to meters
 
     return left_curverad, right_curverad, center
 
 
-def draw_lines(undist, left_fit, right_fit, left_cur, right_cur, center):
-    src = np.float32([[800, 510], [1150, 700], [270, 700], [510, 510]])
-    dst = np.float32([[650, 470], [640, 700], [270, 700], [270, 510]])
-    # inverse
-    Minv = cv.getPerspectiveTransform(dst, src)
-
+def draw_lines(img, left_fit, right_fit):
     # Create an image to draw the lines on
-    warp_zero = np.zeros_like(undist).astype(np.uint8)
-    color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
+    img_zeros = np.zeros_like(img)
 
-    ploty = np.linspace(0, undist.shape[0] - 1, undist.shape[0])
+    ploty = np.linspace(0, img.shape[0] - 1, img.shape[0])
     # Fit new polynomials to x,y in world space
     left_fitx = left_fit[0] * ploty ** 2 + left_fit[1] * ploty + left_fit[2]
     right_fitx = right_fit[0] * ploty ** 2 + right_fit[1] * ploty + right_fit[2]
@@ -183,12 +180,5 @@ def draw_lines(undist, left_fit, right_fit, left_cur, right_cur, center):
     pts = np.hstack((pts_left, pts_right))
 
     # Draw the lane onto the warped blank image
-    cv.fillPoly(color_warp, np.int_([pts]), (0, 255, 0))
-
-    # # Warp the blank back to original image space using inverse perspective matrix (Minv)
-    # newwarp = cv.warpPerspective(color_warp, Minv, (color_warp.shape[1], color_warp.shape[0]))
-    # # Combine the result with the original image
-    # result = cv.addWeighted(undist, 1, newwarp, 0.3, 0)
-    # add_text_to_image(result, left_cur, right_cur, center)
-
-    # return result
+    cv.fillPoly(img_zeros, np.array([pts], dtype=np.int32), GREEN)
+    return cv.addWeighted(img, 1, img_zeros, 0.8, 0)

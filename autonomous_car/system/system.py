@@ -9,6 +9,7 @@ class System:
 
     def output(self, video):
         video_processed, center, curv = self.video_processing(video)
+        show_image(video_processed)
         speed, angle = self.control(center, curv)
         return video_processed, speed, angle
 
@@ -19,19 +20,19 @@ class System:
     def video_processing(video):
         video_street = detect_street(video)
         try:
-            a = 1
-            # left_fit, right_fit, video_processed = fit_lines(video_street)
-            # left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
-            #
-            # curv = (left_cur + right_cur) / 2
-            # add_text_to_image(video_processed, curv, center)
-            # # draw_lines()
+            left_fit, right_fit, video_processed = fit_lines(video_street)
+            show_image(video_processed)
+            left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
+
+            curv = (left_cur + right_cur) / 2
+            add_text_to_image(video_processed, curv, center)
+            video_processed = draw_lines(video, left_fit, right_fit)
 
         except Exception as e:
             print str(e)
 
         finally:
-            return video_street, 1, 1
+            return video_processed, 1, 1
             # return video_processed, center, curv
 
     # Define which controller to use

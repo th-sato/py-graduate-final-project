@@ -1,17 +1,15 @@
-from constants.constants import FUZZY_CONTROLLER
+from constants.constants import FUZZY_CONTROLLER, HOST, PORT
 from picar_v.calibration.calibration import calibration
 from flask import Flask
 from autonomous_car import AutonomousCar
 
-HOST = '0.0.0.0'
-PORT = 5000
 app = Flask(__name__)
 # autonomous_car = AutonomousCar(FUZZY_CONTROLLER)
 
 
 @app.route('/start')
 def start():
-    autonomous_car.restart()
+    autonomous_car.start()
     return 'OK', 200
 
 
@@ -39,7 +37,7 @@ def before_first_request():
 
 
 if __name__ == "__main__":
-    #app.run(host=HOST, port=PORT, debug=False)
+    # app.run(host=HOST, port=PORT, debug=False)
     app.run(host=HOST, port=PORT, debug=True)
 
 

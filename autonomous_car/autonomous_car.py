@@ -1,4 +1,4 @@
-from constants.constants import VIDEO_CAPTURE, URL_BACK
+from constants.constants import VIDEO_CAPTURE, URL_REDIS_IMAGE, KEY_JSON_IMAGE
 from threading import Thread
 import requests
 from system.system import System
@@ -40,14 +40,18 @@ class AutonomousCar:
     def video_processed(self):
         return self._video_processed
 
+    @staticmethod
+    def request_post_image(url, key_img, img):
+        json = {key_img: img}
+        requests.post(url, json)
+
     def update(self):
         system = System(self._controller, self._color_street)
         while not self._stop_car:
             # self._video_original = self.image_test()
             self._video_original = self._camera.frame
             self._video_processed, speed, angle = system.output(self._video_original)
-
-            requests.post(URL_BACK, json={"image": jpgimg_to_base64(self._video_processed)})
+            self.request_post_image(URL_REDIS_IMAGE, KEY_JSON_IMAGE, jpgimg_to_base64(self._video_processed))
             # self.robot.speed(speed)
             # self.robot.turn(angle)
 

@@ -29,21 +29,21 @@ class System:
     # Color image loaded by OpenCV is in BGR mode.
     def video_processing(self, video):
         video_street = self.detect_street_by_color(video)
-        try:
-            left_fit, right_fit, video_processed = fit_lines(video_street)
-            # show_image(video_processed)
-            left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
-
-            curv = (left_cur + right_cur) / 2
-            add_text_to_image(video_processed, curv, center)
-            video_processed = draw_lines(video, left_fit, right_fit)
-
-        except Exception as e:
-            print str(e)
-
-        finally:
-            return video_processed, 1, 1
-            # return video_processed, center, curv
+        return video_street, 1, 1
+        # try:
+        #     left_fit, right_fit, video_processed = fit_lines(video_street)
+        #     # show_image(video_processed)
+        #     left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
+        #
+        #     curv = (left_cur + right_cur) / 2
+        #     add_text_to_image(video_processed, curv, center)
+        #     video_processed = draw_lines(video, left_fit, right_fit)
+        #
+        #     return video_processed, center, curv
+        #
+        # except Exception as e:
+        #     print str(e)
+        #     return video, 1, 1
 
     # Define which controller to use
     # Return speed, angle

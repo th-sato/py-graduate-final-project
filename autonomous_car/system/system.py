@@ -29,6 +29,7 @@ class System:
     # Color image loaded by OpenCV is in BGR mode.
     def video_processing(self, video):
         video_street = self.detect_street_by_color(video)
+        video_street[video_street == 1] = 255
         return video_street, 1, 1
         # try:
         #     left_fit, right_fit, video_processed = fit_lines(video_street)

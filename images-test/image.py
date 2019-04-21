@@ -22,11 +22,11 @@ def detect_street(img, lower_color, upper_color):
 
 
 def image_test():
-    static_path = os.path.join(os.getcwd(), '2019-03-25')
-    return cv.imread(os.path.join(static_path, 'pista-camera2.jpg'))
+    static_path = os.path.join(os.getcwd(), '2019-04-20')
+    return cv.imread(os.path.join(static_path, 'black-road.jpg'))
 
 
 if __name__ == "__main__":
-    lower_color, upper_color = np.array([0, 0, 0]), np.array([180, 255, 35])
+    lower_color, upper_color = np.array([0, 0, 0]), np.array([180, 255, 50])
     img = detect_street(image_test(), lower_color, upper_color)
     show_image(img)

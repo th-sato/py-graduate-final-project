@@ -1,4 +1,4 @@
-from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_BLACK
+from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW
 from picar_v.calibration.calibration import calibration
 from flask import Flask
 from autonomous_car import AutonomousCar
@@ -33,7 +33,7 @@ def home():
 @app.before_first_request
 def before_first_request():
     global autonomous_car
-    autonomous_car = AutonomousCar(FUZZY_CONTROLLER, DETECT_BLACK)
+    autonomous_car = AutonomousCar(FUZZY_CONTROLLER, DETECT_YELLOW)
 
 
 if __name__ == "__main__":

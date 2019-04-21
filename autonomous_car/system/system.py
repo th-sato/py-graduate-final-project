@@ -19,7 +19,7 @@ class System:
             lower_color, upper_color = np.array([20, 0, 100]), np.array([30, 255, 255])
             # lower_color, upper_color = np.array([20, 100, 100]), np.array([30, 255, 255])
         elif self._color == DETECT_BLACK:
-            lower_color, upper_color = np.array([0, 0, 0]), np.array([180, 255, 35])
+            lower_color, upper_color = np.array([0, 0, 0]), np.array([180, 255, 100])
         else:
             raise ValueError('Color to found the street not found!')
         return detect_street(video, lower_color, upper_color)
@@ -28,22 +28,21 @@ class System:
     # Return the processing video
     # Color image loaded by OpenCV is in BGR mode.
     def video_processing(self, video):
-        return video, 1, 1
-        # video_street = self.detect_street_by_color(video)
-        # try:
-        #     left_fit, right_fit, video_processed = fit_lines(video_street)
-        #     # show_image(video_processed)
-        #     left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
-        #
-        #     curv = (left_cur + right_cur) / 2
-        #     add_text_to_image(video_processed, curv, center)
-        #     video_processed = draw_lines(video, left_fit, right_fit)
-        #
-        #     return video_processed, center, curv
-        #
-        # except Exception as e:
-        #     print str(e)
-        #     return video, 1, 1
+        video_street = self.detect_street_by_color(video)
+        try:
+            left_fit, right_fit, video_processed = fit_lines(video_street)
+            # show_image(video_processed)
+            left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
+
+            curv = (left_cur + right_cur) / 2
+            add_text_to_image(video_processed, curv, center)
+            video_processed = draw_lines(video, left_fit, right_fit)
+
+            return video_processed, center, curv
+
+        except Exception as e:
+            print str(e)
+            return video, 1, 1
 
     # Define which controller to use
     # Return speed, angle

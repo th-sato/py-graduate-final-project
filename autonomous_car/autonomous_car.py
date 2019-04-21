@@ -42,8 +42,7 @@ class AutonomousCar:
 
     @staticmethod
     def request_post_image(url, key_img, img):
-        json = {key_img: img}
-        requests.post(url, json)
+        requests.post(url, json={key_img: img})
 
     def update(self):
         system = System(self._controller, self._color_street)

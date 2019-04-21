@@ -10,9 +10,10 @@ import cv2 as cv
 
 
 class AutonomousCar:
-    def __init__(self, controller):
+    def __init__(self, controller, color_street):
         self._stop_car = False
         self._controller = controller
+        self._color_street = color_street
         self._video_processed = None
         self._video_original = None
         # self.robot = Robot()
@@ -40,7 +41,7 @@ class AutonomousCar:
         return self._video_processed
 
     def update(self):
-        system = System(self._controller)
+        system = System(self._controller, self._color_street)
         while not self._stop_car:
             # self._video_original = self.image_test()
             self._video_original = self._camera.frame

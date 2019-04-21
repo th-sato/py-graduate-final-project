@@ -30,21 +30,13 @@ def add_text_to_image(img, curv, center):
 
 
 # img_binary contains only 0 or 255
-def detect_yellow_street(img_hsv):
-    # define range of color (yellow) in HSV
-    lower_color, upper_color = np.array([20, 0, 100]), np.array([30, 255, 255])
-    # lower_color, upper_color = np.array([20, 100, 100]), np.array([30, 255, 255])
-    # Threshold the HSV image to get only the selected colors
-    img_lane = cv.inRange(img_hsv, lower_color, upper_color)
-    img_lane[img_lane == 255] = 1
-    return img_lane
-
-
-def detect_street(img):
-    interval = img.shape[0] / 2, int(img.shape[0] * (1.0 - 1.0 / 8.0))
+def detect_street(img, lower_color, upper_color):
     img_hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-    img_processed = detect_yellow_street(img_hsv)
-    # img_processed = detect_yellow_street(img_hsv[interval[0]:interval[1], :])
+    # interval = img.shape[0] / 2, int(img.shape[0] * (1.0 - 1.0 / 8.0))
+    # img_hsv = img_hsv[interval[0]:interval[1], :]
+    # Threshold the HSV image to get only the selected colors
+    img_processed = cv.inRange(img_hsv, lower_color, upper_color)
+    img_processed[img_processed == 255] = 1
     return img_processed
 
 

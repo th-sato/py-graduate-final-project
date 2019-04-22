@@ -122,8 +122,8 @@ def fit_lines(binary_img):
 def curvature(left_fit, right_fit, binary_warped):
     # xm_per_pix = AXIS_X_METERS_PER_PIXEL  # meters per pixel in x dimension
     ym_per_pix = AXIS_Y_METERS_PER_PIXEL  # meters per pixel in y dimension
-    height_img = binary_warped.shape[0]
-    center_image = height_img / 2
+    height_img, width_img = binary_warped.shape[1]
+    center_image = width_img / 2
 
     plot_y = np.linspace(0, height_img - 1, height_img)
     # Define y-value where we want radius of curvature

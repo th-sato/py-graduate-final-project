@@ -27,10 +27,10 @@ class FuzzyController:
         self._angle['high'] = fuzzy.trimf(self._angle.universe, [0.25, 0.35, 0.45])
 
     def __angle_rules(self):
-        return [ctrl.Rule(self._distance['center'], self._angle['zero']),
-                ctrl.Rule(self._distance['low_dist'], self._angle['low']),
-                ctrl.Rule(self._distance['medium_dist'], self._angle['medium']),
-                ctrl.Rule(self._distance['high_dist'], self._angle['high'])]
+        return ctrl.ControlSystem([ctrl.Rule(self._distance['center'], self._angle['zero']),
+                                   ctrl.Rule(self._distance['low_dist'], self._angle['low']),
+                                   ctrl.Rule(self._distance['medium_dist'], self._angle['medium']),
+                                   ctrl.Rule(self._distance['high_dist'], self._angle['high'])])
 
     def output(self, input_distance, curvature):
         try:

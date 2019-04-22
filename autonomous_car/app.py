@@ -1,6 +1,5 @@
 from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW
-from picar_v.calibration.calibration import calibration
-from flask import Flask
+from flask import Flask, request
 from autonomous_car import AutonomousCar
 
 app = Flask(__name__)
@@ -19,9 +18,28 @@ def stop():
     return 'OK', 200
 
 
-@app.route('/calibration')
+@app.route('/calibration', methods=['POST'])
 def car_calibration():
-    calibration()
+    if request.method == 'POST':
+        json = request.get_json()
+        if json['wheel'] == 'back':
+            autonomous_car.backwheel_calib(json['action'])
+        elif json['wheel'] == 'front':
+            autonomous_car.frontwheel_calib(json['action'])
+        else:
+            return 'Command Error in wheel!', 404
+    else:
+        return 'Method not allowed!', 404
+    return 'OK', 200
+
+
+@app.route('/commands-by-request', methods=['POST'])
+def car_calibration():
+    if request.method == 'POST':
+        json = request.get_json()
+        autonomous_car.commands_by_request(json['command'])
+    else:
+        return 'Method not allowed!', 404
     return 'OK', 200
 
 

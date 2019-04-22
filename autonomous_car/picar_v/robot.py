@@ -50,12 +50,26 @@ class Robot:
         print("Angle", angle, type(angle))
         self.fw.turn(angle)
 
-    def calibration_back_wheel(self, wheel):
-        if wheel == 'calibration':
+    def calibration_back_wheel(self, action):
+        if action == 'calibration':
             self.bw.calibration()
-        elif wheel == 'left':
+        elif action == 'left':
             self.bw.cali_left()
-        elif wheel == 'right':
+        elif action == 'right':
             self.bw.cali_right()
-        elif wheel == 'calibration_ok':
+        elif action == 'calibration_ok':
             self.bw.cali_ok()
+        else:
+            print 'Back Wheel. Command error "%s"' % action
+
+    def calibration_front_wheel(self, action):
+        if action == 'calibration':
+            self.fw.calibration()
+        elif action == 'left':
+            self.fw.cali_left()
+        elif action == 'right':
+            self.fw.cali_right()
+        elif action == 'calibration_ok':
+            self.fw.cali_ok()
+        else:
+            print 'Front Wheel. Command error "%s"' % action

@@ -47,12 +47,12 @@ function stop_autonomous_car() {
 
 function calibration(wheel, command) {
     json = JSON.stringify({ "wheel": wheel, "action": command })
-    requestPostHttp("commands-by-request", json)
+    requestPostHttp("calibration", json)
 }
 
 function commands_to_car(command) {
     json = JSON.stringify({ "command": command })
-    requestPostHttp("calibration", json)
+    requestPostHttp("commands-by-request", json)
 }
 
 get_video_original()

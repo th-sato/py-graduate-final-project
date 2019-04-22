@@ -45,6 +45,7 @@ class System:
             return video, 1, 1
 
     # Define which controller to use
+    @staticmethod
     def __define_controller(controller):
         if controller == FUZZY_CONTROLLER:
             return FuzzyController()

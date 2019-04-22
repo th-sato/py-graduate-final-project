@@ -2,7 +2,7 @@ import cv2 as cv
 import base64
 import os.path
 import numpy as np
-from constants.constants import AXIS_X_METERS_PER_PIXEL, AXIS_Y_METERS_PER_PIXEL, RED, BLUE, GREEN
+from constants.constants import AXIS_X_METERS_PER_PIXEL, AXIS_Y_METERS_PER_PIXEL, WIDTH_LANE, RED, BLUE, GREEN
 
 # Global variables
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory
@@ -120,7 +120,7 @@ def fit_lines(binary_img):
 
 # Calculate Curvature
 def curvature(left_fit, right_fit, binary_warped):
-    xm_per_pix = AXIS_X_METERS_PER_PIXEL  # meters per pixel in x dimension
+    # xm_per_pix = AXIS_X_METERS_PER_PIXEL  # meters per pixel in x dimension
     ym_per_pix = AXIS_Y_METERS_PER_PIXEL  # meters per pixel in y dimension
     height_img = binary_warped.shape[0]
     center_image = height_img / 2
@@ -150,7 +150,7 @@ def curvature(left_fit, right_fit, binary_warped):
     right_lane_bottom = (right_fit[0] * y_eval) ** 2 + right_fit[0] * y_eval + right_fit[2]
     # Lane center as mid of left and right lane bottom
 
-    # xm_per_pix = PISTA / (right_lane_bottom - left_lane_bottom)
+    xm_per_pix = WIDTH_LANE / (right_lane_bottom - left_lane_bottom)
     lane_center = (left_lane_bottom + right_lane_bottom) / 2.
     distance_center = (lane_center - center_image) * xm_per_pix  # Convert to meters
 

@@ -28,10 +28,10 @@ class FuzzyController:
 
     def __angle_rules(self):
         angle_rules = []
-        angle_rules.append(ctrl.Rule(self.distances['center'], self.angles['zero']))
-        angle_rules.append(ctrl.Rule(self.distances['low_dist'], self.angles['low']))
-        angle_rules.append(ctrl.Rule(self.distances['medium_dist'], self.angles['medium']))
-        angle_rules.append(ctrl.Rule(self.distances['high_dist'], self.angles['high']))
+        angle_rules.append(ctrl.Rule(self._distance['center'], self._angle['zero']))
+        angle_rules.append(ctrl.Rule(self._distance['low_dist'], self._angle['low']))
+        angle_rules.append(ctrl.Rule(self._distance['medium_dist'], self._angle['medium']))
+        angle_rules.append(ctrl.Rule(self._distance['high_dist'], self._angle['high']))
         return angle_rules
 
     def output(self, input_distance, curvature):

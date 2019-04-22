@@ -134,16 +134,6 @@ def curvature(left_fit, right_fit, binary_warped):
     left_x = left_fit[0] * plot_y ** 2 + left_fit[1] * plot_y + left_fit[2]
     right_x = right_fit[0] * plot_y ** 2 + right_fit[1] * plot_y + right_fit[2]
 
-    # Identify new coefficients in meters
-    left_fit_cr = np.polyfit(plot_y * ym_per_pix, left_x * xm_per_pix, 2)
-    right_fit_cr = np.polyfit(plot_y * ym_per_pix, right_x * xm_per_pix, 2)
-
-    # Calculate the new radius of curvature
-    left_curverad = ((1 + (2 * left_fit_cr[0] * y_eval * ym_per_pix + left_fit_cr[1]) ** 2) ** 1.5) / np.absolute(
-        2 * left_fit_cr[0])
-    right_curverad = ((1 + (2 * right_fit_cr[0] * y_eval * ym_per_pix + right_fit_cr[1]) ** 2) ** 1.5) / np.absolute(
-        2 * right_fit_cr[0])
-
     # Calculation of center
     # left_lane and right lane bottom in pixels
     left_lane_bottom = (left_fit[0] * y_eval) ** 2 + left_fit[0] * y_eval + left_fit[2]
@@ -153,6 +143,16 @@ def curvature(left_fit, right_fit, binary_warped):
     xm_per_pix = WIDTH_LANE / (right_lane_bottom - left_lane_bottom)
     lane_center = (left_lane_bottom + right_lane_bottom) / 2.
     distance_center = (lane_center - center_image) * xm_per_pix  # Convert to meters
+
+    # Identify new coefficients in meters
+    left_fit_cr = np.polyfit(plot_y * ym_per_pix, left_x * xm_per_pix, 2)
+    right_fit_cr = np.polyfit(plot_y * ym_per_pix, right_x * xm_per_pix, 2)
+
+    # Calculate the new radius of curvature
+    left_curverad = ((1 + (2 * left_fit_cr[0] * y_eval * ym_per_pix + left_fit_cr[1]) ** 2) ** 1.5) / np.absolute(
+        2 * left_fit_cr[0])
+    right_curverad = ((1 + (2 * right_fit_cr[0] * y_eval * ym_per_pix + right_fit_cr[1]) ** 2) ** 1.5) / np.absolute(
+        2 * right_fit_cr[0])
 
     return left_curverad, right_curverad, distance_center
 

@@ -152,9 +152,9 @@ def curvature(left_fit, right_fit, binary_warped):
 
     # xm_per_pix = PISTA / (right_lane_bottom - left_lane_bottom)
     lane_center = (left_lane_bottom + right_lane_bottom) / 2.
-    center = (lane_center - center_image) * xm_per_pix  # Convert to meters
+    distance_center = (lane_center - center_image) * xm_per_pix  # Convert to meters
 
-    return left_curverad, right_curverad, center
+    return left_curverad, right_curverad, distance_center
 
 
 def draw_lines(img, left_fit, right_fit):

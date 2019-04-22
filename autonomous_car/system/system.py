@@ -9,8 +9,8 @@ class System:
         self._color = color_street
 
     def output(self, video):
-        video_processed, center, curv = self.video_processing(video)
-        speed, angle = self.control(center, curv)
+        video_processed, distance_center, curv = self.video_processing(video)
+        speed, angle = self.control(distance_center, curv)
         return video_processed, speed, angle
 
     # define range of color in HSV
@@ -32,13 +32,13 @@ class System:
         try:
             left_fit, right_fit, video_lines = fit_lines(video_street)
             # show_image(video_processed)
-            left_cur, right_cur, center = curvature(left_fit, right_fit, video_lines)
+            left_cur, right_cur, distance_center = curvature(left_fit, right_fit, video_lines)
 
             video_road = draw_lines(video, left_fit, right_fit)
             curv = (left_cur + right_cur) / 2
-            add_text_to_image(video_road, curv, center)
+            add_text_to_image(video_road, curv, distance_center)
 
-            return video_road, center, curv
+            return video_road, distance_center, curv
 
         except Exception as e:
             print str(e)
@@ -46,9 +46,10 @@ class System:
 
     # Define which controller to use
     # Return speed, angle
-    def control(self, center, curv):
+    def control(self, distance_center, curv):
+        # curv to control speed
         if self._controller == FUZZY_CONTROLLER:
-            return FuzzyController.output()
+            return FuzzyController.output(distance_center)
         elif self._controller == PROPORCIONAL_CONTROLLER:
             print "Proporcional Controller"
         else:

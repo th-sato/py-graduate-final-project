@@ -24,6 +24,7 @@ def stop():
 def car_calibration():
     if request.method == 'POST':
         json = request.get_json()
+        print json
         if json['wheel'] == 'back':
             autonomous_car.backwheel_calib(json['action'])
         elif json['wheel'] == 'front':
@@ -39,6 +40,7 @@ def car_calibration():
 def commands_by_request():
     if request.method == 'POST':
         json = request.get_json()
+        print json
         autonomous_car.commands_by_request(json['command'])
     else:
         return 'Method not allowed!', 404

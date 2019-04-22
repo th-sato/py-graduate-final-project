@@ -14,3 +14,4 @@ sudo apt-get install python-tk
 pip install redis
 pip install matplotlib
 pip install requests
+pip install flask_cors

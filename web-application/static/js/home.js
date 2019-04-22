@@ -32,6 +32,7 @@ function requestPostHttp(path, json){
     var protocol  = window.location.protocol;
     url = HOST_AUTONOMOUS_CAR + "/" + path;
     xmlHttp.open("POST", url, true);
+    xmlHttp.setRequestHeader("Content-Type", "application/json");
     xmlHttp.send(json);
     return xmlHttp.responseText;
 }

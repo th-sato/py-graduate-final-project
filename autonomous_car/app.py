@@ -34,7 +34,7 @@ def car_calibration():
 
 
 @app.route('/commands-by-request', methods=['POST'])
-def car_calibration():
+def commands_by_request():
     if request.method == 'POST':
         json = request.get_json()
         autonomous_car.commands_by_request(json['command'])

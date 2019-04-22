@@ -145,7 +145,7 @@ def curvature(left_fit, right_fit, binary_warped):
     lane_center = (left_lane_bottom + right_lane_bottom) / 2.
     print "lane_center: " + str(lane_center)
     distance_center = (lane_center - center_image) * xm_per_pix  # Convert to meters
-    print "distance_center: " + str(distance_center)
+    print "center_image: " + str(center_image)
 
     # Identify new coefficients in meters
     left_fit_cr = np.polyfit(plot_y * ym_per_pix, left_x * xm_per_pix, 2)

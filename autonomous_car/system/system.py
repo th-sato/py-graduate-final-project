@@ -30,15 +30,15 @@ class System:
     def video_processing(self, video):
         video_street = self.detect_street_by_color(video)
         try:
-            left_fit, right_fit, video_processed = fit_lines(video_street)
+            left_fit, right_fit, video_lines = fit_lines(video_street)
             # show_image(video_processed)
-            left_cur, right_cur, center = curvature(left_fit, right_fit, video_processed)
+            left_cur, right_cur, center = curvature(left_fit, right_fit, video_lines)
 
+            video_road = draw_lines(video, left_fit, right_fit)
             curv = (left_cur + right_cur) / 2
-            add_text_to_image(video_processed, curv, center)
-            video_processed = draw_lines(video, left_fit, right_fit)
+            add_text_to_image(video_road, curv, center)
 
-            return video_processed, center, curv
+            return video_road, center, curv
 
         except Exception as e:
             print str(e)
@@ -48,11 +48,9 @@ class System:
     # Return speed, angle
     def control(self, center, curv):
         if self._controller == FUZZY_CONTROLLER:
-            FuzzyController.teste()
-
+            return FuzzyController.output()
         elif self._controller == PROPORCIONAL_CONTROLLER:
-            print "Controller"
-
+            print "Proporcional Controller"
         else:
             print "Controller not found"
 

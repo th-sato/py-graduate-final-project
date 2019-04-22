@@ -1,8 +1,10 @@
 from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW
 from flask import Flask, request
+from flask_cors import CORS
 from autonomous_car import AutonomousCar
 
 app = Flask(__name__)
+CORS(app, support_credentials=True)
 # autonomous_car = AutonomousCar(FUZZY_CONTROLLER)
 
 

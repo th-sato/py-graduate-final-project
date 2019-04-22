@@ -47,7 +47,7 @@ class Robot:
     # angle = 0: straight
     def turn(self, angle):
         angle = STRAIGHT_ANGLE + self.fw.turning_offset + angle
-        print("Angle", angle, type(angle))
+        # print("Angle", angle, type(angle))
         self.fw.turn(angle)
 
     def calibration_back_wheel(self, action):

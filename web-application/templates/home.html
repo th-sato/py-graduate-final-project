@@ -10,6 +10,44 @@
     <title>Autonomous Car</title>
 </head>
 <body>
-    <img id="video_processed" src="">
+    <div style="overflow: auto;">
+        <img id="video_processed" src="" style="float: left; padding: 10px;">
+        <div style="margin-top: 50px;">
+            <h3>Processamento</h3>
+            <button onclick="start_autonomous_car()">Iniciar</button>
+            <button onclick="stop_autonomous_car()">Parar</button>
+        </div>
+
+        <div>
+            <h4>Movimento</h4>
+            <div>
+                <button onclick="commands_to_car('stop')">Frear</button>
+            </div>
+            <div style="margin-left: 522px; margin-bottom: 10px">
+                <button onclick="commands_to_car('forward')">Frente</button>
+            </div>
+            <div>
+                <button onclick="commands_to_car('left')">Esquerda</button>
+                <button onclick="commands_to_car('backward')">Trás</button>
+                <button onclick="commands_to_car('right')">Direita</button>
+            </div>
+        </div>
+    </div>
+    <h2>Calibrar o robô:</h2>
+
+    <div>
+        <h4>Rodas dianteiras</h4>
+        <button onclick="calibration('front', 'calibration')">Iniciar</button>
+        <button onclick="calibration('front', 'left')">Esquerda</button>
+        <button onclick="calibration('front', 'right')">Direita</button>
+        <button onclick="calibration('front', 'calibration_ok')">OK</button>
+
+        <h4>Rodas traseiras</h4>
+        <button onclick="calibration('back', 'calibration')">Iniciar</button>
+        <button onclick="calibration('back', 'left')">Esquerda</button>
+        <button onclick="calibration('back', 'right')">Direita</button>
+        <button onclick="calibration('back', 'calibration_ok')">OK</button>
+    </div>
+
 </body>
 </html>

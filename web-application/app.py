@@ -1,11 +1,14 @@
 from flask import Flask, request, render_template
 from flask_cors import CORS, cross_origin
 from env import *
+import logging
 import redis
 
 app = Flask(__name__)
 r = redis.Redis(host=REDIS_IP, port=REDIS_PORT, db=0)
 CORS(app, support_credentials=True)
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 
 @app.route('/')
@@ -28,6 +31,14 @@ def image():
         return "OK", 200
     else:
         return "Method not found", 404
+
+
+# @app.route('/calibration', methods=['POST'])
+# def teste():
+#     json = request.get_json()
+#     print json['wheel']
+#     print json['action']
+#     return "OK", 200
 
 
 if __name__ == "__main__":

@@ -141,6 +141,13 @@ def curvature(left_fit, right_fit, binary_warped):
     # Lane center as mid of left and right lane bottom
 
     xm_per_pix = WIDTH_LANE / (right_lane_bottom - left_lane_bottom)
+    print "WIDTH_LANE"
+    print WIDTH_LANE
+    teste = right_lane_bottom - left_lane_bottom
+    print "Denominador"
+    print teste
+    print "sxm_per_pix"
+    print xm_per_pix
     lane_center = (left_lane_bottom + right_lane_bottom) / 2.
     distance_center = (lane_center - center_image) * xm_per_pix  # Convert to meters
 

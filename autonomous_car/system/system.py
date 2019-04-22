@@ -5,16 +5,16 @@ from controller.fuzzy_controller import FuzzyController
 
 class System:
     def __init__(self, controller, color_street):
-        self._controller = controller
+        self._controller = self.__define_controller(controller)
         self._color = color_street
 
     def output(self, video):
-        video_processed, distance_center, curv = self.video_processing(video)
-        speed, angle = self.control(distance_center, curv)
+        video_processed, distance_center, curv = self.__video_processing(video)
+        speed, angle = self._controller.output(distance_center, curv)
         return video_processed, speed, angle
 
     # define range of color in HSV
-    def detect_street_by_color(self, video):
+    def __detect_street_by_color(self, video):
         if self._color == DETECT_YELLOW:
             lower_color, upper_color = np.array([20, 0, 100]), np.array([30, 255, 255])
             # lower_color, upper_color = np.array([20, 100, 100]), np.array([30, 255, 255])
@@ -27,8 +27,8 @@ class System:
     # Video processing
     # Return the processing video
     # Color image loaded by OpenCV is in BGR mode.
-    def video_processing(self, video):
-        video_street = self.detect_street_by_color(video)
+    def __video_processing(self, video):
+        video_street = self.__detect_street_by_color(video)
         try:
             left_fit, right_fit, video_lines = fit_lines(video_street)
             # show_image(video_processed)
@@ -45,14 +45,10 @@ class System:
             return video, 1, 1
 
     # Define which controller to use
-    # Return speed, angle
-    def control(self, distance_center, curv):
-        # curv to control speed
-        if self._controller == FUZZY_CONTROLLER:
-            return FuzzyController.output(distance_center)
-        elif self._controller == PROPORCIONAL_CONTROLLER:
+    def __define_controller(controller):
+        if controller == FUZZY_CONTROLLER:
+            return FuzzyController()
+        elif controller == PROPORCIONAL_CONTROLLER:
             print "Proporcional Controller"
         else:
             print "Controller not found"
-
-        return 1, 2

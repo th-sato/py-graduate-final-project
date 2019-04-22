@@ -34,9 +34,13 @@ class FuzzyController:
         angle_rules.append(ctrl.Rule(self.distances['high_dist'], self.angles['high']))
         return angle_rules
 
-    def output(self, input_distance):
-        speed = 40
-        self._angle_LF.input['distance'] = input_distance
-        self._angle_LF.compute()
-        angle = self._angle_LF.output['angle']
-        return speed, angle
+    def output(self, input_distance, curvature):
+        try:
+            speed = 40
+            self._angle_LF.input['distance'] = input_distance
+            self._angle_LF.compute()
+            angle = self._angle_LF.output['angle']
+            return speed, angle
+        except Exception as e:
+            print str(e)
+            return 40, 10

@@ -115,14 +115,14 @@ def fit_lines(binary_img):
     out_img[nonzero_y[left_lane_inds], nonzero_x[left_lane_inds]] = RED
     out_img[nonzero_y[right_lane_inds], nonzero_x[right_lane_inds]] = BLUE
 
-    return left_fit, right_fit, out_img
+    return left_fit, right_fit, out_img.shape
 
 
 # Calculate Curvature
-def curvature(left_fit, right_fit, binary_warped):
+def curvature(left_fit, right_fit, image_shape):
     # xm_per_pix = AXIS_X_METERS_PER_PIXEL  # meters per pixel in x dimension
     ym_per_pix = AXIS_Y_METERS_PER_PIXEL  # meters per pixel in y dimension
-    height_img, width_img, _ = binary_warped.shape
+    height_img, width_img, _ = image_shape
     center_image = width_img / 2
 
     plot_y = np.linspace(0, height_img - 1, height_img)
@@ -143,10 +143,6 @@ def curvature(left_fit, right_fit, binary_warped):
     xm_per_pix = np.abs(WIDTH_LANE / (right_lane_bottom - left_lane_bottom))
     lane_center = (left_lane_bottom + right_lane_bottom) / 2.
     distance_center = (lane_center - center_image) * xm_per_pix  # Convert to meters
-
-    print "xm_per_pix: ", xm_per_pix, ". left_fit: ", left_fit, ". right_fit: ", right_fit
-    print "Y: ", y_eval, ". left_lane_bottom: ", left_lane_bottom, ". right_lane_bottom: ", right_lane_bottom
-    print "lane_center: ", lane_center, ". center_image:", center_image, ". distance_center: ", distance_center
 
     # Identify new coefficients in meters
     left_fit_cr = np.polyfit(plot_y * ym_per_pix, left_x * xm_per_pix, 2)

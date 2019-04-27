@@ -30,9 +30,9 @@ class System:
     def __video_processing(self, video):
         video_street = self.__detect_street_by_color(video)
         try:
-            left_fit, right_fit, video_lines = fit_lines(video_street)
+            left_fit, right_fit, video_shape = fit_lines(video_street)
             # show_image(video_processed)
-            left_cur, right_cur, distance_center = curvature(left_fit, right_fit, video_lines)
+            left_cur, right_cur, distance_center = curvature(left_fit, right_fit, video_shape)
 
             video_road = draw_lines(video, left_fit, right_fit)
             curv = (left_cur + right_cur) / 2

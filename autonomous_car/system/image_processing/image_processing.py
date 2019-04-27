@@ -136,8 +136,8 @@ def curvature(left_fit, right_fit, binary_warped):
 
     # Calculation of center
     # left_lane and right lane bottom in pixels
-    left_lane_bottom = (left_fit[0] * y_eval) ** 2 + left_fit[0] * y_eval + left_fit[2]
-    right_lane_bottom = (right_fit[0] * y_eval) ** 2 + right_fit[0] * y_eval + right_fit[2]
+    left_lane_bottom = (left_fit[0] * y_eval) ** 2 + left_fit[1] * y_eval + left_fit[2]
+    right_lane_bottom = (right_fit[0] * y_eval) ** 2 + right_fit[1] * y_eval + right_fit[2]
     # Lane center as mid of left and right lane bottom
 
     xm_per_pix = np.abs(WIDTH_LANE / (right_lane_bottom - left_lane_bottom))

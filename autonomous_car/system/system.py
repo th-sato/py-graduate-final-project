@@ -31,7 +31,6 @@ class System:
         video_street = self.__detect_street_by_color(video)
         try:
             left_fit, right_fit, video_shape = fit_lines(video_street)
-            print "video_shape: ", video_shape
             # show_image(video_processed)
             left_cur, right_cur, distance_center = curvature(left_fit, right_fit, video_shape)
 

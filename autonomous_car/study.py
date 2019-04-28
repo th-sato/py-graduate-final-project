@@ -12,11 +12,11 @@ from system.controller.fuzzy_controller import FuzzyController
 
 def main():
     fuzzy = FuzzyController()
-    fuzzy.distance.view()
-    raw_input("Press Enter to continue...")
-    fuzzy.angle.view()
-    raw_input("Press Enter to continue...")
-    print "Output: ", fuzzy.output(0.5, 0.0)
+    # fuzzy.distance.view()
+    # raw_input("Press Enter to continue...")
+    # fuzzy.angle.view()
+    # raw_input("Press Enter to continue...")
+    print "Output: ", fuzzy.output(1.555555555555, 0.0)
 
     # img = get_image()
     # show_image(img)

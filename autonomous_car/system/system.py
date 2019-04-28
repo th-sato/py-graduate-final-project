@@ -38,6 +38,8 @@ class System:
             curv = (left_cur + right_cur) / 2
             add_text_to_image(video_road, curv, distance_center)
 
+            print "Distance center: ", distance_center
+            
             return video_road, distance_center, curv
 
         except Exception as e:

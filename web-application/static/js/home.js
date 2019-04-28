@@ -1,12 +1,12 @@
 var interval = 1;
-var HOST_REDIS_IMAGE = 'http://localhost:8081/redis-image'
-var HOST_AUTONOMOUS_CAR = 'http://192.168.1.234:5000';
-//var HOST_AUTONOMOUS_CAR = 'http://localhost:8081';
+var HOST = 'http://localhost:8081';
+//var HOST_REDIS_IMAGE = 'http://localhost:8081/redis-image'
+//var HOST_AUTONOMOUS_CAR = 'http://192.168.1.234:5000';
 
 function get_video_original() {
     $.ajax({
         type: 'GET',
-        url: HOST_REDIS_IMAGE,
+        url: HOST + '/redis-image',
 //        xhrFields: {
 //           withCredentials: true
 //        },
@@ -20,7 +20,7 @@ function get_video_original() {
 
 function requestGetHttp(path){
     var xmlHttp   = new XMLHttpRequest();
-    url = HOST_AUTONOMOUS_CAR + "/" + path;
+    url = HOST + "/" + path;
     xmlHttp.open("GET", url, true);
     xmlHttp.send(null);
     return xmlHttp.responseText;
@@ -30,7 +30,7 @@ function requestGetHttp(path){
 function requestPostHttp(path, json){
     var xmlHttp   = new XMLHttpRequest();
     var protocol  = window.location.protocol;
-    url = HOST_AUTONOMOUS_CAR + "/" + path;
+    url = HOST + "/" + path;
     xmlHttp.open("POST", url, true);
     xmlHttp.setRequestHeader("Content-Type", "application/json");
     xmlHttp.send(json);

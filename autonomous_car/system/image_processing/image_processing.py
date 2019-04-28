@@ -154,21 +154,18 @@ def curvature(left_fit, right_fit, image_shape):
     right_curverad = ((1 + (2 * right_fit_cr[0] * y_eval * ym_per_pix + right_fit_cr[1]) ** 2) ** 1.5) / np.absolute(
         2 * right_fit_cr[0])
 
-    return left_curverad, right_curverad, distance_center
+    return left_curverad, right_curverad, left_x, right_x, distance_center
 
 
-def draw_lines(img, left_fit, right_fit):
+def draw_lines(img, left_fit_x, right_fit_x):
     # Create an image to draw the lines on
     img_zeros = np.zeros_like(img)
 
     ploty = np.linspace(0, img.shape[0] - 1, img.shape[0])
-    # Fit new polynomials to x,y in world space
-    left_fitx = left_fit[0] * ploty ** 2 + left_fit[1] * ploty + left_fit[2]
-    right_fitx = right_fit[0] * ploty ** 2 + right_fit[1] * ploty + right_fit[2]
 
     # Recast the x and y points into usable format for cv2.fillPoly()
-    pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])
-    pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
+    pts_left = np.array([np.transpose(np.vstack([left_fit_x, ploty]))])
+    pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fit_x, ploty])))])
     pts = np.hstack((pts_left, pts_right))
 
     # Draw the lane onto the warped blank image

@@ -32,9 +32,9 @@ class System:
         try:
             left_fit, right_fit, video_shape = fit_lines(video_street)
             # show_image(video_processed)
-            left_cur, right_cur, distance_center = curvature(left_fit, right_fit, video_shape)
+            left_cur, right_cur, left_x, right_x, distance_center = curvature(left_fit, right_fit, video_shape)
 
-            video_road = draw_lines(video, left_fit, right_fit)
+            video_road = draw_lines(video, left_x, right_x)
             curv = (left_cur + right_cur) / 2
             add_text_to_image(video_road, curv, distance_center)
 

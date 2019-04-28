@@ -10,7 +10,7 @@ class FuzzyController:
         self.distance = self.__auto_membership_distance()
         # Auto-membership function: Angle
         self.angle = self.__auto_membership_angle()
-        self.angle_LF = self.__angle_rules(self._distance, self._angle)
+        self.angle_LF = self.__angle_rules(self.distance, self.angle)
 
     @staticmethod
     def __auto_membership_distance():

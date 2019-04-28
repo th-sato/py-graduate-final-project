@@ -42,9 +42,9 @@ class FuzzyController:
     def output(self, input_distance, curvature):
         try:
             speed = 40
-            self._angle_LF.input['distance'] = input_distance
-            self._angle_LF.compute()
-            angle = self._angle_LF.output['angle']
+            self.angle_LF.input['distance'] = input_distance
+            self.angle_LF.compute()
+            angle = self.angle_LF.output['angle']
             return speed, angle
         except Exception as e:
             print str(e)

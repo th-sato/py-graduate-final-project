@@ -76,7 +76,6 @@ def commands_by_request_autonomous_car():
     return 'OK', 200
 
 
-
 # @app.route('/calibration', methods=['POST'])
 # def teste():
 #     json = request.get_json()

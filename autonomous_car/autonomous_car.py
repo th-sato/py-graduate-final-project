@@ -79,8 +79,8 @@ class AutonomousCar:
             self._video_processed, speed, angle = system.output(self._video_original)
             self.request_post_image(URL_REDIS_IMAGE, KEY_JSON_IMAGE, jpgimg_to_base64(self._video_processed))
             # print "Speed: " + str(speed) + " Angle: " + str(angle)
-            # self._robot.speed(speed)
-            # self._robot.turn(angle)
+            self._robot.speed(speed)
+            self._robot.turn(angle)
 
     # @staticmethod
     # def image_test():

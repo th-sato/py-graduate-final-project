@@ -7,30 +7,49 @@ class FuzzyController:
 
     def __init__(self):
         # Auto-membership function: Distance
-        self._distance = ctrl.Antecedent(np.arange(0, 0.5, 0.001), 'distance')
-        self.__auto_membership_distance()
+        self._distance = self.__auto_membership_distance()
         # Auto-membership function: Angle
-        self._angle = ctrl.Consequent(np.arange(0, 0.45, 0.01), 'angle')
-        self.__auto_membership_angle()
-        self._angle_LF = ctrl.ControlSystemSimulation(self.__angle_rules())
+        self._angle = self.__auto_membership_angle()
+        self._angle_LF = self.__angle_rules(self._distance, self._angle)
 
-    def __auto_membership_distance(self):
-        self._distance['center'] = fuzzy.pimf(self._distance.universe, 0, 0.01, 0.02, 0.04)
-        self._distance['low_dist'] = fuzzy.trimf(self._distance.universe, [0.02, 0.05, 0.1])
-        self._distance['medium_dist'] = fuzzy.trimf(self._distance.universe, [0.05, 0.10, 0.2])
-        self._distance['high_dist'] = fuzzy.pimf(self._distance.universe, 0.15, 0.2, 0.4, 0.5)
+    @staticmethod
+    def __auto_membership_distance():
+        distance = ctrl.Antecedent(np.arange(0, 10, 0.1), 'distance')
+        distance['center'] = fuzzy.pimf(distance.universe, 0, 0.1, 1.0, 1.5)
+        distance['low_dist'] = fuzzy.trimf(distance.universe, [1.0, 3.0, 5.0])
+        distance['medium_dist'] = fuzzy.trimf(distance.universe, [4.0, 6.0, 8.0])
+        distance['high_dist'] = fuzzy.pimf(distance.universe, 7.0, 8.0, 9.0, 10.0)
+        return distance
 
-    def __auto_membership_angle(self):
-        self._angle['zero'] = fuzzy.pimf(self._angle.universe, 0, 0.02, 0.05, 0.07)
-        self._angle['low'] = fuzzy.trimf(self._angle.universe, [0.03, 0.1, 0.25])
-        self._angle['medium'] = fuzzy.trimf(self._angle.universe, [0.15, 0.25, 0.35])
-        self._angle['high'] = fuzzy.trimf(self._angle.universe, [0.25, 0.35, 0.45])
+    @staticmethod
+    def __auto_membership_angle():
+        angle = ctrl.Consequent(np.arange(0, 45, 1), 'angle')
+        angle['zero'] = fuzzy.pimf(angle.universe, 0, 3, 5, 7)
+        angle['low'] = fuzzy.trimf(angle.universe, [6, 13, 22])
+        angle['medium'] = fuzzy.trimf(angle.universe, [20, 26, 32])
+        angle['high'] = fuzzy.trimf(angle.universe, [30, 38, 45])
+        return angle
 
-    def __angle_rules(self):
-        return ctrl.ControlSystem([ctrl.Rule(self._distance['center'], self._angle['zero']),
-                                   ctrl.Rule(self._distance['low_dist'], self._angle['low']),
-                                   ctrl.Rule(self._distance['medium_dist'], self._angle['medium']),
-                                   ctrl.Rule(self._distance['high_dist'], self._angle['high'])])
+    @staticmethod
+    def __angle_rules(distance, angle):
+        rules = ctrl.ControlSystem([ctrl.Rule(distance['center'], angle['zero']),
+                                   ctrl.Rule(distance['low_dist'], angle['low']),
+                                   ctrl.Rule(distance['medium_dist'], angle['medium']),
+                                   ctrl.Rule(distance['high_dist'], angle['high'])])
+        control_system = ctrl.ControlSystemSimulation(rules)
+        return control_system
+
+    @property
+    def distance(self):
+        return self._distance
+
+    @property
+    def angle(self):
+        return self._angle
+
+    @property
+    def angle_lf(self):
+        return self._angle_LF
 
     def output(self, input_distance, curvature):
         try:

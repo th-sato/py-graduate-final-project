@@ -1,27 +1,26 @@
-from system.image_processing.image_processing import *
-from constants.constants import FUZZY_CONTROLLER, PROPORCIONAL_CONTROLLER, URL_BACK
-from autonomous_car import AutonomousCar
-import requests
-import os
+# from system.image_processing.image_processing import *
+# import os
+# static_path = 'images-test/2019-03-25/'
+# image_name = 'pista-camera1.jpg'
 
-static_path = 'images-test/2019-03-25/'
-image_name = 'pista-camera1.jpg'
-autonomous_car = AutonomousCar(FUZZY_CONTROLLER)
+# def get_image():
+#     img_path = os.path.join(os.getcwd(), static_path)
+#     return cv.imread(os.path.join(img_path, image_name))
 
-
-def get_image():
-    img_path = os.path.join(os.getcwd(), static_path)
-    return cv.imread(os.path.join(img_path, image_name))
-
-
-def send_image_redis(img):
-    requests.post(URL_BACK, json={"IMG": jpgimg_to_base64(img)})
+from system.controller.fuzzy_controller import FuzzyController
 
 
 def main():
-    img = get_image()
-    show_image(img)
-    send_image_redis(img)
+    fuzzy = FuzzyController()
+    fuzzy.distance.view()
+    raw_input("Press Enter to continue...")
+    fuzzy.angle.view()
+    raw_input("Press Enter to continue...")
+    print "Output: ", fuzzy.output(0.5, 0.0)
+
+    # img = get_image()
+    # show_image(img)
+
     # img_processed = detect_street(img)
     # _, _, img_processed = fit_lines(img_processed)
     # show_image(img_processed)

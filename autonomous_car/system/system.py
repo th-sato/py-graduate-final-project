@@ -42,7 +42,7 @@ class System:
 
         except Exception as e:
             print str(e)
-            return video, 1, 1
+            return video, 0, 0
 
     # Define which controller to use
     @staticmethod

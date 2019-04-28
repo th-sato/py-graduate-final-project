@@ -7,10 +7,10 @@ class FuzzyController:
 
     def __init__(self):
         # Auto-membership function: Distance
-        self._distance = self.__auto_membership_distance()
+        self.distance = self.__auto_membership_distance()
         # Auto-membership function: Angle
-        self._angle = self.__auto_membership_angle()
-        self._angle_LF = self.__angle_rules(self._distance, self._angle)
+        self.angle = self.__auto_membership_angle()
+        self.angle_LF = self.__angle_rules(self._distance, self._angle)
 
     @staticmethod
     def __auto_membership_distance():
@@ -38,18 +38,6 @@ class FuzzyController:
                                    ctrl.Rule(distance['high_dist'], angle['high'])])
         control_system = ctrl.ControlSystemSimulation(rules)
         return control_system
-
-    @property
-    def distance(self):
-        return self._distance
-
-    @property
-    def angle(self):
-        return self._angle
-
-    @property
-    def angle_lf(self):
-        return self._angle_LF
 
     def output(self, input_distance, curvature):
         try:

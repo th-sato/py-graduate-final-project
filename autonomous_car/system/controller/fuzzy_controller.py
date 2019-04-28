@@ -1,6 +1,7 @@
 import skfuzzy as fuzzy
 import numpy as np
 from skfuzzy import control as ctrl
+from math import floor
 
 
 class FuzzyController:
@@ -42,7 +43,7 @@ class FuzzyController:
     def output(self, input_distance, curvature):
         try:
             speed = 40
-            self.angle_LF.input['distance'] = input_distance
+            self.angle_LF.input['distance'] = (floor(input_distance * 10)) / 10
             self.angle_LF.compute()
             angle = self.angle_LF.output['angle']
             return speed, angle

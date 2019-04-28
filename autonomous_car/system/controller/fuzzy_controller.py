@@ -47,6 +47,8 @@ class FuzzyController:
             self.angle_LF.input['distance'] = abs(input_distance)
             self.angle_LF.compute()
             angle = self.angle_LF.output['angle']
+            if input_distance < 0:
+                angle = - angle
             return speed, angle
         except Exception as e:
             print str(e)

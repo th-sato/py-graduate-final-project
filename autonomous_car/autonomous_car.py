@@ -55,11 +55,11 @@ class AutonomousCar:
 
     def commands_by_request(self, command):
         if command == "forward":
-            self._robot.speed(40)
             self._robot.forward()
-        elif command == "backward":
             self._robot.speed(40)
+        elif command == "backward":
             self._robot.backward()
+            self._robot.speed(40)
         elif command == "right":
             self._robot.turn(35)
         elif command == "left":

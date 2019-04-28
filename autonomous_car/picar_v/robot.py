@@ -18,7 +18,7 @@ class Robot:
         self.fw.ready()
         self.bw_status = 0
 
-    def speed(self, speed):
+    def __speed(self, speed):
         _speed = speed
         if speed < 0:
             _speed = 0
@@ -34,13 +34,15 @@ class Robot:
         self.bw_status = 0
         self.bw.stop()
 
-    def forward(self):
+    def forward(self, speed):
         self.bw_status = 1
         self.bw.forward()
+        self.__speed(speed)
 
-    def backward(self):
+    def backward(self, speed):
         self.bw_status = -1
         self.bw.backward()
+        self.__speed(speed)
 
     # angle < 0: turn left
     # angle > 0: turn right

@@ -55,11 +55,9 @@ class AutonomousCar:
 
     def commands_by_request(self, command):
         if command == "forward":
-            self._robot.forward()
-            self._robot.speed(40)
+            self._robot.forward(40)
         elif command == "backward":
-            self._robot.backward()
-            self._robot.speed(40)
+            self._robot.backward(40)
         elif command == "right":
             self._robot.turn(35)
         elif command == "left":
@@ -79,7 +77,7 @@ class AutonomousCar:
             self._video_processed, speed, angle = system.output(self._video_original)
             self.request_post_image(URL_REDIS_IMAGE, KEY_JSON_IMAGE, jpgimg_to_base64(self._video_processed))
             print "Speed: ", speed, " Angle: ", angle
-            self._robot.speed(speed)
+            self._robot.forward(speed)
             self._robot.turn(angle)
 
     # @staticmethod

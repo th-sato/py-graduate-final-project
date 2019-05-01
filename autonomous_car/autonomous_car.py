@@ -45,8 +45,9 @@ class AutonomousCar:
 
     @staticmethod
     def request_async_post_image(image):
-        session = requests.session()
-        session.post(URL_REDIS_IMAGE, json={KEY_JSON_IMAGE: image})
+        # session = requests.session()
+        # session.post(URL_REDIS_IMAGE, json={KEY_JSON_IMAGE: image})
+        requests.post(URL_REDIS_IMAGE, json={KEY_JSON_IMAGE: image})
 
     # @staticmethod
     # def request_post_image(url, key_img, img):

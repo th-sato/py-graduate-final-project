@@ -43,6 +43,10 @@ class AutonomousCar:
     def video_processed(self):
         return self._video_processed
 
+    def request_async_post(self, key, image):
+        url = URL_REDIS_IMAGE
+        Thread(target=self.request_post_image, args=(url, key, image)).start()
+
     @staticmethod
     def request_post_image(url, key_img, img):
         requests.post(url, json={key_img: img})
@@ -75,7 +79,7 @@ class AutonomousCar:
             # self._video_original = self.image_test()
             self._video_original = self._camera.frame
             self._video_processed, speed, angle = system.output(self._video_original)
-            self.request_post_image(URL_REDIS_IMAGE, KEY_JSON_IMAGE, jpgimg_to_base64(self._video_processed))
+            self.request_async_post(KEY_JSON_IMAGE, jpgimg_to_base64(self._video_processed))
             print "Speed: ", speed, " Angle: ", angle
             self._robot.forward(speed)
             self._robot.turn(angle)

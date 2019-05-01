@@ -2,7 +2,7 @@ import cv2 as cv
 import base64
 import os.path
 import numpy as np
-from constants.constants import AXIS_X_METERS_PER_PIXEL, AXIS_Y_METERS_PER_PIXEL, WIDTH_LANE, RED, BLUE, GREEN
+from constants.constants import AXIS_Y_METERS_PER_PIXEL, WIDTH_LANE, RED, BLUE, GREEN
 
 # Global variables
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory

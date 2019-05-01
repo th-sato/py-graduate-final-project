@@ -19,13 +19,15 @@ KEY_JSON_IMAGE = "image"
 # HEIGHT_IMAGE = 240  # Pixels
 
 # Lane dimension
-WIDTH_LANE = 22.0           # Centimeters
-WIDTH_LANE_PIXEL = 350      # Pixels
-HEIGHT_LANE = 100.0         # Centimeters
+# WIDTH_LANE = 22.0           # Centimeters
+# WIDTH_LANE_PIXEL = 350      # Pixels
+# HEIGHT_LANE = 100.0         # Centimeters
+# HEIGHT_LANE_PIXEL = 195     # Pixels
+WIDTH_LANE = 0.22           # Meters
+HEIGHT_LANE = 1.0           # Meters
 HEIGHT_LANE_PIXEL = 195     # Pixels
 
 # Measures
-AXIS_X_METERS_PER_PIXEL = WIDTH_LANE/WIDTH_LANE_PIXEL
 AXIS_Y_METERS_PER_PIXEL = HEIGHT_LANE/HEIGHT_LANE_PIXEL
 
 # Color to detect

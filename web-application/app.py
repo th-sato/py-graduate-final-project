@@ -85,5 +85,5 @@ def commands_by_request_autonomous_car():
 
 
 if __name__ == "__main__":
-    # app.run(host=HOST, port=PORT, debug=False)
-    app.run(host=FLASK_HOST, port=FLASK_PORT, debug=True)
+    app.run(host=FLASK_HOST, port=FLASK_PORT, debug=False, threaded=True)
+    # app.run(host=FLASK_HOST, port=FLASK_PORT, debug=True)

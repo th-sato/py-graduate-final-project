@@ -40,11 +40,30 @@ def detect_street(img, lower_color, upper_color):
     return img_processed
 
 
+def find_peaks_of_image(histogram, space_lines):
+    peak_one = np.argmax(histogram)
+    histogram_length = histogram.shape[0]
+    if (peak_one - space_lines) < 0:
+        histogram[0: peak_one] = 0
+    else:
+        histogram[(peak_one - space_lines): peak_one] = 0
+
+    if (peak_one + space_lines) > histogram_length:
+        histogram[peak_one: (histogram_length - 1)] = 0
+    else:
+        histogram[peak_one: (peak_one + space_lines)] = 0
+
+    peak_two = np.argmax(histogram)
+
+    return peak_one, peak_two
+
+
 # Functions for drawing lines
 def fit_lines(binary_img):
-    nwindows = 50  # Choose the number of sliding windows
-    margin = 30  # Set the width of the windows +/- margin
-    minpix = 10  # Set minimum number of pixels found to recenter window
+    nwindows = 50       # Choose the number of sliding windows
+    margin = 30         # Set the width of the windows +/- margin
+    minpix = 10         # Set minimum number of pixels found to recenter window
+    space_lines = 150   # Set the space between track lines
     # Create empty lists to receive left and right lane pixel indices
     left_lane_inds = []
     right_lane_inds = []
@@ -53,15 +72,11 @@ def fit_lines(binary_img):
     height_img, width_img = binary_warped.shape
     # Assuming you have created a warped binary image called "binary_warped"
     # Take a histogram of the bottom half of the image
-    histogram = np.sum(binary_warped[height_img / 2:, :], axis=0)
+    histogram = np.sum(binary_warped[height_img / 10:, :], axis=0)
     # Create an output image to draw on and  visualize the result
     out_img = np.dstack((binary_warped, binary_warped, binary_warped)) * 255
     # Find the peak of the left and right halves of the histogram
-    # These will be the starting point for the left and right lines
-    # Make this more robust
-    midpoint = np.int(histogram.shape[0] / 2)
-    left_x_base = np.argmax(histogram[0:midpoint])
-    right_x_base = np.argmax(histogram[midpoint:(width_img - 1)]) + midpoint
+    left_x_base, right_x_base = find_peaks_of_image(histogram, space_lines)
 
     # Set height of windows
     window_height = np.int(height_img / nwindows)

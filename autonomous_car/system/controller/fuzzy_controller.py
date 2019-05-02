@@ -8,8 +8,6 @@ class FuzzyController:
 
     def __init__(self):
         # Auto-membership function: Distance
-        self.width = 14
-        self.length = 24
         self.distance = self.__auto_membership_distance()
         # Auto-membership function: Angle
         self.angle = self.__auto_membership_angle()
@@ -57,7 +55,6 @@ class FuzzyController:
     def output(self, input_distance, curvature):
         try:
             speed = 40
-            # self.angle_LF.input['distance'] = (floor(input_distance * 10)) / 10
             self.angle_LF.input['distance'] = abs(input_distance)
             self.angle_LF.compute()
             angle = self.angle_LF.output['angle']

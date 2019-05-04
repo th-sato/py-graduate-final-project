@@ -8,27 +8,49 @@
 #     return cv.imread(os.path.join(img_path, image_name))
 
 from system.controller.fuzzy_controller import FuzzyController
+from system.image_processing.image_processing import *
+
+static_path = 'images-test/2019-03-25/'
+image_name = 'pista-camera1.jpg'
+
+
+def detect_street_by_color(video):
+    lower_color, upper_color = np.array([20, 0, 100]), np.array([30, 255, 255])
+    return detect_street(video, lower_color, upper_color)
+
+
+def image_input():
+    img_path = os.path.join(os.getcwd(), static_path)
+    return cv.imread(os.path.join(img_path, image_name))
 
 
 def main():
-    fuzzy = FuzzyController()
-    # fuzzy.distance.view()
-    # raw_input("Press Enter to continue...")
-    # fuzzy.angle.view()
-    # raw_input("Press Enter to continue...")
-    print "Output: ", fuzzy.output(1.555555555555, 0.0)
-
-    # img = get_image()
-    # show_image(img)
-
-    # img_processed = detect_street(img)
-    # _, _, img_processed = fit_lines(img_processed)
-    # show_image(img_processed)
+    print "Histograma"
+    img = detect_street_by_color(image_input())
+    fit_lines(img)
 
 
 if __name__ == "__main__":
     main()
 
+
+
+
+
+# def main2():
+#     fuzzy = FuzzyController()
+#     # fuzzy.distance.view()
+#     # raw_input("Press Enter to continue...")
+#     # fuzzy.angle.view()
+#     # raw_input("Press Enter to continue...")
+#     print "Output: ", fuzzy.output(1.555555555555, 0.0)
+#
+#     # img = get_image()
+#     # show_image(img)
+#
+#     # img_processed = detect_street(img)
+#     # _, _, img_processed = fit_lines(img_processed)
+#     # show_image(img_processed)
 
 
 # import system.system as system

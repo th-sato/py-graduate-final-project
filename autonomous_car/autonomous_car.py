@@ -1,4 +1,4 @@
-from constants.constants import VIDEO_CAPTURE, URL_REDIS_IMAGE, KEY_JSON_IMAGE
+from constants.constants import *
 from threading import Thread
 import requests
 import time
@@ -18,6 +18,9 @@ class AutonomousCar:
         self._video_processed = None
         self._video_original = None
         self._robot = Robot()
+        self._image_to_show = STREET_ORIGINAL_IMAGE
+        # self._image_to_show = STREET_LINES_DRAWN
+        self._send_commands_robot = True
         self._camera = Camera(VIDEO_CAPTURE)
         self._camera.start()
 
@@ -26,6 +29,7 @@ class AutonomousCar:
 
     def start(self):
         self._stop_car = False
+        self._send_commands_robot = True
         self._camera.start()
         self.__start()
 
@@ -52,6 +56,12 @@ class AutonomousCar:
     # @staticmethod
     # def request_post_image(url, key_img, img):
     #     requests.post(url, json={key_img: img})
+
+    def image_to_show(self, option):
+        self._image_to_show = option
+
+    def send_commands_robot(self, command):
+        self._send_commands_robot = command
 
     def backwheel_calib(self, action):
         self._robot.calibration_back_wheel(action)
@@ -80,11 +90,12 @@ class AutonomousCar:
         while not self._stop_car:
             # self._video_original = self.image_test()
             self._video_original = self._camera.frame
-            self._video_processed, speed, angle = system.output(self._video_original)
+            self._video_processed, speed, angle = system.output(self._video_original, self._image_to_show)
             self.request_async_post_image(jpgimg_to_base64(self._video_processed))
             print "Speed: ", speed, " Angle: ", angle
-            self._robot.forward(speed)
-            self._robot.turn(angle)
+            if self._send_commands_robot:
+                self._robot.forward(speed)
+                self._robot.turn(angle)
 
     # @staticmethod
     # def image_test():

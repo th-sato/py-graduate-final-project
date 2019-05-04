@@ -40,30 +40,55 @@ def detect_street(img, lower_color, upper_color):
     return img_processed
 
 
-def find_peaks_of_image(histogram, space_lines):
-    peak_one = np.argmax(histogram)
-    histogram_length = histogram.shape[0]
-    if (peak_one - space_lines) < 0:
-        histogram[0: peak_one] = 0
-    else:
-        histogram[(peak_one - space_lines): peak_one] = 0
+# Disconsider the proximity points of peak_one
+def _disconsider_proximity_points(histogram, peak, space_lines):
+    histogram_length = histogram.shape[0]  # Length of histogram
 
-    if (peak_one + space_lines) > histogram_length:
-        histogram[peak_one: (histogram_length - 1)] = 0
+    # Left proximity
+    if (peak - space_lines) < 0:
+        histogram[0: peak] = 0
     else:
-        histogram[peak_one: (peak_one + space_lines)] = 0
+        histogram[(peak - space_lines): peak] = 0
+    # Right proximity
+    if (peak + space_lines) > (histogram_length - 1):
+        histogram[peak: (histogram_length - 1)] = 0
+    else:
+        histogram[peak: (peak + space_lines)] = 0
 
+    return histogram
+
+
+def _find_peaks_of_image(histogram):
+    space_lines = 110                               # Set the space between track lines
+    histogram_min_value = 100                       # Value to consider that the point is valid
+    left_line, right_line = None, None              # Defining the value of lines
+    histogram_length = histogram.shape[0]           # Length of histogram
+    peak_one = np.argmax(histogram)                 # Find one of the Peaks in Histogram
+
+    histogram = _disconsider_proximity_points(histogram, peak_one, space_lines)
     peak_two = np.argmax(histogram)
 
-    return peak_one, peak_two
+    if histogram[peak_one] > histogram_min_value:
+        if peak_one > np.int(histogram_length/2):   # Peak relative with right line
+            right_line = peak_one
+        else:                                       # Peak relative with left line
+            left_line = peak_one
+
+    if histogram[peak_two] > histogram_min_value:
+        if peak_two > np.int(histogram_length/2):   # Peak relative with right line
+            right_line = peak_two
+        else:                                       # Peak relative with left line
+            left_line = peak_two
+
+    return right_line, left_line
 
 
 # Functions for drawing lines
 def fit_lines(binary_img):
-    nwindows = 50       # Choose the number of sliding windows
-    margin = 30         # Set the width of the windows +/- margin
-    minpix = 10         # Set minimum number of pixels found to recenter window
-    space_lines = 150   # Set the space between track lines
+    nwindows = 50           # Choose the number of sliding windows
+    margin = 30             # Set the width of the windows +/- margin
+    minpix = 10             # Set minimum number of pixels found to recenter window
+    interval_img = 9/10     # Histogram interval to take in image
     # Create empty lists to receive left and right lane pixel indices
     left_lane_inds = []
     right_lane_inds = []
@@ -72,11 +97,12 @@ def fit_lines(binary_img):
     height_img, width_img = binary_warped.shape
     # Assuming you have created a warped binary image called "binary_warped"
     # Take a histogram of the bottom half of the image
-    histogram = np.sum(binary_warped[height_img / 10:, :], axis=0)
+    boundary_histogram = np.int(height_img*interval_img)
+    histogram = np.sum(binary_warped[boundary_histogram:, :], axis=0)
     # Create an output image to draw on and  visualize the result
     out_img = np.dstack((binary_warped, binary_warped, binary_warped)) * 255
     # Find the peak of the left and right halves of the histogram
-    left_x_base, right_x_base = find_peaks_of_image(histogram, space_lines)
+    left_x_base, right_x_base = _find_peaks_of_image(histogram)
 
     # Set height of windows
     window_height = np.int(height_img / nwindows)

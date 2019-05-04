@@ -14,6 +14,11 @@ PORT = 5000
 URL_REDIS_IMAGE = 'http://192.168.1.189:8081/redis-image'
 KEY_JSON_IMAGE = "image"
 
+# Image to show
+STREET_ORIGINAL_IMAGE = 0
+STREET_PROCESSING = 1
+STREET_LINES_DRAWN = 2
+
 # Image dimensions
 # WIDTH_IMAGE = 432   # Pixels
 # HEIGHT_IMAGE = 240  # Pixels

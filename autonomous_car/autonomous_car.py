@@ -3,7 +3,7 @@ from threading import Thread
 import requests
 import time
 from system.system import System
-from system.image_processing.image_processing import code_video, video_writer
+from system.image_processing.image_processing import video_writer
 from picar_v.camera.camera import Camera
 from picar_v.robot import Robot
 

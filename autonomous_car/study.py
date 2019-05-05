@@ -40,7 +40,7 @@ def main():
     img_processed = detect_street_by_color(img)
     img_test = img_processed.copy()
     img_test[img_processed == 1] = 255
-    # show_image(img_test)
+    show_image(img_test)
     left_fit, right_fit, video_shape = fit_lines(img_processed)
     left_cur, right_cur, left_x, right_x, distance_center = curvature(left_fit, right_fit, video_shape)
     video_road = draw_lines(img, left_x, right_x)

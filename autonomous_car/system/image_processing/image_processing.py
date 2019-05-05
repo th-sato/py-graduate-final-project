@@ -114,7 +114,7 @@ def fit_lines(binary_img):
     nwindows = 25           # Choose the number of sliding windows
     margin = 30             # Set the width of the windows +/- margin
     minpix = 10             # Set minimum number of pixels found to recenter window
-    interval_img = 9/10     # Histogram interval to take in image
+    interval_img = 9.0/10   # Histogram interval to take in image
     # Create empty lists to receive left and right lane pixel indices
     left_lane_index = []
     right_lane_index = []
@@ -223,7 +223,7 @@ def draw_lines(img, left_fit_x, right_fit_x):
     elif left_fit_x is None:
         pts = np.hstack((([[[0, 0], [0, height_img-1]]]), pts_right))
     elif right_fit_x is None:
-        pts = np.hstack((pts_left, ([[[width_img-1, 0], [width_img-1, height_img-1]]])))
+        pts = np.hstack((pts_left, ([[[width_img-1, height_img-1], [width_img-1, 0]]])))
 
     # Draw the lane onto the warped blank image
     cv.fillPoly(img_zeros, np.array([pts], dtype=np.int32), GREEN)

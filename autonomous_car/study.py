@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 static_path = '../images-test/2019-05-04/'
 # image_name = 'uma_pista_2.jpg'
-image_name = 'pista_parcial.jpg'
+image_name = 'carro_fora_pista_2.jpg'
 
 
 def detect_street_by_color(video):

@@ -184,7 +184,7 @@ def curvature(left_fit, right_fit, image_shape):
     xm_per_pix = AXIS_X_METERS_PER_PIXEL  # meters per pixel in x dimension
     ym_per_pix = AXIS_Y_METERS_PER_PIXEL  # meters per pixel in y dimension
     height_img, width_img = image_shape
-    pixels_lane = np.int(WIDTH_LANE * (1.0 / xm_per_pix))
+    pixels_lane = WIDTH_LANE_PIXEL
     center_image = width_img / 2
 
     plot_y = np.linspace(0, height_img - 1, height_img)

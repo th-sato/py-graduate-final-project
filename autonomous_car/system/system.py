@@ -13,7 +13,7 @@ class System:
         speed, angle = self._controller.output(distance_center, curv)
 
         if img_to_show == STREET_ORIGINAL_IMAGE:
-            return video, 0, 0
+            return video, speed, angle
         elif img_to_show == STREET_DETECTING:
             return self.__detect_street_by_color(video), speed, angle
         elif img_to_show == STREET_LINES_DRAWN:

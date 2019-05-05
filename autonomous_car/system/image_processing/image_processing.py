@@ -2,7 +2,7 @@ import cv2 as cv
 import base64
 import os.path
 import numpy as np
-from constants.constants import AXIS_Y_METERS_PER_PIXEL, WIDTH_LANE, RED, BLUE, GREEN
+from constants.constants import *
 
 # Global variables
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory
@@ -41,7 +41,7 @@ def detect_street(img, lower_color, upper_color):
 
 
 # Disconsider the proximity points of peak_one
-def _disconsider_proximity_points(histogram, peak, space_lines):
+def __disconsider_proximity_points(histogram, peak, space_lines):
     histogram_length = histogram.shape[0]  # Length of histogram
 
     # Left proximity
@@ -58,15 +58,12 @@ def _disconsider_proximity_points(histogram, peak, space_lines):
     return histogram
 
 
-def _find_peaks_of_image(histogram):
-    space_lines = 110                               # Set the space between track lines
-    histogram_min_value = 100                       # Value to consider that the point is valid
+def __find_peaks_of_image(histogram):
+    space_lines = 150                               # Set the space between track lines
+    histogram_min_value = 20                        # Value to consider that the point is valid
     left_line, right_line = None, None              # Defining the value of lines
     histogram_length = histogram.shape[0]           # Length of histogram
     peak_one = np.argmax(histogram)                 # Find one of the Peaks in Histogram
-
-    histogram = _disconsider_proximity_points(histogram, peak_one, space_lines)
-    peak_two = np.argmax(histogram)
 
     if histogram[peak_one] > histogram_min_value:
         if peak_one > np.int(histogram_length/2):   # Peak relative with right line
@@ -74,24 +71,53 @@ def _find_peaks_of_image(histogram):
         else:                                       # Peak relative with left line
             left_line = peak_one
 
+    histogram = __disconsider_proximity_points(histogram, peak_one, space_lines)
+    peak_two = np.argmax(histogram)
+
     if histogram[peak_two] > histogram_min_value:
         if peak_two > np.int(histogram_length/2):   # Peak relative with right line
             right_line = peak_two
         else:                                       # Peak relative with left line
             left_line = peak_two
 
-    return right_line, left_line
+    return left_line, right_line
+
+
+def __window_boundaries(lane_indexes, window_x_current, window_y, nonzero_x, nonzero_y, margin, minpix):
+    if window_x_current is None:
+        return [], None
+
+    win_x = window_x_current - margin, window_x_current + margin
+    good_indexes = ((nonzero_y >= window_y[0]) & (nonzero_y < window_y[1]) & (nonzero_x >= win_x[0]) & (
+                    nonzero_x < win_x[1])).nonzero()[0]
+    lane_indexes.append(good_indexes)
+    if len(good_indexes) > minpix:
+        window_x_current = np.int(np.mean(nonzero_x[good_indexes]))
+
+    return lane_indexes, window_x_current
+
+
+def __fit_lines(lane_index, nonzero_x, nonzero_y):
+    if len(lane_index) == 0:
+        return None
+    # Concatenate the arrays of indices
+    lane_index = np.concatenate(lane_index)
+    # Extract left and right line pixel positions
+    x_positions = nonzero_x[lane_index]
+    y_positions = nonzero_y[lane_index]
+
+    return np.polyfit(y_positions, x_positions, 2)
 
 
 # Functions for drawing lines
 def fit_lines(binary_img):
-    nwindows = 50           # Choose the number of sliding windows
+    nwindows = 25           # Choose the number of sliding windows
     margin = 30             # Set the width of the windows +/- margin
     minpix = 10             # Set minimum number of pixels found to recenter window
     interval_img = 9/10     # Histogram interval to take in image
     # Create empty lists to receive left and right lane pixel indices
-    left_lane_inds = []
-    right_lane_inds = []
+    left_lane_index = []
+    right_lane_index = []
 
     binary_warped = binary_img
     height_img, width_img = binary_warped.shape
@@ -102,10 +128,10 @@ def fit_lines(binary_img):
     # Create an output image to draw on and  visualize the result
     out_img = np.dstack((binary_warped, binary_warped, binary_warped)) * 255
     # Find the peak of the left and right halves of the histogram
-    left_x_base, right_x_base = _find_peaks_of_image(histogram)
+    left_x_base, right_x_base = __find_peaks_of_image(histogram)
 
     # Set height of windows
-    window_height = np.int(height_img / nwindows)
+    window_height = np.int((height_img / 2) / nwindows)
     # Identify the x and y positions of all nonzero pixels in the image
     nonzero = binary_warped.nonzero()
     nonzero_y = np.array(nonzero[0])
@@ -118,96 +144,86 @@ def fit_lines(binary_img):
     # Step through the windows one by one
     for window in range(nwindows):
         # Identify window boundaries in x and y (and right and left)
-        win_y_low = binary_warped.shape[0] - (window + 1) * window_height
-        win_y_high = binary_warped.shape[0] - window * window_height
-        win_x_left_low = left_x_current - margin
-        win_x_left_high = left_x_current + margin
-        win_x_right_low = right_x_current - margin
-        win_x_right_high = right_x_current + margin
-        # Draw the windows on the visualization image
-        # Identify the nonzero pixels in x and y within the window
-        good_left_inds = ((nonzero_y >= win_y_low) & (nonzero_y < win_y_high) & (nonzero_x >= win_x_left_low) & (
-                    nonzero_x < win_x_left_high)).nonzero()[0]
-        good_right_inds = ((nonzero_y >= win_y_low) & (nonzero_y < win_y_high) & (nonzero_x >= win_x_right_low) & (
-                    nonzero_x < win_x_right_high)).nonzero()[0]
-        # Append these indices to the lists
-        left_lane_inds.append(good_left_inds)
-        right_lane_inds.append(good_right_inds)
-        # If you found > minpix pixels, recenter next window on their mean position
-        if len(good_left_inds) > minpix:
-            left_x_current = np.int(np.mean(nonzero_x[good_left_inds]))
-        if len(good_right_inds) > minpix:
-            right_x_current = np.int(np.mean(nonzero_x[good_right_inds]))
+        win_y = height_img - (window + 1) * window_height, height_img - window * window_height
+        left_lane_index, left_x_current = __window_boundaries(left_lane_index, left_x_current, win_y, nonzero_x,
+                                                              nonzero_y, margin, minpix)
+        right_lane_index, right_x_current = __window_boundaries(right_lane_index, right_x_current, win_y, nonzero_x,
+                                                                nonzero_y, margin, minpix)
 
-    # Concatenate the arrays of indices
-    left_lane_inds = np.concatenate(left_lane_inds)
-    right_lane_inds = np.concatenate(right_lane_inds)
+    left_fit = __fit_lines(left_lane_index, nonzero_x, nonzero_y)
+    right_fit = __fit_lines(right_lane_index, nonzero_x, nonzero_y)
 
-    # Extract left and right line pixel positions
-    left_x = nonzero_x[left_lane_inds]
-    left_y = nonzero_y[left_lane_inds]
-    right_x = nonzero_x[right_lane_inds]
-    right_y = nonzero_y[right_lane_inds]
+    return left_fit, right_fit, (height_img, width_img)
 
-    # Fit a second order polynomial to each
-    left_fit = np.polyfit(left_y, left_x, 2)
-    right_fit = np.polyfit(right_y, right_x, 2)
 
-    out_img[nonzero_y[left_lane_inds], nonzero_x[left_lane_inds]] = RED
-    out_img[nonzero_y[right_lane_inds], nonzero_x[right_lane_inds]] = BLUE
+def __lane_pixels(fit, plot_y):
+    return fit[0] * plot_y ** 2 + fit[1] * plot_y + fit[2]
 
-    return left_fit, right_fit, out_img.shape
+
+def __curvature_lane(fit, plot_y, ym_per_pix, xm_per_pix):
+    if fit is None:
+        return None, 0, None
+
+    # Define y-value where we want radius of curvature
+    # I'll choose the maximum y-value, corresponding to the bottom of the image
+    y_eval = np.max(plot_y)
+    # Define lanes in pixels
+    lane_pixels = __lane_pixels(fit, plot_y)
+    # Lane bottom in pixels
+    point_bottom = __lane_pixels(fit, y_eval)
+    # Identify new coefficients in meters
+    fit_cr = np.polyfit(plot_y * ym_per_pix, lane_pixels * xm_per_pix, 2)
+    # Calculate the new radius of curvature
+    radius = ((1 + (2 * fit_cr[0] * y_eval * ym_per_pix + fit_cr[1]) ** 2) ** 1.5) / np.absolute(2 * fit_cr[0])
+
+    return point_bottom, radius, lane_pixels
 
 
 # Calculate Curvature
 def curvature(left_fit, right_fit, image_shape):
-    # xm_per_pix = AXIS_X_METERS_PER_PIXEL  # meters per pixel in x dimension
+    xm_per_pix = AXIS_X_METERS_PER_PIXEL  # meters per pixel in x dimension
     ym_per_pix = AXIS_Y_METERS_PER_PIXEL  # meters per pixel in y dimension
-    height_img, width_img, _ = image_shape
+    height_img, width_img = image_shape
+    pixels_lane = np.int(WIDTH_LANE * (1.0 / xm_per_pix))
     center_image = width_img / 2
 
     plot_y = np.linspace(0, height_img - 1, height_img)
-    # Define y-value where we want radius of curvature
-    # I'll choose the maximum y-value, corresponding to the bottom of the image
-    y_eval = np.max(plot_y)
 
-    # Define left and right lanes in pixels
-    left_x = left_fit[0] * plot_y ** 2 + left_fit[1] * plot_y + left_fit[2]
-    right_x = right_fit[0] * plot_y ** 2 + right_fit[1] * plot_y + right_fit[2]
+    left_point_bottom, left_radius, left_x = __curvature_lane(left_fit, plot_y, ym_per_pix, xm_per_pix)
+    right_point_bottom, right_radius, right_x = __curvature_lane(right_fit, plot_y, ym_per_pix, xm_per_pix)
 
-    # Calculation of center
-    # left_lane and right lane bottom in pixels
-    left_lane_bottom = left_fit[0] * y_eval ** 2 + left_fit[1] * y_eval + left_fit[2]
-    right_lane_bottom = right_fit[0] * y_eval ** 2 + right_fit[1] * y_eval + right_fit[2]
     # Lane center as mid of left and right lane bottom
+    if left_point_bottom is None:
+        left_point_bottom = right_point_bottom - pixels_lane
+    if right_point_bottom is None:
+        right_point_bottom = left_point_bottom + pixels_lane
 
-    xm_per_pix = np.abs(WIDTH_LANE / (right_lane_bottom - left_lane_bottom))
-    lane_center = (left_lane_bottom + right_lane_bottom) / 2.
+    lane_center = (left_point_bottom + right_point_bottom) / 2.0
     distance_center = (lane_center - center_image) * xm_per_pix  # Convert to meters
 
-    # Identify new coefficients in meters
-    left_fit_cr = np.polyfit(plot_y * ym_per_pix, left_x * xm_per_pix, 2)
-    right_fit_cr = np.polyfit(plot_y * ym_per_pix, right_x * xm_per_pix, 2)
-
-    # Calculate the new radius of curvature
-    left_curverad = ((1 + (2 * left_fit_cr[0] * y_eval * ym_per_pix + left_fit_cr[1]) ** 2) ** 1.5) / np.absolute(
-        2 * left_fit_cr[0])
-    right_curverad = ((1 + (2 * right_fit_cr[0] * y_eval * ym_per_pix + right_fit_cr[1]) ** 2) ** 1.5) / np.absolute(
-        2 * right_fit_cr[0])
-
-    return left_curverad, right_curverad, left_x, right_x, distance_center
+    return left_radius, right_radius, left_x, right_x, distance_center
 
 
 def draw_lines(img, left_fit_x, right_fit_x):
+    height_img, width_img, _ = img.shape
     # Create an image to draw the lines on
     img_zeros = np.zeros_like(img)
 
-    ploty = np.linspace(0, img.shape[0] - 1, img.shape[0])
+    plot_y = np.linspace(0, img.shape[0] - 1, img.shape[0])
 
     # Recast the x and y points into usable format for cv2.fillPoly()
-    pts_left = np.array([np.transpose(np.vstack([left_fit_x, ploty]))])
-    pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fit_x, ploty])))])
-    pts = np.hstack((pts_left, pts_right))
+    if left_fit_x is not None:
+        pts_left = np.array([np.transpose(np.vstack([left_fit_x, plot_y]))])
+
+    if right_fit_x is not None:
+        pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fit_x, plot_y])))])
+
+    if (left_fit_x is not None) and (right_fit_x is not None):
+        pts = np.hstack((pts_left, pts_right))
+    elif left_fit_x is None:
+        pts = np.hstack((([[[0, 0], [0, height_img-1]]]), pts_right))
+    elif right_fit_x is None:
+        pts = np.hstack((pts_left, ([[[width_img-1, 0], [width_img-1, height_img-1]]])))
 
     # Draw the lane onto the warped blank image
     cv.fillPoly(img_zeros, np.array([pts], dtype=np.int32), GREEN)

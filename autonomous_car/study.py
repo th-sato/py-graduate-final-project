@@ -10,9 +10,9 @@
 from system.controller.fuzzy_controller import FuzzyController
 from system.image_processing.image_processing import *
 
-static_path = 'images-test/2019-03-25/'
-image_name = 'pista-camera1.jpg'
-
+static_path = '../images-test/2019-05-04/'
+# image_name = 'uma_pista_2.jpg'
+image_name = 'uma_pista.jpg'
 
 def detect_street_by_color(video):
     lower_color, upper_color = np.array([20, 0, 100]), np.array([30, 255, 255])
@@ -20,14 +20,24 @@ def detect_street_by_color(video):
 
 
 def image_input():
-    img_path = os.path.join(os.getcwd(), static_path)
-    return cv.imread(os.path.join(img_path, image_name))
+    img_path = os.path.join(os.path.join(os.getcwd(), static_path), image_name)
+    img = cv.imread(img_path)
+    return img
 
 
 def main():
     print "Histograma"
-    img = detect_street_by_color(image_input())
-    fit_lines(img)
+    img = image_input()
+    img_processed = detect_street_by_color(img)
+    img_test = img_processed.copy()
+    img_test[img_processed == 1] = 255
+    # show_image(img_test)
+    left_fit, right_fit, video_shape = fit_lines(img_processed)
+    left_cur, right_cur, left_x, right_x, distance_center = curvature(left_fit, right_fit, video_shape)
+    video_road = draw_lines(img, left_x, right_x)
+    curv = (left_cur + right_cur) / 2
+    add_text_to_image(video_road, curv, distance_center)
+    show_image(video_road)
 
 
 if __name__ == "__main__":

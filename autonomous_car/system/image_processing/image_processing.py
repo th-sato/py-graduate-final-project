@@ -24,7 +24,7 @@ def add_text_to_image(img, curv, center):
     font = cv.FONT_HERSHEY_SIMPLEX
     cv.putText(img, 'Radius of Curvature = %d(m)' % curv, (50, 50), font, 0.7, (255, 255, 255), 1)
 
-    left_or_right = "left" if center < 0 else "right"
+    left_or_right = "left" if center > 0 else "right"
     cv.putText(img, 'Vehicle is %.2fcm %s of center' % (np.abs(center), left_or_right), (50, 100), font, 0.7,
                 (255, 255, 255), 1)
 
@@ -59,26 +59,31 @@ def __disconsider_proximity_points(histogram, peak, space_lines):
 
 
 def __find_peaks_of_image(histogram):
-    space_lines = 150                               # Set the space between track lines
-    histogram_min_value = 20                        # Value to consider that the point is valid
+    space_lines = 85                                # Set the space between track lines
+    histogram_min_value = 5                         # Value to consider that the point is valid
     left_line, right_line = None, None              # Defining the value of lines
     histogram_length = histogram.shape[0]           # Length of histogram
     peak_one = np.argmax(histogram)                 # Find one of the Peaks in Histogram
-
-    if histogram[peak_one] > histogram_min_value:
-        if peak_one > np.int(histogram_length/2):   # Peak relative with right line
-            right_line = peak_one
-        else:                                       # Peak relative with left line
-            left_line = peak_one
+    peak_one_value = histogram[peak_one]            # Value of the peak one
 
     histogram = __disconsider_proximity_points(histogram, peak_one, space_lines)
     peak_two = np.argmax(histogram)
+    peak_two_value = histogram[peak_two]
 
-    if histogram[peak_two] > histogram_min_value:
-        if peak_two > np.int(histogram_length/2):   # Peak relative with right line
-            right_line = peak_two
-        else:                                       # Peak relative with left line
+    # Two lanes
+    if (peak_one_value > histogram_min_value) and (peak_two_value > histogram_min_value):
+        if peak_one > peak_two:
+            right_line = peak_one
             left_line = peak_two
+        else:
+            right_line = peak_two
+            left_line = peak_one
+    # One lane
+    elif peak_one_value > histogram_min_value:
+        if peak_one > np.int(histogram_length/2):
+            left_line = peak_one
+        else:
+            right_line = peak_one
 
     return left_line, right_line
 
@@ -111,10 +116,10 @@ def __fit_lines(lane_index, nonzero_x, nonzero_y):
 
 # Functions for drawing lines
 def fit_lines(binary_img):
-    nwindows = 25           # Choose the number of sliding windows
-    margin = 30             # Set the width of the windows +/- margin
-    minpix = 10             # Set minimum number of pixels found to recenter window
-    interval_img = 9.0/10   # Histogram interval to take in image
+    nwindows = 25                   # Choose the number of sliding windows
+    margin = 30                     # Set the width of the windows +/- margin
+    minpix = 10                     # Set minimum number of pixels found to recenter window
+    interval_img = 1.0/2, 3.2/5     # Histogram interval to take in image
     # Create empty lists to receive left and right lane pixel indices
     left_lane_index = []
     right_lane_index = []
@@ -123,8 +128,8 @@ def fit_lines(binary_img):
     height_img, width_img = binary_warped.shape
     # Assuming you have created a warped binary image called "binary_warped"
     # Take a histogram of the bottom half of the image
-    boundary_histogram = np.int(height_img*interval_img)
-    histogram = np.sum(binary_warped[boundary_histogram:, :], axis=0)
+    boundary_histogram = np.int(height_img*interval_img[0]), np.int(height_img*interval_img[1])
+    histogram = np.sum(binary_warped[boundary_histogram[0]: boundary_histogram[1], :], axis=0)
     # Find the peak of the left and right halves of the histogram
     left_x_base, right_x_base = __find_peaks_of_image(histogram)
 
@@ -139,10 +144,13 @@ def fit_lines(binary_img):
     left_x_current = left_x_base
     right_x_current = right_x_base
 
+    # Point to start the search
+    height_img_base = height_img / 2
+
     # Step through the windows one by one
     for window in range(nwindows):
         # Identify window boundaries in x and y (and right and left)
-        win_y = height_img - (window + 1) * window_height, height_img - window * window_height
+        win_y = height_img_base + window * window_height, height_img_base + (window + 1) * window_height
         left_lane_index, left_x_current = __window_boundaries(left_lane_index, left_x_current, win_y, nonzero_x,
                                                               nonzero_y, margin, minpix)
         right_lane_index, right_x_current = __window_boundaries(right_lane_index, right_x_current, win_y, nonzero_x,

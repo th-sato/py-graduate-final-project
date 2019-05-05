@@ -16,8 +16,8 @@ class AutonomousCar:
         self._video_processed = None
         self._video_original = None
         self._robot = Robot()
-        # self._image_to_show = STREET_ORIGINAL_IMAGE
-        self._image_to_show = STREET_LINES_DRAWN
+        self._image_to_show = STREET_ORIGINAL_IMAGE
+        # self._image_to_show = STREET_LINES_DRAWN
         self._send_commands_robot = True
         self._camera = Camera(VIDEO_CAPTURE)
         self._camera.start()

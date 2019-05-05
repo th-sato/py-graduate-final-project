@@ -8,6 +8,11 @@ from constants.constants import *
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory
 
 
+def video_writer(fourcc):
+    fourcc = cv.VideoWriter_fourcc(*'MJPG')
+    return cv.VideoWriter('output.avi', fourcc, 20.0, (WIDTH_IMAGE, HEIGHT_IMAGE))
+
+
 def show_image(img):
     cv.imshow('image', img)
     # cv.waitKey(10)

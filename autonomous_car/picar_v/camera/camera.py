@@ -1,12 +1,13 @@
 from threading import Thread
+from constants.constants import WIDTH_IMAGE, HEIGHT_IMAGE
 import cv2 as cv
 
 
 class Camera:
     def __init__(self, source=0):
         self._video = cv.VideoCapture(source)
-        self._video.set(cv.CAP_PROP_FRAME_WIDTH, 432.)
-        self._video.set(cv.CAP_PROP_FRAME_HEIGHT, 240.)
+        self._video.set(cv.CAP_PROP_FRAME_WIDTH, WIDTH_IMAGE)
+        self._video.set(cv.CAP_PROP_FRAME_HEIGHT, HEIGHT_IMAGE)
         _, self._frame = self._video.read()
         self._stop = False
 

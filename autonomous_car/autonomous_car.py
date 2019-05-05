@@ -89,7 +89,7 @@ class AutonomousCar:
             # self._video_original = self.image_test()
             self._video_original = self._camera.frame
             self._video_processed, speed, angle = system.output(self._video_original, self._image_to_show)
-            self.request_async_post_image(jpgimg_to_base64(self._video_processed))
+            # self.request_async_post_image(jpgimg_to_base64(self._video_processed))
             print "Speed: ", speed, " Angle: ", angle
             if self._send_commands_robot:
                 self._robot.forward(speed)

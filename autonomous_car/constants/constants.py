@@ -20,8 +20,10 @@ STREET_DETECTING = 1
 STREET_LINES_DRAWN = 2
 
 # Image dimensions
-WIDTH_IMAGE = 432.0   # Pixels
-HEIGHT_IMAGE = 240.0  # Pixels
+WIDTH_IMAGE = 432   # Pixels
+HEIGHT_IMAGE = 240  # Pixels
+# WIDTH_IMAGE = 432.0   # Pixels
+# HEIGHT_IMAGE = 240.0  # Pixels
 
 # Lane dimension
 # WIDTH_LANE = 22.0           # Centimeters

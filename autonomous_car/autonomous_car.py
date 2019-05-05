@@ -27,7 +27,7 @@ class AutonomousCar:
 
     def start(self):
         self._stop_car = False
-        self._send_commands_robot = True
+        # self._send_commands_robot = True
         self._camera.start()
         self.__start()
 

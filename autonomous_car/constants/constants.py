@@ -16,7 +16,7 @@ KEY_JSON_IMAGE = "image"
 
 # Image to show
 STREET_ORIGINAL_IMAGE = 0
-STREET_PROCESSING = 1
+STREET_DETECTING = 1
 STREET_LINES_DRAWN = 2
 
 # Image dimensions

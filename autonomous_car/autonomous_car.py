@@ -6,8 +6,6 @@ from system.system import System
 from system.image_processing.image_processing import jpgimg_to_base64
 from picar_v.camera.camera import Camera
 from picar_v.robot import Robot
-# import os
-# import cv2 as cv
 
 
 class AutonomousCar:
@@ -18,8 +16,8 @@ class AutonomousCar:
         self._video_processed = None
         self._video_original = None
         self._robot = Robot()
-        self._image_to_show = STREET_ORIGINAL_IMAGE
-        # self._image_to_show = STREET_LINES_DRAWN
+        # self._image_to_show = STREET_ORIGINAL_IMAGE
+        self._image_to_show = STREET_LINES_DRAWN
         self._send_commands_robot = True
         self._camera = Camera(VIDEO_CAPTURE)
         self._camera.start()

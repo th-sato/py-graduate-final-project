@@ -8,7 +8,7 @@ from constants.constants import *
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory
 
 
-def video_writer(fourcc):
+def video_writer():
     fourcc = cv.VideoWriter_fourcc(*'MJPG')
     return cv.VideoWriter('output.avi', fourcc, 20.0, (WIDTH_IMAGE, HEIGHT_IMAGE))
 

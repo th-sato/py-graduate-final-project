@@ -125,8 +125,6 @@ def fit_lines(binary_img):
     # Take a histogram of the bottom half of the image
     boundary_histogram = np.int(height_img*interval_img)
     histogram = np.sum(binary_warped[boundary_histogram:, :], axis=0)
-    # Create an output image to draw on and  visualize the result
-    out_img = np.dstack((binary_warped, binary_warped, binary_warped)) * 255
     # Find the peak of the left and right halves of the histogram
     left_x_base, right_x_base = __find_peaks_of_image(histogram)
 

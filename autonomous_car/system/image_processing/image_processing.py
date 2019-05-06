@@ -10,7 +10,7 @@ LOCAL_PATH = os.path.dirname(__file__)  # get current directory
 
 def video_writer():
     fourcc = cv.VideoWriter_fourcc(*'MJPG')
-    return cv.VideoWriter('autonomous_car/static/output.avi', fourcc, 20.0, (WIDTH_IMAGE, HEIGHT_IMAGE))
+    return cv.VideoWriter(VIDEO_NAME, fourcc, 20.0, (WIDTH_IMAGE, HEIGHT_IMAGE))
 
 
 def show_image(img):

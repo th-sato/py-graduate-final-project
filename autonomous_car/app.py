@@ -1,6 +1,8 @@
 from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW
 from flask import Flask, request, redirect
+from constants.constants import VIDEO_NAME
 from flask_cors import CORS
+import os
 from autonomous_car import AutonomousCar
 
 app = Flask(__name__)
@@ -62,8 +64,9 @@ def before_first_request():
 
 
 if __name__ == "__main__":
+    filename = os.path.join(os.getcwd(), VIDEO_NAME)
     # app.run(host=HOST, port=PORT, debug=False, threaded=True)
-    app.run(host=HOST, port=PORT, debug=True, threaded=True)
+    app.run(host=HOST, port=PORT, debug=True, threaded=True, extras_files=filename)
 
 
 # Intervalo para considerar da imagem

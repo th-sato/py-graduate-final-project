@@ -62,8 +62,6 @@ def before_first_request():
 
 
 if __name__ == "__main__":
-    app.jinja_env.auto_reload = True
-    app.config['TEMPLATES_AUTO_RELOAD'] = True
     # app.run(host=HOST, port=PORT, debug=False, threaded=True)
     app.run(host=HOST, port=PORT, debug=True, threaded=True)
 

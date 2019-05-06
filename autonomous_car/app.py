@@ -62,8 +62,8 @@ def before_first_request():
 
 
 if __name__ == "__main__":
-    # app.run(host=HOST, port=PORT, debug=False)
-    app.run(host=HOST, port=PORT, debug=True)
+    # app.run(host=HOST, port=PORT, debug=False, threaded=True)
+    app.run(host=HOST, port=PORT, debug=True, threaded=True)
 
 
 # Intervalo para considerar da imagem

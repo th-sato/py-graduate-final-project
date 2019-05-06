@@ -45,6 +45,10 @@ function stop_autonomous_car() {
     requestGetHttp('stop')
 }
 
+function get_video_processed() {
+    requestGetHttp('video')
+}
+
 function calibration(wheel, command) {
     json = JSON.stringify({ "wheel": wheel, "action": command })
     requestPostHttp("calibration", json)

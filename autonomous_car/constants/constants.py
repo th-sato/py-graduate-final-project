@@ -3,6 +3,7 @@ STRAIGHT_ANGLE = 90
 
 # Camera
 VIDEO_CAPTURE = 0
+VIDEO_NAME = "autonomous_car/static/output.avi"
 
 # Controller
 FUZZY_CONTROLLER = "Fuzzy"

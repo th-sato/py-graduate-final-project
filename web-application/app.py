@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from env import *
 import logging
 import redis
@@ -33,6 +33,7 @@ def home():
 #         return "Method not found", 404
 
 @app.route('/video')
+@cross_origin()
 def video():
     url = HOST_AUTONOMOUS_CAR + '/video_output'
     return redirect(url)

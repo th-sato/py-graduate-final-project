@@ -18,6 +18,7 @@ var HOST = 'http://localhost:8081';
 //    });
 //}
 
+
 function requestGetHttp(path){
     var xmlHttp   = new XMLHttpRequest();
     url = HOST + "/" + path;
@@ -45,10 +46,6 @@ function stop_autonomous_car() {
     requestGetHttp('stop')
 }
 
-function get_video_processed() {
-    requestGetHttp('video')
-}
-
 function calibration(wheel, command) {
     json = JSON.stringify({ "wheel": wheel, "action": command })
     requestPostHttp("calibration", json)
@@ -58,5 +55,3 @@ function commands_to_car(command) {
     json = JSON.stringify({ "command": command })
     requestPostHttp("commands-by-request", json)
 }
-
-get_video_original()

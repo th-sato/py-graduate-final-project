@@ -23,7 +23,11 @@ def stop():
 
 @app.route('/video_output')
 def video_output():
-    return send_from_directory('/static', 'output.avi')
+    try:
+        return send_from_directory('/static', 'output.avi')
+    except Exception as e:
+        print str(e)
+        return 500
 
 
 @app.route('/calibration', methods=['POST'])

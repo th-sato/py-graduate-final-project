@@ -4,6 +4,7 @@ from flask_cors import CORS
 from autonomous_car import AutonomousCar
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 CORS(app, support_credentials=True)
 # autonomous_car = AutonomousCar(FUZZY_CONTROLLER)
 
@@ -22,7 +23,7 @@ def stop():
 
 @app.route('/video_output')
 def video_output():
-    return redirect('/static/output.avi')
+    return app.send_static_file('/static/output.avi')
 
 
 @app.route('/calibration', methods=['POST'])

@@ -1,11 +1,11 @@
 from constants.constants import *
 from threading import Thread
-import requests
 import time
 from system.system import System
 from system.image_processing.image_processing import video_writer
 from picar_v.camera.camera import Camera
 from picar_v.robot import Robot
+# import requests
 
 
 class AutonomousCar:
@@ -45,11 +45,11 @@ class AutonomousCar:
     def video_processed(self):
         return self._video_processed
 
-    @staticmethod
-    def request_async_post_image(image):
-        # session = requests.session()
-        # session.post(URL_REDIS_IMAGE, json={KEY_JSON_IMAGE: image})
-        requests.post(URL_REDIS_IMAGE, json={KEY_JSON_IMAGE: image})
+    # @staticmethod
+    # def request_async_post_image(image):
+    #     # session = requests.session()
+    #     # session.post(URL_REDIS_IMAGE, json={KEY_JSON_IMAGE: image})
+    #     requests.post(URL_REDIS_IMAGE, json={KEY_JSON_IMAGE: image})
 
     # @staticmethod
     # def request_post_image(url, key_img, img):

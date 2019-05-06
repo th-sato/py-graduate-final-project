@@ -1,5 +1,5 @@
-from flask import Flask, request, render_template
-from flask_cors import CORS, cross_origin
+from flask import Flask, request, render_template, redirect
+from flask_cors import CORS
 from env import *
 import logging
 import redis
@@ -17,21 +17,25 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/redis-image', methods=['GET', 'POST'])
-# @cross_origin(supports_credentials=True)
-def image():
-    if request.method == 'GET':
-        img = r.get(REDIS_KEY_IMAGE)
-        if img is not None:
-            return HTML_IMAGE_HEADER + img, 200
-        else:
-            return "", 200
-    elif request.method == 'POST':
-        json = request.get_json()
-        r.set(REDIS_KEY_IMAGE, json['image'])
-        return "OK", 200
-    else:
-        return "Method not found", 404
+# @app.route('/redis-image', methods=['GET', 'POST'])
+# def image():
+#     if request.method == 'GET':
+#         img = r.get(REDIS_KEY_IMAGE)
+#         if img is not None:
+#             return HTML_IMAGE_HEADER + img, 200
+#         else:
+#             return "", 200
+#     elif request.method == 'POST':
+#         json = request.get_json()
+#         r.set(REDIS_KEY_IMAGE, json['image'])
+#         return "OK", 200
+#     else:
+#         return "Method not found", 404
+
+@app.route('/video')
+def video():
+    url = HOST_AUTONOMOUS_CAR + '/video_output'
+    return requests.get(url)
 
 
 @app.route('/start', methods=['GET'])

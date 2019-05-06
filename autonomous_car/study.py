@@ -11,13 +11,14 @@ from system.controller.fuzzy_controller import FuzzyController
 from system.image_processing.image_processing import *
 import matplotlib.pyplot as plt
 
-static_path = '../images-test/2019-05-04/'
+# static_path = '../images-test/2019-05-04/'
+static_path = 'images-test/2019-05-04/'
 image_name = [
     # 'carro_fora_pista.jpg',
     # 'carro_fora_pista_2.jpg',
-    # 'duas_pistas.jpg',
+    'duas_pistas.jpg'
     # 'duas_pistas_2.jpg',
-    'pista_parcial.jpg',
+    # 'pista_parcial.jpg',
     # 'uma_pista.jpg',
     # 'uma_pista_2.jpg'
 ]
@@ -40,23 +41,27 @@ def plot_image(fit, ploty):
 
 
 def main():
-    for name in image_name:
-        print "name:", name
-        img = image_input(name)
-        img_processed = detect_street_by_color(img)
-        img_test = img_processed.copy()
-        img_test[img_processed == 1] = 255
-        # show_image(img_test)
-        left_fit, right_fit, video_shape = fit_lines(img_processed)
-        left_cur, right_cur, left_x, right_x, distance_center = curvature(left_fit, right_fit, video_shape)
-        video_road = draw_lines(img, left_x, right_x)
-        # if left_x is not None:
-        #     plot_image(left_x, plot_y)
-        # if right_x is not None:
-        #     plot_image(right_x, plot_y)
-        curv = (left_cur + right_cur) / 2
-        add_text_to_image(video_road, curv, distance_center)
-        show_image(video_road)
+    video_output = video_writer()
+    for i in range(100):
+        for name in image_name:
+            print "name:", name
+            img = image_input(name)
+            img_processed = detect_street_by_color(img)
+            img_test = img_processed.copy()
+            img_test[img_processed == 1] = 255
+            # show_image(img_test)
+            left_fit, right_fit, video_shape = fit_lines(img_processed)
+            left_cur, right_cur, left_x, right_x, distance_center = curvature(left_fit, right_fit, video_shape)
+            video_road = draw_lines(img, left_x, right_x)
+            # if left_x is not None:
+            #     plot_image(left_x, plot_y)
+            # if right_x is not None:
+            #     plot_image(right_x, plot_y)
+            curv = (left_cur + right_cur) / 2
+            add_text_to_image(video_road, curv, distance_center)
+            # show_image(video_road)
+            video_output.write(video_road)
+    video_output.release()
 
 
 if __name__ == "__main__":

@@ -35,7 +35,7 @@ def home():
 @app.route('/video')
 def video():
     url = HOST_AUTONOMOUS_CAR + '/video_output'
-    return requests.get(url)
+    return redirect(url)
 
 
 @app.route('/start', methods=['GET'])

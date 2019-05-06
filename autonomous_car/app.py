@@ -22,7 +22,7 @@ def stop():
 
 @app.route('/video_output')
 def video_output():
-    return redirect('/static/video/output.avi')
+    return redirect('/static/output.avi')
 
 
 @app.route('/calibration', methods=['POST'])

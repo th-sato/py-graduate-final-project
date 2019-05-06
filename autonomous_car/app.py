@@ -8,14 +8,6 @@ CORS(app, support_credentials=True)
 # autonomous_car = AutonomousCar(FUZZY_CONTROLLER)
 
 
-@app.after_request
-def add_header(response):
-    response.cache_control.max_age = 300
-    if 'Cache-Control' not in response.headers:
-        response.headers['Cache-Control'] = 'no-store'
-    return response
-
-
 @app.route('/start')
 def start():
     autonomous_car.start()

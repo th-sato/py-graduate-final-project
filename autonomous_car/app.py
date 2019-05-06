@@ -1,10 +1,9 @@
 from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, redirect
 from flask_cors import CORS
 from autonomous_car import AutonomousCar
 
 app = Flask(__name__)
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 CORS(app, support_credentials=True)
 # autonomous_car = AutonomousCar(FUZZY_CONTROLLER)
 
@@ -23,12 +22,8 @@ def stop():
 
 @app.route('/video_output')
 def video_output():
-    try:
-        return send_from_directory('/static', 'output.avi')
-    except Exception as e:
-        print str(e)
-        return 500
-
+    return redirect('/static/output.avi')
+    
 
 @app.route('/calibration', methods=['POST'])
 def car_calibration():

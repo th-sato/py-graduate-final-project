@@ -4,6 +4,7 @@ from flask_cors import CORS
 from autonomous_car import AutonomousCar
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 CORS(app, support_credentials=True)
 # autonomous_car = AutonomousCar(FUZZY_CONTROLLER)
 

@@ -3,20 +3,20 @@ var HOST = 'http://localhost:8081';
 //var HOST_REDIS_IMAGE = 'http://localhost:8081/redis-image'
 //var HOST_AUTONOMOUS_CAR = 'http://192.168.1.234:5000';
 
-function get_video_original() {
-    $.ajax({
-        type: 'GET',
-        url: HOST + '/redis-image',
-//        xhrFields: {
-//           withCredentials: true
+//function get_video_original() {
+//    $.ajax({
+//        type: 'GET',
+//        url: HOST + '/redis-image',
+////        xhrFields: {
+////           withCredentials: true
+////        },
+////        crossDomain: true,
+//        success: function (res) {
+//            $("#video_processed").attr("src", res);
+//            setTimeout(get_video_original, interval);
 //        },
-//        crossDomain: true,
-        success: function (res) {
-            $("#video_processed").attr("src", res);
-            setTimeout(get_video_original, interval);
-        },
-    });
-}
+//    });
+//}
 
 function requestGetHttp(path){
     var xmlHttp   = new XMLHttpRequest();

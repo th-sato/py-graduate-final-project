@@ -61,12 +61,6 @@ def before_first_request():
     autonomous_car = AutonomousCar(FUZZY_CONTROLLER, DETECT_YELLOW)
 
 
-@app.after_request
-def add_header(response):
-    response.cache_control.max_age = 5
-    return response
-
-
 if __name__ == "__main__":
     # app.run(host=HOST, port=PORT, debug=False, threaded=True)
     app.run(host=HOST, port=PORT, debug=True, threaded=True)

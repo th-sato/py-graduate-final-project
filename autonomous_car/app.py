@@ -1,5 +1,5 @@
 from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW
-from flask import Flask, request, send_from_directory, redirect
+from flask import Flask, request, send_from_directory, send_file
 from flask_cors import CORS
 from autonomous_car import AutonomousCar
 
@@ -22,8 +22,8 @@ def stop():
 
 @app.route('/video_output')
 def video_output():
-    return redirect('/static/output.avi')
-    
+    return send_file('/static/output.avi', as_attachment=True, cache_timeout=0)
+
 
 @app.route('/calibration', methods=['POST'])
 def car_calibration():

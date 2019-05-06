@@ -61,7 +61,12 @@ def before_first_request():
     autonomous_car = AutonomousCar(FUZZY_CONTROLLER, DETECT_YELLOW)
 
 
+def before_each_request():
+    app.jinja_env.cache = {}
+
+
 if __name__ == "__main__":
+    app.before_request(before_each_request)
     # app.run(host=HOST, port=PORT, debug=False, threaded=True)
     app.run(host=HOST, port=PORT, debug=True, threaded=True)
 

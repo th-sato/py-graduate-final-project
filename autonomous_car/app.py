@@ -1,7 +1,8 @@
 from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW
-from flask import Flask, request, send_from_directory, send_file
+from flask import Flask, request, send_file
 from flask_cors import CORS
 from autonomous_car import AutonomousCar
+import os
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
@@ -22,7 +23,8 @@ def stop():
 
 @app.route('/video_output')
 def video_output():
-    return send_file('/static/output.avi', as_attachment=True, cache_timeout=0)
+    file_path = os.path.join(os.path.join(os.getcwd(), 'static/'), 'output.avi')
+    return send_file(file_path, as_attachment=True, cache_timeout=0)
 
 
 @app.route('/calibration', methods=['POST'])

@@ -23,7 +23,7 @@ def stop():
 
 @app.route('/video_output')
 def video_output():
-    file_path = os.path.join(os.path.join(os.getcwd(), 'static/'), 'output.avi')
+    file_path = os.path.join(os.path.join(os.getcwd(), 'autonomous_car/static/'), 'output.avi')
     return send_file(file_path, as_attachment=True, cache_timeout=0)
 
 

@@ -9,6 +9,7 @@ Antecedent (input/sensor) variable for a fuzzy control system.
 
 ###### skfuzzy.control.Consequent(universe, label) [Link](https://pythonhosted.org/scikit-fuzzy/api/skfuzzy.control.html#consequent)
 Consequent (output/control) variable for a fuzzy control system.
+
 1. **universe:** Universe variable. Must be 1-dimensional and convertible to a NumPy array.
 2. **label:** Name of the universe variable.
 

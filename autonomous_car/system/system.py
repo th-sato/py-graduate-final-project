@@ -13,7 +13,7 @@ class System:
         curv = self.__set_max(curv, 200.0)
         distance_center = self.__set_max(distance_center, 0.5)
         speed, angle = self._controller.output(distance_center, curv)
-        file_w.write('Speed: %.2f Angle: %.2f Distance: %.2f Curvature: %.2f\n' % (speed, angle, distance_center, curv))
+        file_w.write('Speed: %.2f Angle: %.2f Dist: %.2f RCurv: %.2f\n' % (speed, angle, distance_center, curv))
 
         if img_to_show == STREET_ORIGINAL_IMAGE:
             return video, speed, angle

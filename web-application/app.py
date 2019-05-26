@@ -40,8 +40,7 @@ def video():
 
 
 @app.route('/log')
-@cross_origin()
-def video():
+def log():
     url = HOST_AUTONOMOUS_CAR + '/log_output'
     return redirect(url)
 

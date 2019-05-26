@@ -28,7 +28,7 @@ def video_output():
 
 
 @app.route('/log_output')
-def video_output():
+def log_output():
     file_path = os.path.join(os.path.join(os.getcwd(), 'autonomous_car/static/'), 'log.txt')
     return send_file(file_path, as_attachment=True, cache_timeout=0)
 

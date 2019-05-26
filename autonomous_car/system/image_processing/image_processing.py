@@ -25,9 +25,14 @@ def jpgimg_to_base64(img):
     return base64.b64encode(jpg)
 
 
-def add_text_to_image(img, curv, center):
+def add_text_to_image(img, radius_curvature, center):
     font = cv.FONT_HERSHEY_SIMPLEX
-    cv.putText(img, 'Radius of Curvature = %d(m)' % curv, (50, 50), font, 0.7, (255, 255, 255), 1)
+    if radius_curvature == 0:
+        curv_text = 'Curvature cannot be calculated.'
+    else:
+        curvature = 1.0 / radius_curvature
+        curv_text = 'Curvature = %.2f(m)' % curvature
+    cv.putText(img, curv_text, (50, 50), font, 0.7, (255, 255, 255), 1)
 
     left_or_right = "left" if center > 0 else "right"
     cv.putText(img, 'Vehicle is %.2fcm %s of center' % (np.abs(center), left_or_right), (50, 100), font, 0.7,
@@ -119,6 +124,13 @@ def __fit_lines(lane_index, nonzero_x, nonzero_y):
     return np.polyfit(y_positions, x_positions, 2)
 
 
+def __take_histogram(img, interval):
+    height_img = img.shape[0]
+    boundary_histogram = np.int(height_img * interval[0]), np.int(height_img * interval[1])
+    histogram = np.sum(img[boundary_histogram[0]: boundary_histogram[1], :], axis=0)
+    return histogram
+
+
 # Functions for drawing lines
 def fit_lines(binary_img):
     nwindows = 25                   # Choose the number of sliding windows
@@ -132,9 +144,8 @@ def fit_lines(binary_img):
     binary_warped = binary_img
     height_img, width_img = binary_warped.shape
     # Assuming you have created a warped binary image called "binary_warped"
-    # Take a histogram of the bottom half of the image
-    boundary_histogram = np.int(height_img*interval_img[0]), np.int(height_img*interval_img[1])
-    histogram = np.sum(binary_warped[boundary_histogram[0]: boundary_histogram[1], :], axis=0)
+    # Take a histogram
+    histogram = __take_histogram(binary_warped, interval_img)
     # Find the peak of the left and right halves of the histogram
     left_x_base, right_x_base = __find_peaks_of_image(histogram)
 
@@ -163,6 +174,13 @@ def fit_lines(binary_img):
 
     left_fit = __fit_lines(left_lane_index, nonzero_x, nonzero_y)
     right_fit = __fit_lines(right_lane_index, nonzero_x, nonzero_y)
+
+    # out_img = np.dstack((binary_warped, binary_warped, binary_warped)) * 255
+    # left_lane_index = np.concatenate(left_lane_index)
+    # right_lane_index = np.concatenate(right_lane_index)
+    # out_img[nonzero_y[left_lane_index], nonzero_x[left_lane_index]] = RED
+    # out_img[nonzero_y[right_lane_index], nonzero_x[right_lane_index]] = BLUE
+    # show_image(out_img)
 
     return left_fit, right_fit, (height_img, width_img)
 

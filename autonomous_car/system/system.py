@@ -10,6 +10,8 @@ class System:
 
     def output(self, video, img_to_show):
         video_processed, distance_center, curv = self.__video_processing(video)
+        curv = self.__set_max(curv, 200.0)
+        distance_center = self.__set_max(distance_center, 0.5)
         speed, angle = self._controller.output(distance_center, curv)
 
         if img_to_show == STREET_ORIGINAL_IMAGE:
@@ -44,11 +46,9 @@ class System:
             left_cur, right_cur, left_x, right_x, distance_center = curvature(left_fit, right_fit, video_shape)
 
             video_road = draw_lines(video, left_x, right_x)
-            curv = (left_cur + right_cur) / 2
+            curv = (left_cur + right_cur) / 2.0
             add_text_to_image(video_road, curv, distance_center)
 
-            print "Distance center: ", distance_center
-            
             return video_road, distance_center, curv
 
         except Exception as e:
@@ -64,3 +64,9 @@ class System:
             print "Proporcional Controller"
         else:
             print "Controller not found"
+
+    @staticmethod
+    def __set_max(value, max):
+        if value > max:
+            return max
+        return value

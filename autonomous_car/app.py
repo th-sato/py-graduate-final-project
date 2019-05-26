@@ -27,6 +27,12 @@ def video_output():
     return send_file(file_path, as_attachment=True, cache_timeout=0)
 
 
+@app.route('/log_output')
+def video_output():
+    file_path = os.path.join(os.path.join(os.getcwd(), 'autonomous_car/static/'), 'log.txt')
+    return send_file(file_path, as_attachment=True, cache_timeout=0)
+
+
 @app.route('/calibration', methods=['POST'])
 def car_calibration():
     if request.method == 'POST':

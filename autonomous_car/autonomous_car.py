@@ -86,16 +86,17 @@ class AutonomousCar:
     def update(self):
         system = System(self._controller, self._color_street)
         video_output = video_writer()
+        file_w = open(LOG_FILE_NAME, "w")
         while not self._stop_car:
             # self._video_original = self.image_test()
             self._video_original = self._camera.frame
-            self._video_processed, speed, angle = system.output(self._video_original, self._image_to_show)
+            self._video_processed, speed, angle = system.output(self._video_original, self._image_to_show, file_w)
             # self.request_async_post_image(jpgimg_to_base64(self._video_processed))
             video_output.write(self._video_processed)
-            print "Speed: ", speed, " Angle: ", angle
             if self._send_commands_robot:
                 self._robot.forward(speed)
                 self._robot.turn(angle)
+        file_w.close()
         video_output.release()
 
     # @staticmethod

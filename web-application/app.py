@@ -39,6 +39,13 @@ def video():
     return redirect(url)
 
 
+@app.route('/log')
+@cross_origin()
+def video():
+    url = HOST_AUTONOMOUS_CAR + '/log_output'
+    return redirect(url)
+
+
 @app.route('/start', methods=['GET'])
 def start_autonomous_car():
     url = HOST_AUTONOMOUS_CAR + '/start'

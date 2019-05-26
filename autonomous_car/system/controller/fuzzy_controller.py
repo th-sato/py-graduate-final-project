@@ -76,7 +76,7 @@ class FuzzyController:
             speed = self.speed_control_system.output['speed']
             if distance_center < 0:
                 angle = - angle
-            return int(speed), angle
+            return speed, angle
         except Exception as e:
             print str(e)
             return 0, 0

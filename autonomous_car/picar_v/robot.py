@@ -24,8 +24,6 @@ class Robot:
             _speed = 0
         elif _speed > 100:
             _speed = 100
-        else:
-            _speed = speed
 
         if self.bw_status != 0:
             self.bw.speed = _speed

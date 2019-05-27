@@ -103,7 +103,6 @@ def __find_peak_two(bin_warped, peak_one, hist, hist_min_value, interval_two):
     if peak_two is not None:
         return __left_right_lane(peak_one, peak_two, search_in_end_of_img)
     else:
-        # Discover if the peak is the left or the right
         hist = __take_histogram(bin_warped, interval_two)
         hist, peak_one = __find_peak_histogram(hist, hist_min_value)
         if peak_one is not None:
@@ -111,18 +110,25 @@ def __find_peak_two(bin_warped, peak_one, hist, hist_min_value, interval_two):
             if peak_two is not None:
                 return __left_right_lane(peak_one, peak_two, (not search_in_end_of_img))
             else:
+                # Discover if the peak is the left or the right
                 if peak_one_previous > peak_one:
                     return None, peak_one_previous, search_in_end_of_img
                 else:
                     return peak_one_previous, None, search_in_end_of_img
         else:
-            return None, None, search_in_end_of_img
+            interval = 0.7, 0.8571
+            hist = __take_histogram(bin_warped, interval)
+            _, peak_one = __find_peak_histogram(hist, hist_min_value)
+            if peak_one_previous > peak_one:
+                return None, peak_one_previous, search_in_end_of_img
+            else:
+                return peak_one_previous, None, search_in_end_of_img
 
 
 def __find_peaks_of_image(binary_warped):
     histogram_min_value = 5  # Value to consider that the point is valid
-    interval_middle = 1.0 / 2, 3.2 / 5
-    interval_base = 6.0 / 7.0, 1.0
+    interval_middle = 0.5, 0.64
+    interval_base = 0.8571, 1.0
     # interval_base = 0.5, 1.0
     histogram = __take_histogram(binary_warped, interval_base)
     histogram, peak_one = __find_peak_histogram(histogram, histogram_min_value)
@@ -131,15 +137,13 @@ def __find_peaks_of_image(binary_warped):
     if peak_one is not None:
         return __find_peak_two(binary_warped, peak_one, histogram, histogram_min_value, interval_middle)
     else:
-        histogram = __take_histogram(binary_warped, interval_middle)
-        histogram, peak_one = __find_peak_histogram(histogram, histogram_min_value)
-        if peak_one is not None:
-            interval_base = 3.2 / 5, 3.0 / 4
-            left_base, right_base = __find_peak_two(binary_warped, peak_one, histogram, histogram_min_value,
-                                                    interval_base)
-            return left_base, right_base, False
-        else:
-            return None, None, False
+        # histogram = __take_histogram(binary_warped, interval_middle)
+        # histogram, peak_one = __find_peak_histogram(histogram, histogram_min_value)
+        # if peak_one is not None:
+        #     interval = 0.64, 0.75
+        #     return __find_peak_two(binary_warped, peak_one, histogram, histogram_min_value, interval)
+        # else:
+        return None, None, False
 
 
 def __window_boundaries(lane_indexes, window_x_current, window_y, nonzero_x, nonzero_y, margin, minpix):

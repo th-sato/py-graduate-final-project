@@ -28,7 +28,7 @@ class FuzzyController:
     def __auto_membership_angle():
         angle = ctrl.Consequent(np.arange(0, 45, 1), 'angle')
         angle['zero'] = fuzzy.pimf(angle.universe, 0, 2, 5, 7)
-        angle['low'] = fuzzy.trimf(angle.universe, [3, 10, 25])
+        angle['low'] = fuzzy.trimf(angle.universe, [3, 5, 25])
         angle['medium'] = fuzzy.trimf(angle.universe, [15, 25, 35])
         angle['high'] = fuzzy.trimf(angle.universe, [25, 35, 45])
         return angle

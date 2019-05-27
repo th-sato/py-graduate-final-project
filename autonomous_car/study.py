@@ -1,110 +1,109 @@
 #####################################################################################################################
 #################################################### Controller #####################################################
 #####################################################################################################################
-from system.controller.fuzzy_controller import *
-from system.image_processing.image_processing import *
-import matplotlib.pyplot as plt
-
-
-def main():
-    print "Iniciando..."
-    fuzzy = FuzzyController()
-    distance_center = 0.04
-    curvature = 0.0
-    fuzzy.distance.view()
-    # fuzzy.angle.view()
-    # fuzzy.radius_curvature.view()
-    # fuzzy.speed.view()
-
-    # for i in range(550):
-    #     speed, angle = fuzzy.output((i + 1) / 1000.0, 0)
-    #     print (i + 1) / 1000.0, speed, angle
-    # value = 450 / 1000.0
-
-    speed, angle = fuzzy.output(distance_center, curvature)
-    print "distance_center: ", distance_center, ", angle:", angle, ", curvature: ", curvature, ", speed: ", speed
-    fuzzy.angle.view(sim=fuzzy.angle_control_system)
-    # fuzzy.speed.view(sim=fuzzy.speed_control_system)
-    print "Finalizando..."
-
-
-if __name__ == "__main__":
-    main()
-    plt.show()
-
+# from system.controller.fuzzy_controller import *
+# from system.image_processing.image_processing import *
+# import matplotlib.pyplot as plt
+#
+#
+# def main():
+#     print "Iniciando..."
+#     fuzzy = FuzzyController()
+#     distance_center = 0.04
+#     curvature = 0.0
+#     fuzzy.distance.view()
+#     # fuzzy.angle.view()
+#     # fuzzy.radius_curvature.view()
+#     # fuzzy.speed.view()
+#
+#     # for i in range(550):
+#     #     speed, angle = fuzzy.output((i + 1) / 1000.0, 0)
+#     #     print (i + 1) / 1000.0, speed, angle
+#     # value = 450 / 1000.0
+#
+#     speed, angle = fuzzy.output(distance_center, curvature)
+#     print "distance_center: ", distance_center, ", angle:", angle, ", curvature: ", curvature, ", speed: ", speed
+#     fuzzy.angle.view(sim=fuzzy.angle_control_system)
+#     # fuzzy.speed.view(sim=fuzzy.speed_control_system)
+#     print "Finalizando..."
+#
+#
+# if __name__ == "__main__":
+#     main()
+#     plt.show()
+#
 
 
 #####################################################################################################################
 ###################################################### Teste 2 ######################################################
 #####################################################################################################################
 
-# # from system.image_processing.image_processing import *
-# # import os
-# # static_path = 'images-test/2019-03-25/'
-# # image_name = 'pista-camera1.jpg'
-#
-# # def get_image():
-# #     img_path = os.path.join(os.getcwd(), static_path)
-# #     return cv.imread(os.path.join(img_path, image_name))
-#
-# from system.controller.fuzzy_controller import FuzzyController
 # from system.image_processing.image_processing import *
-# import matplotlib.pyplot as plt
-#
-# static_path = '../images-test/2019-05-04/'
-# # static_path =
-# # 'images-test/2019-05-04/'
-# image_name = [
-#     # 'carro_fora_pista.jpg',
-#     # 'carro_fora_pista_2.jpg',
-#     # 'teste.png'
-#     # 'duas_pistas_2.jpg',
-#     # 'pista_parcial.jpg',
-#     'uma_pista.jpg',
-#     # 'uma_pista_2.jpg'
-# ]
-#
-#
-# def detect_street_by_color(video):
-#     lower_color, upper_color = np.array([20, 0, 100]), np.array([30, 255, 255])
-#     return detect_street(video, lower_color, upper_color)
-#
-#
-# def image_input(name):
-#     img_path = os.path.join(os.path.join(os.getcwd(), static_path), name)
-#     img = cv.imread(img_path)
-#     return img
-#
-#
-# def plot_image(fit, ploty):
-#     plt.figure()
-#     plt.plot(fit, ploty, color='black')
-#
-#
-# def main():
-#     for name in image_name:
-#         print "name:", name
-#         img = image_input(name)
-#         img_processed = detect_street_by_color(img)
-#         img_test = img_processed.copy()
-#         img_test[img_processed == 1] = 255
-#         show_image(img_test)
-#         left_fit, right_fit, video_shape = fit_lines(img_processed)
-#         left_cur, right_cur, left_x, right_x, distance_center = curvature(left_fit, right_fit, video_shape)
-#         video_road = draw_lines(img, left_x, right_x)
-#         # if left_x is not None:
-#         #     plot_image(left_x, plot_y)
-#         # if right_x is not None:
-#         #     plot_image(right_x, plot_y)
-#         # curv = (left_cur + right_cur) / 2
-#         # add_text_to_image(video_road, curv, distance_center)
-#         curv = (left_cur + right_cur) / 2
-#         add_text_to_image(video_road, curv, distance_center)
-#         show_image(video_road)
-#
-#
-# if __name__ == "__main__":
-#     main()
+# import os
+# static_path = 'images-test/2019-03-25/'
+# image_name = 'pista-camera1.jpg'
+
+# def get_image():
+#     img_path = os.path.join(os.getcwd(), static_path)
+#     return cv.imread(os.path.join(img_path, image_name))
+
+from system.controller.fuzzy_controller import FuzzyController
+from system.image_processing.image_processing import *
+import matplotlib.pyplot as plt
+
+static_path = '../images-test/2019-05-04/'
+# static_path =
+# 'images-test/2019-05-04/'
+image_name = [
+    'carro_fora_pista.jpg',
+    'carro_fora_pista_2.jpg',
+    'duas_pistas_2.jpg',
+    'pista_parcial.jpg',
+    'uma_pista.jpg',
+    'uma_pista_2.jpg'
+]
+
+
+def detect_street_by_color(video):
+    lower_color, upper_color = np.array([20, 0, 100]), np.array([30, 255, 255])
+    return detect_street(video, lower_color, upper_color)
+
+
+def image_input(name):
+    img_path = os.path.join(os.path.join(os.getcwd(), static_path), name)
+    img = cv.imread(img_path)
+    return img
+
+
+def plot_image(fit, ploty):
+    plt.figure()
+    plt.plot(fit, ploty, color='black')
+
+
+def main():
+    for name in image_name:
+        print "name:", name
+        img = image_input(name)
+        img_processed = detect_street_by_color(img)
+        img_test = img_processed.copy()
+        img_test[img_processed == 1] = 255
+        show_image(img_test)
+        left_fit, right_fit, video_shape = fit_lines(img_processed)
+        left_cur, right_cur, left_x, right_x, distance_center = curvature(left_fit, right_fit, video_shape)
+        video_road = draw_lines(img, left_x, right_x)
+        # if left_x is not None:
+        #     plot_image(left_x, plot_y)
+        # if right_x is not None:
+        #     plot_image(right_x, plot_y)
+        # curv = (left_cur + right_cur) / 2
+        # add_text_to_image(video_road, curv, distance_center)
+        curv = (left_cur + right_cur) / 2
+        add_text_to_image(video_road, curv, distance_center)
+        show_image(video_road)
+
+
+if __name__ == "__main__":
+    main()
 
 
 #####################################################################################################################

@@ -68,34 +68,78 @@ def __disconsider_proximity_points(histogram, peak, space_lines):
     return histogram
 
 
-def __find_peaks_of_image(histogram):
-    space_lines = 85                                # Set the space between track lines
-    histogram_min_value = 5                         # Value to consider that the point is valid
-    left_line, right_line = None, None              # Defining the value of lines
-    histogram_length = histogram.shape[0]           # Length of histogram
-    peak_one = np.argmax(histogram)                 # Find one of the Peaks in Histogram
-    peak_one_value = histogram[peak_one]            # Value of the peak one
+def __take_histogram(img, interval):
+    height_img = img.shape[0]
+    boundary_histogram = np.int(height_img * interval[0]), np.int(height_img * interval[1])
+    histogram = np.sum(img[boundary_histogram[0]: (boundary_histogram[1] - 1), :], axis=0)
+    return histogram
 
-    histogram = __disconsider_proximity_points(histogram, peak_one, space_lines)
-    peak_two = np.argmax(histogram)
-    peak_two_value = histogram[peak_two]
 
-    # Two lanes
-    if (peak_one_value > histogram_min_value) and (peak_two_value > histogram_min_value):
-        if peak_one > peak_two:
-            right_line = peak_one
-            left_line = peak_two
+def __find_peak_histogram(histogram, min_value):
+    space_lines = 85  # Set the space between track lines
+    peak = np.argmax(histogram) # Find one of the Peaks in Histogram
+    peak_value = histogram[peak]  # Value of the peak one
+
+    if peak_value > min_value:
+        histogram = __disconsider_proximity_points(histogram, peak, space_lines)
+        return histogram, peak
+    else:
+        return histogram, None
+
+
+def __left_right_lane(peak_one, peak_two, search_in_end_of_img):
+    if peak_one > peak_two:
+        return peak_two, peak_one, search_in_end_of_img
+    else:
+        return peak_one, peak_two, search_in_end_of_img
+
+
+def __find_peak_two(bin_warped, peak_one, hist, hist_min_value, interval_two):
+    search_in_end_of_img = True
+    peak_one_previous = peak_one
+    # Search for other side
+    _, peak_two = __find_peak_histogram(hist, hist_min_value)
+    # Two size were found
+    if peak_two is not None:
+        return __left_right_lane(peak_one, peak_two, search_in_end_of_img)
+    else:
+        # Discover if the peak is the left or the right
+        hist = __take_histogram(bin_warped, interval_two)
+        hist, peak_one = __find_peak_histogram(hist, hist_min_value)
+        if peak_one is not None:
+            _, peak_two = __find_peak_histogram(hist, hist_min_value)
+            if peak_two is not None:
+                return __left_right_lane(peak_one, peak_two, (not search_in_end_of_img))
+            else:
+                if peak_one_previous > peak_one:
+                    return None, peak_one_previous, search_in_end_of_img
+                else:
+                    return peak_one_previous, None, search_in_end_of_img
         else:
-            right_line = peak_two
-            left_line = peak_one
-    # One lane
-    elif peak_one_value > histogram_min_value:
-        if peak_one > np.int(histogram_length/2):
-            left_line = peak_one
-        else:
-            right_line = peak_one
+            return None, None, search_in_end_of_img
 
-    return left_line, right_line
+
+def __find_peaks_of_image(binary_warped):
+    histogram_min_value = 5  # Value to consider that the point is valid
+    interval_middle = 1.0 / 2, 3.2 / 5
+    interval_base = 6.0 / 7.0, 1.0
+    # interval_base = 0.5, 1.0
+    histogram = __take_histogram(binary_warped, interval_base)
+    histogram, peak_one = __find_peak_histogram(histogram, histogram_min_value)
+
+    # One size of track was found
+    if peak_one is not None:
+        return __find_peak_two(binary_warped, peak_one, histogram, histogram_min_value, interval_middle)
+    else:
+        histogram = __take_histogram(binary_warped, interval_middle)
+        histogram, peak_one = __find_peak_histogram(histogram, histogram_min_value)
+        if peak_one is not None:
+            interval_base = 3.2 / 5, 3.0 / 4
+            left_base, right_base = __find_peak_two(binary_warped, peak_one, histogram, histogram_min_value,
+                                                    interval_base)
+            return left_base, right_base, False
+        else:
+            return None, None, False
 
 
 def __window_boundaries(lane_indexes, window_x_current, window_y, nonzero_x, nonzero_y, margin, minpix):
@@ -124,30 +168,19 @@ def __fit_lines(lane_index, nonzero_x, nonzero_y):
     return np.polyfit(y_positions, x_positions, 2)
 
 
-def __take_histogram(img, interval):
-    height_img = img.shape[0]
-    boundary_histogram = np.int(height_img * interval[0]), np.int(height_img * interval[1])
-    histogram = np.sum(img[boundary_histogram[0]: boundary_histogram[1], :], axis=0)
-    return histogram
-
-
 # Functions for drawing lines
 def fit_lines(binary_img):
     nwindows = 25                   # Choose the number of sliding windows
     margin = 30                     # Set the width of the windows +/- margin
     minpix = 10                     # Set minimum number of pixels found to recenter window
-    interval_img = 1.0/2, 3.2/5     # Histogram interval to take in image
     # Create empty lists to receive left and right lane pixel indices
     left_lane_index = []
     right_lane_index = []
-
     binary_warped = binary_img
     height_img, width_img = binary_warped.shape
-    # Assuming you have created a warped binary image called "binary_warped"
-    # Take a histogram
-    histogram = __take_histogram(binary_warped, interval_img)
-    # Find the peak of the left and right halves of the histogram
-    left_x_base, right_x_base = __find_peaks_of_image(histogram)
+
+    # Find the peak of the left and right of image
+    left_x_base, right_x_base, search_in_end_of_img = __find_peaks_of_image(binary_warped)
 
     # Set height of windows
     window_height = np.int((height_img / 2) / nwindows)
@@ -161,12 +194,18 @@ def fit_lines(binary_img):
     right_x_current = right_x_base
 
     # Point to start the search
-    height_img_base = height_img / 2
+    if search_in_end_of_img:
+        height_img_base = height_img
+    else:
+        height_img_base = height_img / 2
 
     # Step through the windows one by one
     for window in range(nwindows):
         # Identify window boundaries in x and y (and right and left)
-        win_y = height_img_base + window * window_height, height_img_base + (window + 1) * window_height
+        if search_in_end_of_img:
+            win_y = height_img_base - (window + 1) * window_height, height_img_base - window * window_height
+        else:
+            win_y = height_img_base + window * window_height, height_img_base + (window + 1) * window_height
         left_lane_index, left_x_current = __window_boundaries(left_lane_index, left_x_current, win_y, nonzero_x,
                                                               nonzero_y, margin, minpix)
         right_lane_index, right_x_current = __window_boundaries(right_lane_index, right_x_current, win_y, nonzero_x,

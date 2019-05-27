@@ -29,7 +29,7 @@ class FuzzyController:
         angle = ctrl.Consequent(np.arange(0, 45, 1), 'angle')
         angle['zero'] = fuzzy.pimf(angle.universe, 0, 2, 5, 7)
         angle['low'] = fuzzy.pimf(angle.universe, 3, 5, 15, 25)
-        angle['medium'] = fuzzy.trimf(angle.universe, [15, 25, 35])
+        angle['medium'] = fuzzy.pimf(angle.universe, 15, 18, 23, 35)
         angle['high'] = fuzzy.trimf(angle.universe, [25, 35, 45])
         return angle
 

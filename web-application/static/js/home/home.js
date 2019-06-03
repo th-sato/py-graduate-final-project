@@ -76,7 +76,7 @@ function find_first_element_true(element_name, n) {
 }
 
 function change_option_video() {
-    qtd_option = 3
+    qtd_option = 2
     video_prefix = "video"
     selected_video = find_first_element_true(video_prefix, qtd_option)
     json = JSON.stringify({ "selected_video": selected_video })

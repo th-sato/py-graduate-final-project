@@ -60,8 +60,8 @@ function commands_to_car(command) {
 
 function speed_wheel_car() {
     speed = document.getElementById("speed-input").value
-    wheel = document.getElementById("wheel-input").value
-    json = JSON.stringify({ "speed": speed, "wheel": wheel })
+    angle = document.getElementById("angle-input").value
+    json = JSON.stringify({ "speed": speed, "angle": wheel })
     requestPostHttp("input-values", json)
 }
 

@@ -59,14 +59,23 @@ def commands_by_request():
     return 'OK', 200
 
 
+def convert_string_to_int(string_value, default_value):
+    try:
+        converted = int(string_value)
+        return converted
+    except Exception as e:
+        print str(e)
+        return default_value
+
+
 @app.route('/input-values', methods=['POST'])
 def input_values():
     if request.method == 'POST':
         json = request.get_json()
-        speed = int(json['speed'])
-        wheel = int(json['wheel'])
+        speed = convert_string_to_int(json['speed'], 0)
+        angle = convert_string_to_int(json['angle'], 0)
         autonomous_car.speed_request(speed)
-        autonomous_car.turn_request(wheel)
+        autonomous_car.turn_request(angle)
     else:
         return 'Method not allowed!', 404
     return 'OK', 200

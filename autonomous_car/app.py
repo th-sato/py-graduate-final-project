@@ -79,8 +79,8 @@ def selected_video():
         video = json['selected_video']
         if video == 'img-original':
             selected = STREET_ORIGINAL_IMAGE
-        elif video == 'img-color':
-            selected = STREET_DETECTING
+        # elif video == 'img-color':
+        #     selected = STREET_DETECTING
         # img-processed
         else:
             selected = STREET_LINES_DRAWN

@@ -1,4 +1,3 @@
-from constants.constants import *
 from image_processing.image_processing import *
 from controller.fuzzy_controller import FuzzyController
 
@@ -17,8 +16,8 @@ class System:
 
         if img_to_show == STREET_ORIGINAL_IMAGE:
             return video, speed, angle
-        elif img_to_show == STREET_DETECTING:
-            return self.__detect_street_by_color(video), speed, angle
+        # elif img_to_show == STREET_DETECTING:
+        #     return self.__detect_street_by_color(video), speed, angle
         elif img_to_show == STREET_LINES_DRAWN:
             return video_processed, speed, angle
         else:

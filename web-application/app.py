@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, send_file
 from flask_cors import CORS, cross_origin
 from env import *
 import logging
@@ -32,9 +32,9 @@ def home():
 #     else:
 #         return "Method not found", 404
 
-@app.route('/video')
+@app.route('/get-video')
 @cross_origin()
-def video():
+def get_video():
     url = HOST_AUTONOMOUS_CAR + '/video_output'
     return redirect(url)
 
@@ -65,26 +65,45 @@ def stop_autonomous_car():
     return 'OK', 200
 
 
-@app.route('/calibration', methods=['POST'])
-def calibration_autonomous_car():
-    url = HOST_AUTONOMOUS_CAR + '/calibration'
-    if request.method == 'POST':
-        json_calibration = request.get_json()
+def post_method(url, request_data):
+    if request_data.method == 'POST':
+        json_calibration = request_data.get_json()
         requests.post(url, json=json_calibration)
     else:
         return 'Method not allowed!', 404
     return 'OK', 200
 
 
+@app.route('/calibration', methods=['POST'])
+def calibration_autonomous_car():
+    url = HOST_AUTONOMOUS_CAR + '/calibration'
+    return post_method(url, request)
+
+
 @app.route('/commands-by-request', methods=['POST'])
 def commands_by_request_autonomous_car():
     url = HOST_AUTONOMOUS_CAR + '/commands-by-request'
-    if request.method == 'POST':
-        json_commands = request.get_json()
-        requests.post(url, json=json_commands)
-    else:
-        return 'Method not allowed!', 404
-    return 'OK', 200
+    return post_method(url, request)
+
+
+@app.route('/input-values', methods=['POST'])
+def input_values():
+    url = HOST_AUTONOMOUS_CAR + '/input-values'
+    return post_method(url, request)
+
+
+@app.route('/selected-video', methods=['POST'])
+def selected_video():
+    url = HOST_AUTONOMOUS_CAR + '/selected-video'
+    return post_method(url, request)
+
+
+# @app.route('/get-video', methods=['GET'])
+# def get_video():
+#     # url = HOST_AUTONOMOUS_CAR + '/get-video'
+#     import os
+#     file_path = os.path.join(os.path.join(os.getcwd(), 'web-application/static/video-test'), 'output.mp4')
+#     return send_file(file_path, as_attachment=True, cache_timeout=0)
 
 
 # @app.route('/calibration', methods=['POST'])

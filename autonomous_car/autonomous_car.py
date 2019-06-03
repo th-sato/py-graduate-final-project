@@ -67,6 +67,16 @@ class AutonomousCar:
     def frontwheel_calib(self, action):
         self._robot.calibration_front_wheel(action)
 
+    def speed_request(self, speed):
+        if speed > 0:
+            self._robot.forward(speed)
+        else:
+            self._robot.backward(abs(speed))
+
+    def turn_request(self, value):
+        if (value > -45) and (value < 45):
+            self._robot.turn(value)
+
     def commands_by_request(self, command):
         if command == "forward":
             self._robot.forward(40)

@@ -3,7 +3,7 @@ STRAIGHT_ANGLE = 90
 
 # Camera
 VIDEO_CAPTURE = 0
-VIDEO_NAME = "autonomous_car/static/output.avi"
+VIDEO_NAME = "autonomous_car/static/output.mp4"
 LOG_FILE_NAME = "autonomous_car/static/log.txt"
 
 # Controller

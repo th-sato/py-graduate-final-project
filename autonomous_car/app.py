@@ -1,4 +1,4 @@
-from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW
+from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW, STREET_ORIGINAL_IMAGE, STREET_DETECTING, STREET_LINES_DRAWN
 from flask import Flask, request, send_file
 from flask_cors import CORS
 from autonomous_car import AutonomousCar
@@ -53,6 +53,38 @@ def commands_by_request():
     if request.method == 'POST':
         json = request.get_json()
         autonomous_car.commands_by_request(json['command'])
+    else:
+        return 'Method not allowed!', 404
+    return 'OK', 200
+
+
+@app.route('/input-values', methods=['POST'])
+def input_values():
+    if request.method == 'POST':
+        json = request.get_json()
+        speed = int(json['speed'])
+        wheel = int(json['wheel'])
+        autonomous_car.speed_request(speed)
+        autonomous_car.turn_request(wheel)
+    else:
+        return 'Method not allowed!', 404
+    return 'OK', 200
+
+
+@app.route('/selected-video', methods=['POST'])
+def selected_video():
+    if request.method == 'POST':
+        json = request.get_json()
+        video = int(json['selected_video'])
+        if video == 'img-original':
+            selected = STREET_ORIGINAL_IMAGE
+        elif video == 'img-color':
+            selected = STREET_DETECTING
+        # img-processed
+        else:
+            selected = STREET_LINES_DRAWN
+
+        autonomous_car.image_to_show(selected)
     else:
         return 'Method not allowed!', 404
     return 'OK', 200

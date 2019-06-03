@@ -1,4 +1,5 @@
-from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW, STREET_ORIGINAL_IMAGE, STREET_DETECTING, STREET_LINES_DRAWN
+from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW, STREET_ORIGINAL_IMAGE, STREET_DETECTING, \
+    STREET_LINES_DRAWN, VIDEO_NAME
 from flask import Flask, request, send_file
 from flask_cors import CORS
 from autonomous_car import AutonomousCar
@@ -23,7 +24,7 @@ def stop():
 
 @app.route('/video_output')
 def video_output():
-    file_path = os.path.join(os.path.join(os.getcwd(), 'autonomous_car/static/'), 'output.avi')
+    file_path = os.path.join(os.getcwd(), VIDEO_NAME)
     return send_file(file_path, as_attachment=True, cache_timeout=0)
 
 
@@ -75,7 +76,7 @@ def input_values():
 def selected_video():
     if request.method == 'POST':
         json = request.get_json()
-        video = int(json['selected_video'])
+        video = json['selected_video']
         if video == 'img-original':
             selected = STREET_ORIGINAL_IMAGE
         elif video == 'img-color':

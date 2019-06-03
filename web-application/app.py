@@ -32,11 +32,11 @@ def home():
 #     else:
 #         return "Method not found", 404
 
-# @app.route('/get-video')
-# @cross_origin()
-# def get_video():
-#     url = HOST_AUTONOMOUS_CAR + '/video_output'
-#     return redirect(url)
+@app.route('/get-video')
+@cross_origin()
+def get_video():
+    url = HOST_AUTONOMOUS_CAR + '/video_output'
+    return redirect(url)
 
 
 @app.route('/log')
@@ -98,12 +98,12 @@ def selected_video():
     return post_method(url, request)
 
 
-@app.route('/get-video', methods=['GET'])
-def get_video():
-    # url = HOST_AUTONOMOUS_CAR + '/get-video'
-    import os
-    file_path = os.path.join(os.path.join(os.getcwd(), 'web-application/static/video-test'), 'output.mp4')
-    return send_file(file_path, as_attachment=True, cache_timeout=0)
+# @app.route('/get-video', methods=['GET'])
+# def get_video():
+#     # url = HOST_AUTONOMOUS_CAR + '/get-video'
+#     import os
+#     file_path = os.path.join(os.path.join(os.getcwd(), 'web-application/static/video-test'), 'output.mp4')
+#     return send_file(file_path, as_attachment=True, cache_timeout=0)
 
 
 # @app.route('/calibration', methods=['POST'])

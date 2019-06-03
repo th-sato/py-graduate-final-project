@@ -9,7 +9,8 @@ LOCAL_PATH = os.path.dirname(__file__)  # get current directory
 
 
 def video_writer():
-    fourcc = cv.VideoWriter_fourcc(*'H264')
+    # fourcc = cv.VideoWriter_fourcc(*'H264')
+    fourcc = 0x00000021
     return cv.VideoWriter(VIDEO_NAME, fourcc, 20.0, (WIDTH_IMAGE, HEIGHT_IMAGE))
 
 

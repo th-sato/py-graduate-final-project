@@ -1,4 +1,4 @@
-var interval = 1;
+//var interval = 1;
 //var HOST = 'http://localhost:8081';
 //var HOST_REDIS_IMAGE = 'http://localhost:8081/redis-image'
 //var HOST_AUTONOMOUS_CAR = 'http://192.168.1.234:5000';
@@ -18,15 +18,16 @@ var interval = 1;
 //    });
 //}
 
+var HTML_IMAGE_HEADER = "data:image/png;base64, ";
 
-function requestGetHttp(path){
+
+function requestGetHttp(path, is_asynchronous){
     var xmlHttp   = new XMLHttpRequest();
 //    url = HOST + "/" + path;
     url = "/" + path;
-    xmlHttp.open("GET", url, true);
+    xmlHttp.open("GET", url, is_asynchronous);
     xmlHttp.send(null);
     return xmlHttp.responseText;
-
 }
 
 function requestPostHttp(path, json){
@@ -41,11 +42,11 @@ function requestPostHttp(path, json){
 }
 
 function start_autonomous_car() {
-    requestGetHttp('start')
+    requestGetHttp('start', true)
 }
 
 function stop_autonomous_car() {
-    requestGetHttp('stop')
+    requestGetHttp('stop', true)
 }
 
 function calibration(wheel, command) {
@@ -85,4 +86,16 @@ function change_option_video() {
 
 function update_video() {
     document.getElementById("my-video").load();
+}
+
+function update_img_camera() {
+    path = "get-image-camera"
+    res = JSON.parse(requestGetHttp(path, false))
+    document.getElementById("img_camera").src = HTML_IMAGE_HEADER + res["img"]
+}
+
+function activate_controller(activate) {
+    path = "controller-active"
+    json = JSON.stringify({ "active": activate })
+    requestPostHttp(path, json)
 }

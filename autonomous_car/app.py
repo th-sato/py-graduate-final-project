@@ -1,6 +1,7 @@
 from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW, STREET_ORIGINAL_IMAGE, STREET_DETECTING, \
     STREET_LINES_DRAWN, VIDEO_NAME
-from flask import Flask, request, send_file
+from system.image_processing.image_processing import jpgimg_to_base64
+from flask import Flask, request, send_file, jsonify
 from flask_cors import CORS
 from autonomous_car import AutonomousCar
 import os
@@ -26,6 +27,25 @@ def stop():
 def video_output():
     file_path = os.path.join(os.getcwd(), VIDEO_NAME)
     return send_file(file_path, as_attachment=True, cache_timeout=0)
+
+
+@app.route('/get-image-camera')
+def get_image_camera():
+    img_base64 = jpgimg_to_base64(autonomous_car.video_processed)
+    return jsonify({"img": img_base64})
+
+
+@app.route('/controller-active', methods=['POST'])
+def controller_active():
+    if request.method == 'POST':
+        json = request.get_json()
+        if json['active'] == 'false':
+            autonomous_car.send_commands_robot = False
+        else:
+            autonomous_car.send_commands_robot = True
+    else:
+        return 'Method not allowed!', 404
+    return 'OK', 200
 
 
 @app.route('/log_output')

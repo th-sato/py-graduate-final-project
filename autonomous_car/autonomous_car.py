@@ -27,12 +27,13 @@ class AutonomousCar:
 
     def start(self):
         self._stop_car = False
-        # self._send_commands_robot = True
+        self._send_commands_robot = True
         self._camera.start()
         self.__start()
 
     def stop(self):
         self._stop_car = True
+        self._send_commands_robot = False
         self._camera.stop()
         time.sleep(2)
         self._robot.stop_car()

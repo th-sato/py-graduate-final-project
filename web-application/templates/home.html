@@ -114,6 +114,30 @@
         <hr>
 
         <div class="row">
+            <div class="col-md-6">
+                <img id="img_camera" src="" alt="Imagem da câmera">
+            </div>
+            <div class="form-group col-md-6">
+                <h4 class="my-3"><i class='fa fa-camera'></i> Imagem da câmera</h4>
+                <button type="button" class="btn btn-info" onclick="update_img_camera()">
+                    Obter imagem processada
+                </button>
+                <hr>
+                <h4 class="my-3"><i class='fa fa-wrench'></i> Comandos do controlador</h4>
+                <button type="button" class="btn btn-info" onclick="activate_controller('true')">
+                    Ativar
+                </button>
+                <button type="button" class="btn btn-info" onclick="activate_controller('false')">
+                    Desativar
+                </button>
+            </div>
+        </div>
+
+
+
+        <hr>
+
+        <div class="row">
             <div class="col-md-8">
                 <video id="my-video" class="img-fluid" width="750" controls>
                     <source src="get-video" type="video/mp4">

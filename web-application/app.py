@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, send_file
+from flask import Flask, request, render_template, redirect, jsonify
 from flask_cors import CORS, cross_origin
 from env import *
 import logging
@@ -32,6 +32,15 @@ def home():
 #     else:
 #         return "Method not found", 404
 
+def post_method(url, request_data):
+    if request_data.method == 'POST':
+        json_calibration = request_data.get_json()
+        requests.post(url, json=json_calibration)
+    else:
+        return 'Method not allowed!', 404
+    return 'OK', 200
+
+
 @app.route('/get-video')
 @cross_origin()
 def get_video():
@@ -43,6 +52,18 @@ def get_video():
 def log():
     url = HOST_AUTONOMOUS_CAR + '/log_output'
     return redirect(url)
+
+
+@app.route('/get-image-camera')
+def get_image_camera():
+    url = HOST_AUTONOMOUS_CAR + '/get-image-camera'
+    return requests.get(url)
+
+
+@app.route('/controller-active', methods=['POST'])
+def controller_active():
+    url = HOST_AUTONOMOUS_CAR + '/controller-active'
+    return post_method(url, request)
 
 
 @app.route('/start', methods=['GET'])
@@ -60,15 +81,6 @@ def stop_autonomous_car():
     url = HOST_AUTONOMOUS_CAR + '/stop'
     if request.method == 'GET':
         requests.get(url)
-    else:
-        return 'Method not allowed!', 404
-    return 'OK', 200
-
-
-def post_method(url, request_data):
-    if request_data.method == 'POST':
-        json_calibration = request_data.get_json()
-        requests.post(url, json=json_calibration)
     else:
         return 'Method not allowed!', 404
     return 'OK', 200

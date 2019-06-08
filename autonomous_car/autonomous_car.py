@@ -109,7 +109,7 @@ class AutonomousCar:
                 self._robot.turn(angle)
             else:
                 self._robot.forward(0)
-                # Manter somente o comando do esterçamento
+                # Manter somente o comando do estercamento
                 self._robot.turn(angle)
                 # self._robot.turn(0)
         file_w.close()

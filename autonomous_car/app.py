@@ -40,11 +40,9 @@ def controller_active():
     if request.method == 'POST':
         json = request.get_json()
         if json['active'] == 'false':
-            print "json['active'] == 'false'"
-            autonomous_car.send_commands_robot = False
+            autonomous_car.send_commands_robot(False)
         else:
-            print "json['active'] == 'True'"
-            autonomous_car.send_commands_robot = True
+            autonomous_car.send_commands_robot(True)
     else:
         return 'Method not allowed!', 404
     return 'OK', 200

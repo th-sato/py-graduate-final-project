@@ -107,6 +107,9 @@ class AutonomousCar:
             if self._send_commands_robot:
                 self._robot.forward(speed)
                 self._robot.turn(angle)
+            else:
+                self._robot.forward(0)
+                self._robot.turn(0)
         file_w.close()
         video_output.release()
 

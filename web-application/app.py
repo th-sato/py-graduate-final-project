@@ -54,10 +54,14 @@ def log():
     return redirect(url)
 
 
-@app.route('/get-image-camera')
+@app.route('/get-image-camera', methods=['GET'])
 def get_image_camera():
     url = HOST_AUTONOMOUS_CAR + '/get-image-camera'
-    return requests.get(url)
+    if request.method == 'GET':
+        res = requests.get(url)
+    else:
+        return 'Method not allowed!', 404
+    return res
 
 
 @app.route('/controller-active', methods=['POST'])

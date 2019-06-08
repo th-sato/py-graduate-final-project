@@ -58,10 +58,10 @@ def log():
 def get_image_camera():
     url = HOST_AUTONOMOUS_CAR + '/get-image-camera'
     if request.method == 'GET':
-        res = requests.get(url)
+        resp = requests.get(url)
+        return resp.content, resp.status_code, resp.headers.items()
     else:
         return 'Method not allowed!', 404
-    return res
 
 
 @app.route('/controller-active', methods=['POST'])

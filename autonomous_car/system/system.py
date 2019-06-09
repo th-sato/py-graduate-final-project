@@ -8,11 +8,11 @@ class System:
         self._color = color_street
 
     def output(self, video, img_to_show, file_w):
-        video_processed, distance_center, curv = self.__video_processing(video)
-        curv = self.__set_max(curv, 200.0)
-        distance_center = self.__set_max(distance_center, 0.5)
-        speed, angle = self._controller.output(distance_center, curv)
-        file_w.write('Speed: %.2f Angle: %.2f Dist: %.2f RCurv: %.2f\n' % (speed, angle, distance_center, curv))
+        video_processed, dist_center, curv = self.__video_processing(video)
+        curv_max = self.__set_max(curv, 200.0)
+        dist_center_max = self.__set_max(dist_center, 0.5)
+        speed, angle = self._controller.output(dist_center_max, curv_max)
+        file_w.write('Speed: %.2f Angle: %.2f Dist: %.2f RCurv: %.2f\n' % (speed, angle, dist_center, curv))
 
         if img_to_show == STREET_ORIGINAL_IMAGE:
             return video, speed, angle

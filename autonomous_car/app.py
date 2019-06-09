@@ -29,9 +29,15 @@ def video_output():
     return send_file(file_path, as_attachment=True, cache_timeout=0)
 
 
-@app.route('/get-image-camera')
-def get_image_camera():
+@app.route('/get-image-processed-camera')
+def get_image_processed_camera():
     img_base64 = jpgimg_to_base64(autonomous_car.video_processed)
+    return jsonify({"img": img_base64})
+
+
+@app.route('/get-image-original-camera')
+def get_image_original_camera():
+    img_base64 = jpgimg_to_base64(autonomous_car.video_original)
     return jsonify({"img": img_base64})
 
 

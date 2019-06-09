@@ -88,8 +88,14 @@ function update_video() {
     document.getElementById("my-video").load();
 }
 
-function update_img_camera() {
-    path = "get-image-camera"
+function img_processed_camera() {
+    path = "get-image-processed-camera"
+    res = JSON.parse(requestGetHttp(path, false))
+    document.getElementById("img_camera").src = HTML_IMAGE_HEADER + res["img"]
+}
+
+function img_original_camera() {
+    path = "get-image-original-camera"
     res = JSON.parse(requestGetHttp(path, false))
     document.getElementById("img_camera").src = HTML_IMAGE_HEADER + res["img"]
 }

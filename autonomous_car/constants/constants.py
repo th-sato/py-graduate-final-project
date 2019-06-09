@@ -13,6 +13,11 @@ PROPORCIONAL_CONTROLLER = "Proporcional"
 # Network
 HOST = '0.0.0.0'
 PORT = 5000
+
+# Redis
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+
 # URL_REDIS_IMAGE = 'http://192.168.1.189:8081/redis-image'
 # KEY_JSON_IMAGE = "image"
 

@@ -54,9 +54,19 @@ def log():
     return redirect(url)
 
 
-@app.route('/get-image-camera', methods=['GET'])
-def get_image_camera():
-    url = HOST_AUTONOMOUS_CAR + '/get-image-camera'
+@app.route('/get-image-processed-camera', methods=['GET'])
+def get_image_processed_camera():
+    url = HOST_AUTONOMOUS_CAR + '/get-image-processed-camera'
+    if request.method == 'GET':
+        resp = requests.get(url)
+        return resp.content, resp.status_code, resp.headers.items()
+    else:
+        return 'Method not allowed!', 404
+
+
+@app.route('/get-image-original-camera', methods=['GET'])
+def get_image_original_camera():
+    url = HOST_AUTONOMOUS_CAR + '/get-image-original-camera'
     if request.method == 'GET':
         resp = requests.get(url)
         return resp.content, resp.status_code, resp.headers.items()

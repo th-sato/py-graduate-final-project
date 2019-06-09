@@ -1,6 +1,7 @@
 from constants.constants import *
 from threading import Thread
 import time
+from logs.redis import Redis
 from system.system import System
 from system.image_processing.image_processing import video_writer
 from picar_v.camera.camera import Camera
@@ -20,6 +21,7 @@ class AutonomousCar:
         self._image_to_show = STREET_LINES_DRAWN
         self._send_commands_robot = True
         self._camera = Camera(VIDEO_CAPTURE)
+        self._redis = Redis
         self._camera.start()
 
     def __start(self):

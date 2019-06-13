@@ -51,21 +51,28 @@ from system.controller.fuzzy_controller import FuzzyController
 from system.image_processing.image_processing import *
 import matplotlib.pyplot as plt
 
-# static_path = '../images-test/2019-05-04/'
+static_path = '../images-test/2019-05-04/'
+image_name = [
+    'carro_fora_pista.jpg',
+    'carro_fora_pista_2.jpg',
+    'duas_pistas.jpg',
+    'duas_pistas_2.jpg',
+    'pista_parcial.jpg',
+    'uma_pista.jpg',
+    'uma_pista_2.jpg'
+]
+
+# static_path = '../images-test/2019-05-26/'
 # image_name = [
-#     'carro_fora_pista.jpg',
-#     'carro_fora_pista_2.jpg',
-#     'duas_pistas_2.jpg',
-#     'pista_parcial.jpg',
-#     'uma_pista.jpg',
-#     'uma_pista_2.jpg'
+#     'teste1.png',
+#     # 'teste2.png',
 # ]
 
-static_path = '../images-test/2019-05-26/'
-image_name = [
-    'teste1.png',
-    'teste2.png',
-]
+# static_path = '../images-test/2019-06-08/'
+# image_name = [
+#     'teste1.jpg',
+#     'teste2.jpg',
+# ]
 
 
 def detect_street_by_color(video):
@@ -90,6 +97,7 @@ def main():
         img = image_input(name)
         img_processed = detect_street_by_color(img)
         img_test = img_processed.copy()
+        nonzero = img_test.nonzero()
         img_test[img_processed == 1] = 255
         show_image(img_test)
         left_fit, right_fit, video_shape = fit_lines(img_processed)

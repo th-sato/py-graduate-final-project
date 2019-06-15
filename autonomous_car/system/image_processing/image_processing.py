@@ -70,7 +70,7 @@ def __disconsider_proximity_points(histogram, peak, space_lines=85):
         histogram[(peak - space_lines): peak] = 0
     # Right proximity
     if (peak + space_lines) > (histogram_length - 1):
-        histogram[peak: (histogram_length - 1)] = 0
+        histogram[peak: histogram_length] = 0
     else:
         histogram[peak: (peak + space_lines)] = 0
 
@@ -96,33 +96,11 @@ def __search_for_peak_histogram(histogram, min_value=5):
     peak = np.argmax(histogram)   # Find one of the Peaks in Histogram
     peak_value = histogram[peak]  # Value of the peak one
 
-    if peak_value > min_value:
+    if peak_value >= min_value:
         histogram = __disconsider_proximity_points(histogram, peak)
         return histogram, peak
     else:
         return histogram, None
-
-
-# Define if the new_peak is valid or not
-# margin_one_line: Set the width of the windows +/- margin
-def __right_or_left_peak(peak, new_peak, first_interval_y, second_interval_y, margin_one_line=15):
-    left_x_base, right_x_base = None, None
-    if ((peak - margin_one_line) > new_peak) and ((peak + margin_one_line) < new_peak):
-        if peak < np.int(first_interval_y[0] / 2):
-            left_x_base = peak
-            algorithm_interval_y = first_interval_y, None
-        else:
-            right_x_base = peak
-            algorithm_interval_y = None, first_interval_y
-    else:
-        if new_peak > peak:
-            algorithm_interval_y = first_interval_y, second_interval_y
-            left_x_base, right_x_base = peak, new_peak
-        else:
-            algorithm_interval_y = second_interval_y, first_interval_y
-            left_x_base, right_x_base = new_peak, peak
-
-    return left_x_base, right_x_base, algorithm_interval_y
 
 
 # Sliding window algorithm
@@ -130,7 +108,8 @@ def __right_or_left_peak(peak, new_peak, first_interval_y, second_interval_y, ma
 # margin: Set the width of the windows +/- margin
 # minpix: Set minimum number of pixels found to recenter window
 # lane_index: Create empty lists to receive lane pixel indices
-def __sliding_window_algorithm(nonzero, interval_y, x_base, nwindows=20, margin=30, minpix=10, x_pos=[], y_pos=[]):
+def __sliding_window_algorithm(nonzero, interval_y, x_base, nwindows=30, margin=30, minpix=10,
+                               x_pos=[], y_pos=[], bin_img=None):
     lane_index = []
     # Check if the point is being passed
     if x_base is None:
@@ -160,6 +139,11 @@ def __sliding_window_algorithm(nonzero, interval_y, x_base, nwindows=20, margin=
     # Extract left and right line pixel positions
     x_positions = np.append(x_pos, nonzero_x[lane_index])
     y_positions = np.append(y_pos, nonzero_y[lane_index])
+
+    if bin_img is not None:
+        out_img = np.dstack((bin_img, bin_img, bin_img)) * 255
+        out_img[nonzero_y[lane_index], nonzero_x[lane_index]] = RED
+        show_image(out_img)
 
     return np.polyfit(y_positions, x_positions, 2)
 
@@ -193,7 +177,7 @@ def fit_lines(binary_img, straight_value=0.0004):
         x_fit = __sliding_window_algorithm(nonzero, first_interval_y, peak_one)
         x_fit_base_img = __lane_pixels(x_fit, height_img - 1)
         # Histogram from extremity of image
-        interval_y = [half_height, np.int(0.7 * height_img)]
+        interval_y = [half_height, np.int(0.8 * height_img)]
         interval_x = [0, np.int(0.1 * width_img)], [np.int(0.9 * width_img), width_img - 1]
         left_hist = __take_histogram(binary_img, y=interval_y, x=interval_x[0])
         right_hist = __take_histogram(binary_img, y=interval_y, x=interval_x[1])
@@ -212,13 +196,13 @@ def fit_lines(binary_img, straight_value=0.0004):
                 right_fit = x_fit
                 other_lane_base_x = x_fit_base_img - WIDTH_LANE_PIXEL
                 left_fit = __sliding_window_algorithm(nonzero, interval_y, left_x_base, minpix=4,
-                                                      x_pos=other_lane_base_x, y_pos=height_img - 1)
+                                                      x_pos=other_lane_base_x, y_pos=height_img-1)
             elif is_straight and peak_x_right is not None:
                 left_fit = x_fit
                 right_x_base = peak_x_right
                 other_lane_base_x = x_fit_base_img + WIDTH_LANE_PIXEL
                 right_fit = __sliding_window_algorithm(nonzero, interval_y, right_x_base, minpix=4,
-                                                       x_pos=other_lane_base_x, y_pos=height_img - 1)
+                                                       x_pos=other_lane_base_x, y_pos=height_img-1)
             else:
                 left_fit = x_fit
                 right_fit = None
@@ -228,13 +212,13 @@ def fit_lines(binary_img, straight_value=0.0004):
                 left_fit = x_fit
                 other_lane_base_x = x_fit_base_img + WIDTH_LANE_PIXEL
                 right_fit = __sliding_window_algorithm(nonzero, interval_y, right_x_base,
-                                                       x_pos=other_lane_base_x, y_pos=height_img - 1)
+                                                       x_pos=other_lane_base_x, y_pos=height_img-1)
             elif is_straight and peak_x_left is not None:
                 right_fit = x_fit
                 left_x_base = peak_x_left
                 other_lane_base_x = x_fit_base_img - WIDTH_LANE_PIXEL
                 left_fit = __sliding_window_algorithm(nonzero, interval_y, left_x_base,
-                                                      x_pos=other_lane_base_x, y_pos=height_img - 1)
+                                                      x_pos=other_lane_base_x, y_pos=height_img-1)
             else:
                 left_fit = None
                 right_fit = x_fit

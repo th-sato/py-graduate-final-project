@@ -51,16 +51,16 @@ from system.controller.fuzzy_controller import FuzzyController
 from system.image_processing.image_processing import *
 import matplotlib.pyplot as plt
 
-static_path = '../images-test/2019-05-04/'
-image_name = [
-    'carro_fora_pista.jpg',
-    'carro_fora_pista_2.jpg',
-    'duas_pistas.jpg',
-    'duas_pistas_2.jpg',
-    'pista_parcial.jpg',
-    'uma_pista.jpg',
-    'uma_pista_2.jpg'
-]
+# static_path = '../images-test/2019-05-04/'
+# image_name = [
+#     'carro_fora_pista.jpg',
+#     'carro_fora_pista_2.jpg',
+#     'duas_pistas.jpg',
+#     'duas_pistas_2.jpg',
+#     'pista_parcial.jpg',
+#     'uma_pista.jpg',
+#     'uma_pista_2.jpg'
+# ]
 
 # static_path = '../images-test/2019-05-26/'
 # image_name = [
@@ -73,6 +73,14 @@ image_name = [
 #     'teste1.jpg',
 #     'teste2.jpg',
 # ]
+
+static_path = '../images-test/2019-06-14/'
+image_name = [
+    # 'erro1.jpg',
+    # 'erro2.jpg',
+    # 'erro3.jpg',
+    'erro4.jpg',
+]
 
 
 def detect_street_by_color(video):

@@ -79,7 +79,12 @@ image_name = [
     # 'erro1.jpg',
     # 'erro2.jpg',
     # 'erro3.jpg',
-    'erro4.jpg',
+    # 'erro4.jpg',
+    # 'erro5.jpg',
+    # 'erro6.jpg',
+    'erro7.jpg',
+    'erro8.jpg',
+    'erro9.jpg',
 ]
 
 

@@ -1,5 +1,5 @@
 from threading import Thread
-from constants.constants import WIDTH_IMAGE, HEIGHT_IMAGE
+from env.constants import WIDTH_IMAGE, HEIGHT_IMAGE
 import cv2 as cv
 
 

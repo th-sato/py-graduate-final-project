@@ -1,5 +1,5 @@
 import redis
-from constants.constants import *
+from env.constants import *
 
 
 class Redis:
@@ -9,7 +9,7 @@ class Redis:
     def add_value_by_key(self, key, value):
         self.connection.sadd(key, value)
 
-    def remove_values_by_key(self, key):
+    def delete_values_of_key(self, key):
         self.connection.delete(key)
 
     def get_values_by_key(self, key):

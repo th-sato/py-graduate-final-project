@@ -1,7 +1,6 @@
-from constants.constants import *
+from env.constants import *
 from threading import Thread
 import time
-from logs.redis import Redis
 from system.system import System
 from system.image_processing.image_processing import video_writer
 from picar_v.camera.camera import Camera
@@ -21,7 +20,7 @@ class AutonomousCar:
         self._image_to_show = STREET_LINES_DRAWN
         self._send_commands_robot = True
         self._camera = Camera(VIDEO_CAPTURE)
-        self._redis = Redis
+        self._system = System(self._controller, self._color_street)
         self._camera.start()
 
     def __start(self):
@@ -47,16 +46,6 @@ class AutonomousCar:
     @property
     def video_processed(self):
         return self._video_processed
-
-    # @staticmethod
-    # def request_async_post_image(image):
-    #     # session = requests.session()
-    #     # session.post(URL_REDIS_IMAGE, json={KEY_JSON_IMAGE: image})
-    #     requests.post(URL_REDIS_IMAGE, json={KEY_JSON_IMAGE: image})
-
-    # @staticmethod
-    # def request_post_image(url, key_img, img):
-    #     requests.post(url, json={key_img: img})
 
     def image_to_show(self, option):
         self._image_to_show = option
@@ -96,28 +85,23 @@ class AutonomousCar:
         else:
             print "Command to Picar-V not found"
 
+    def get_log_car(self):
+        return self._system.get_log_system()
+
     def update(self):
-        system = System(self._controller, self._color_street)
+        self._system.reset_log()
         video_output = video_writer()
-        file_w = open(LOG_FILE_NAME, "w")
         while not self._stop_car:
             # self._video_original = self.image_test()
             self._video_original = self._camera.frame
-            self._video_processed, speed, angle = system.output(self._video_original, self._image_to_show, file_w)
-            # self.request_async_post_image(jpgimg_to_base64(self._video_processed))
+            self._video_processed, speed, angle = self._system.output(self._video_original, self._image_to_show)
             video_output.write(self._video_processed)
             if self._send_commands_robot:
                 self._robot.forward(speed)
                 self._robot.turn(angle)
             else:
                 self._robot.forward(0)
-                # Manter somente o comando do estercamento
+                # Keep only turn command active
                 self._robot.turn(angle)
                 # self._robot.turn(0)
-        file_w.close()
         video_output.release()
-
-    # @staticmethod
-    # def image_test():
-    #     static_path = os.path.join(os.getcwd(), '../images-test/2019-03-25')
-    #     return cv.imread(os.path.join(static_path, 'pista-camera1.jpg'))

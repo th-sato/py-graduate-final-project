@@ -1,5 +1,5 @@
 from picar import back_wheels, front_wheels
-from constants.constants import STRAIGHT_ANGLE
+from env.constants import STRAIGHT_ANGLE
 import picar
 
 

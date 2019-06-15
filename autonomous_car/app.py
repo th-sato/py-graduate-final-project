@@ -1,5 +1,5 @@
-from constants.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW, STREET_ORIGINAL_IMAGE, STREET_DETECTING, \
-    STREET_LINES_DRAWN, VIDEO_NAME
+from env.constants import FUZZY_CONTROLLER, HOST, PORT, DETECT_YELLOW, STREET_ORIGINAL_IMAGE,\
+    STREET_DETECTING, STREET_LINES_DRAWN, VIDEO_NAME
 from system.image_processing.image_processing import jpgimg_to_base64
 from flask import Flask, request, send_file, jsonify
 from flask_cors import CORS
@@ -124,6 +124,12 @@ def selected_video():
     else:
         return 'Method not allowed!', 404
     return 'OK', 200
+
+
+@app.route('/get-log', methods=['GET'])
+def get_log():
+    log = autonomous_car.get_log_car()
+    return jsonify(log)
 
 
 @app.route('/')

@@ -2,7 +2,7 @@ import cv2 as cv
 import base64
 import os.path
 import numpy as np
-from constants.constants import *
+from env.constants import *
 
 # Global variables
 LOCAL_PATH = os.path.dirname(__file__)  # get current directory

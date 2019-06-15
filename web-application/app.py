@@ -48,11 +48,14 @@ def get_video():
     return redirect(url)
 
 
-@app.route('/log')
-def log():
-    url = HOST_AUTONOMOUS_CAR + '/log_output'
-    return redirect(url)
-
+@app.route('/get-log', methods=['GET'])
+def get_log():
+    url = HOST_AUTONOMOUS_CAR + '/get-log'
+    if request.method == 'GET':
+        return requests.get(url)
+    else:
+        return 'Method not allowed!', 404
+    
 
 @app.route('/get-image-processed-camera', methods=['GET'])
 def get_image_processed_camera():
@@ -122,22 +125,6 @@ def input_values():
 def selected_video():
     url = HOST_AUTONOMOUS_CAR + '/selected-video'
     return post_method(url, request)
-
-
-# @app.route('/get-video', methods=['GET'])
-# def get_video():
-#     # url = HOST_AUTONOMOUS_CAR + '/get-video'
-#     import os
-#     file_path = os.path.join(os.path.join(os.getcwd(), 'web-application/static/video-test'), 'output.mp4')
-#     return send_file(file_path, as_attachment=True, cache_timeout=0)
-
-
-# @app.route('/calibration', methods=['POST'])
-# def teste():
-#     json = request.get_json()
-#     print json['wheel']
-#     print json['action']
-#     return "OK", 200
 
 
 if __name__ == "__main__":

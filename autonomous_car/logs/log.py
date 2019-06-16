@@ -1,9 +1,9 @@
-from redis import Redis
+from redis import RedisCommunication
 
 
 class Log:
     def __init__(self):
-        self._redis = Redis()
+        self._redis = RedisCommunication()
         self._key = "log_car"
 
     def clean_log(self):

@@ -1,5 +1,4 @@
 import redis
-import time
 from env.constants import REDIS_HOST, REDIS_PORT
 
 

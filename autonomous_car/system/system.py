@@ -2,6 +2,7 @@ from image_processing.image_processing import *
 from controller.fuzzy_controller import FuzzyController
 from logs.log_dto import LogDto
 from logs.log import Log
+import time
 
 
 class System:
@@ -9,6 +10,8 @@ class System:
         self._controller = self.__define_controller(controller)
         self._color = color_street
         self._log = Log()
+        self._initial_exec = True
+        self._initial_time = None
 
     def output(self, video, img_to_show):
         video_processed, dist_center, curv = self.__video_processing(video)
@@ -59,6 +62,7 @@ class System:
             return video, 0, 0
 
     def reset_log(self):
+        self._initial_exec = True
         self._log.clean_log()
 
     def get_log_system(self):
@@ -66,12 +70,11 @@ class System:
 
     def __store_object_log(self, speed, angle, dist_center, curv):
         try:
-            log_object = LogDto()
-            log_object.speed = speed
-            log_object.angle = angle
-            log_object.dist_center = dist_center
-            log_object.curv = curv
+            if self._start_execution:
+                self._initial_time = time.time()
+                self._initial_exec = False
 
+            log_object = LogDto(self._initial_time, speed, angle, dist_center, curv)
             log_obj_str = repr(log_object)
             self._log.store_object(log_obj_str)
         except Exception as e:

@@ -29,6 +29,14 @@ def video_output():
     return send_file(file_path, as_attachment=True, cache_timeout=0)
 
 
+@app.route('/get-log', methods=['GET'])
+def get_log():
+    log = autonomous_car.get_log_car()
+    for i in log:
+        print i
+    return jsonify(log)
+
+
 @app.route('/get-image-processed-camera')
 def get_image_processed_camera():
     img_base64 = jpgimg_to_base64(autonomous_car.video_processed)
@@ -124,12 +132,6 @@ def selected_video():
     else:
         return 'Method not allowed!', 404
     return 'OK', 200
-
-
-@app.route('/get-log', methods=['GET'])
-def get_log():
-    log = autonomous_car.get_log_car()
-    return jsonify(log)
 
 
 @app.route('/')

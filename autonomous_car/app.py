@@ -32,8 +32,6 @@ def video_output():
 @app.route('/get-log', methods=['GET'])
 def get_log():
     log = autonomous_car.get_log_car()
-    for i in log:
-        print i
     return jsonify(log)
 
 

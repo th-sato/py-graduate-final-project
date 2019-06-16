@@ -62,7 +62,7 @@ class System:
         self._log.clean_log()
 
     def get_log_system(self):
-        print self._log.get_log()
+        print "log:", self._log.get_log()
         return self._log.get_log()
 
     def __store_object_log(self, speed, angle, dist_center, curv):

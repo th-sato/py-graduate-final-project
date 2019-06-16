@@ -1,6 +1,7 @@
 
 class LogDto:
     def __init__(self):
+        # self._time =
         self._speed = 0
         self._angle = 0
         self._dist_center = 0

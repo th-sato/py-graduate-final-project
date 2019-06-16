@@ -1,4 +1,4 @@
-from redis import RedisCommunication
+from redis_communication import RedisCommunication
 
 
 class Log:

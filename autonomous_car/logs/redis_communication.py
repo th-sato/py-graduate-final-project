@@ -1,4 +1,5 @@
 import redis
+import time
 from env.constants import REDIS_HOST, REDIS_PORT
 
 
@@ -14,5 +15,5 @@ class RedisCommunication:
 
     def get_values_by_key(self, key):
         result = self.connection.smembers(key)
-        print result
+        time.sleep(5)
         return result

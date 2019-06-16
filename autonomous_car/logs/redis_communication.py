@@ -13,6 +13,4 @@ class RedisCommunication:
         self.connection.delete(key)
 
     def get_values_by_key(self, key):
-        print "key", key
-        print self.connection.smembers(key)
         return self.connection.smembers(key)

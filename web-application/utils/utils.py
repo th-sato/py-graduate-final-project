@@ -59,7 +59,7 @@ def gen_scatter_by_values(axis_x, axis_y, name_img, title=u'Título', axis_x_nam
 
 def gen_graphics(points):
     # order by time
-    # points = sorted(points, key=lambda k: k['speed'])
+    points = sorted(points, key=lambda k: k['time'])
     data = {'time': gen_data_by_field(points, 'time'), 'speed': gen_data_by_field(points, 'speed'),
             'angle': gen_data_by_field(points, 'angle'), 'dist_center': gen_data_by_field(points, 'dist_center'),
             'curv': gen_data_by_field(points, 'curv')}

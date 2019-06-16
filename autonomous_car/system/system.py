@@ -18,7 +18,8 @@ class System:
         curv_max = self.__set_max(curv, 200.0)
         dist_center_max = self.__set_max(dist_center, 0.5)
         speed, angle = self._controller.output(dist_center_max, curv_max)
-        self.__store_object_log(speed, angle, dist_center, curv)
+        # self.__store_object_log(speed, angle, dist_center, curv)
+        self.__store_object_log(speed, angle, dist_center_max, curv_max)
 
         if img_to_show == STREET_ORIGINAL_IMAGE:
             return video, speed, angle

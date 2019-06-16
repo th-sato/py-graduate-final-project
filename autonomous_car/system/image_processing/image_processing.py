@@ -30,14 +30,14 @@ def jpgimg_to_base64(img):
 def add_text_to_image(img, radius_curvature, center):
     font = cv.FONT_HERSHEY_SIMPLEX
     if radius_curvature == 0:
-        curv_text = 'Curvatura nao pode ser calculada.'
+        curv_text = u'Curvatura não pode ser calculada.'
     else:
         curvature = 1.0 / radius_curvature
         curv_text = 'Curvatura = %.2f(m)' % curvature
     cv.putText(img, curv_text, (50, 50), font, 0.7, (255, 255, 255), 1)
 
     left_or_right = "esquerda" if center > 0 else "direita"
-    cv.putText(img, 'Veiculo esta %.2fm a %s do centro' % (np.abs(center), left_or_right), (50, 100), font, 0.7,
+    cv.putText(img, 'Carro: %.2fm a %s do centro' % (np.abs(center), left_or_right), (50, 100), font, 0.7,
                 (255, 255, 255), 1)
 
 

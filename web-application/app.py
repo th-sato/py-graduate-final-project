@@ -3,12 +3,10 @@ from flask import Flask, request, render_template, redirect, jsonify
 from flask_cors import CORS, cross_origin
 from env import *
 import logging
-import redis
 import requests
 import json
 
 app = Flask(__name__)
-r = redis.Redis(host=REDIS_IP, port=REDIS_PORT, db=0)
 CORS(app, support_credentials=True)
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -48,6 +46,12 @@ def get_method_with_return(url):
     return resp.content, resp.status_code, resp.headers.items()
 
 
+def save_log_file(content):
+    file_w = open(FILE_NAME_LOG, "w")
+    file_w.write(content)
+    file_w.close()
+
+
 @app.route('/get-video')
 @cross_origin()
 def get_video():
@@ -67,6 +71,7 @@ def get_log():
 @app.route('/update-graphics', methods=['GET'])
 def update_graphics():
     content, status, _ = get_log()
+    save_log_file(content)
     if status == 200 and content is not None:
         resp = json.loads(content)
         log_object = []

@@ -107,7 +107,7 @@ function activate_controller(activate) {
 }
 
 function update_graphics(){
-    qtd_images = 4
+    qtd_images = 6
     path_update_images = 'update-graphics'
     requestGetHttp(path_update_images, false)
 

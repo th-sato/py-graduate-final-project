@@ -8,12 +8,16 @@ import os
 STATIC_PATH = os.path.join(os.getcwd(), 'web-application/static/results/')
 IMG_NAME_TIME_SPEED = 'time_speed.png'
 IMG_NAME_TIME_DISTCENTER ='time_distcenter.png'
+IMG_NAME_TIME_ANGLE ='time_angle.png'
+IMG_NAME_TIME_RCURV ='time_curv.png'
 IMG_NAME_SPEED_CURV = 'speed_curv.png'
 IMG_NAME_ANGLE_DISTCENTER = 'angle_distcenter.png'
 
 IMG_NAMES = [
     IMG_NAME_TIME_SPEED,
     IMG_NAME_TIME_DISTCENTER,
+    IMG_NAME_TIME_RCURV,
+    IMG_NAME_TIME_ANGLE,
     IMG_NAME_SPEED_CURV,
     IMG_NAME_ANGLE_DISTCENTER
 ]
@@ -68,7 +72,13 @@ def gen_graphics(points):
                        axis_y_name=u'Velocidade')
     gen_plot_by_values(data['time'], data['dist_center'], IMG_NAMES[1], title=u'Distância do centro x Tempo',
                        axis_x_name=u'Tempo', axis_y_name=u'Distância do centro')
-    gen_scatter_by_values(data['speed'], data['curv'], IMG_NAMES[2], title=u'Curvatura x Velocidade',
+
+    gen_plot_by_values(data['time'], data['curv'], IMG_NAMES[2], title=u'Raio de Curvatura x Tempo',
+                       axis_x_name=u'Tempo', axis_y_name=u'Raio de Curvatura')
+    gen_plot_by_values(data['time'], data['angle'], IMG_NAMES[3], title=u'Ângulo x Tempo',
+                       axis_x_name=u'Tempo', axis_y_name=u'Ângulo')
+
+    gen_scatter_by_values(data['speed'], data['curv'], IMG_NAMES[4], title=u'Curvatura x Velocidade',
                           axis_x_name=u'Velocidade', axis_y_name=u'Curvatura')
-    gen_scatter_by_values(data['angle'], data['dist_center'], IMG_NAMES[3], title=u'Distância do Centro x Ângulo',
+    gen_scatter_by_values(data['angle'], data['dist_center'], IMG_NAMES[5], title=u'Distância do Centro x Ângulo',
                           axis_x_name=u'Ângulo', axis_y_name=u'Distância do Centro')

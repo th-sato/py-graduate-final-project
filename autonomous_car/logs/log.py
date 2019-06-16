@@ -13,4 +13,4 @@ class Log:
         self._redis_communication.add_value_by_key(self._key, item)
 
     def get_log(self):
-        self._redis_communication.get_values_by_key(self._key)
+        return self._redis_communication.get_values_by_key(self._key)

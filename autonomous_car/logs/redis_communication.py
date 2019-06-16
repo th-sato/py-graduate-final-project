@@ -14,6 +14,4 @@ class RedisCommunication:
         self.connection.delete(key)
 
     def get_values_by_key(self, key):
-        result = self.connection.smembers(key)
-        time.sleep(5)
-        return result
+        return self.connection.smembers(key)

@@ -55,7 +55,7 @@ def get_log():
         return requests.get(url)
     else:
         return 'Method not allowed!', 404
-    
+
 
 @app.route('/get-image-processed-camera', methods=['GET'])
 def get_image_processed_camera():

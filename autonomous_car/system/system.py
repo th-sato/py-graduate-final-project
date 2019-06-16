@@ -71,7 +71,9 @@ class System:
             log_object.angle = angle
             log_object.dist_center = dist_center
             log_object.curv = curv
-            self._log.store_object(log_object)
+
+            log_obj_str = repr(log_object)
+            self._log.store_object(log_obj_str)
         except Exception as e:
             print "Error while storing log: ", str(e)
 

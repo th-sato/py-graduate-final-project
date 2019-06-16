@@ -32,12 +32,12 @@ def add_text_to_image(img, radius_curvature, center):
     if radius_curvature == 0:
         curv_text = u'Curvatura não pode ser calculada.'
     else:
-        curvature = 1.0 / radius_curvature
-        curv_text = 'Curvatura = %.2f(m)' % curvature
+        # curvature = 1.0 / radius_curvature
+        curv_text = 'Raio Curvatura = %.2fm' % radius_curvature
     cv.putText(img, curv_text, (50, 50), font, 0.7, (255, 255, 255), 1)
 
     left_or_right = "esquerda" if center > 0 else "direita"
-    cv.putText(img, 'Carro: %.2fm a %s do centro' % (np.abs(center), left_or_right), (50, 100), font, 0.7,
+    cv.putText(img, '%.2fm a %s do centro' % (np.abs(center), left_or_right), (50, 100), font, 0.7,
                 (255, 255, 255), 1)
 
 

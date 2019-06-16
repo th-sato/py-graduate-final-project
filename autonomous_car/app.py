@@ -36,7 +36,7 @@ def get_log():
         logs = []
         for item in log:
             logs.append(item)
-        return jsonify({'logs': [logs]})
+        return jsonify({'logs': logs})
     else:
         return log
 

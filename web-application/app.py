@@ -41,6 +41,11 @@ def post_method(url, request_data):
     return 'OK', 200
 
 
+def get_method_with_return(url):
+    resp = requests.get(url)
+    return resp.content, resp.status_code, resp.headers.items()
+
+
 @app.route('/get-video')
 @cross_origin()
 def get_video():
@@ -52,7 +57,7 @@ def get_video():
 def get_log():
     url = HOST_AUTONOMOUS_CAR + '/get-log'
     if request.method == 'GET':
-        return requests.get(url)
+        return get_method_with_return(url)
     else:
         return 'Method not allowed!', 404
 
@@ -61,8 +66,7 @@ def get_log():
 def get_image_processed_camera():
     url = HOST_AUTONOMOUS_CAR + '/get-image-processed-camera'
     if request.method == 'GET':
-        resp = requests.get(url)
-        return resp.content, resp.status_code, resp.headers.items()
+        return get_method_with_return(url)
     else:
         return 'Method not allowed!', 404
 
@@ -71,8 +75,7 @@ def get_image_processed_camera():
 def get_image_original_camera():
     url = HOST_AUTONOMOUS_CAR + '/get-image-original-camera'
     if request.method == 'GET':
-        resp = requests.get(url)
-        return resp.content, resp.status_code, resp.headers.items()
+        return get_method_with_return(url)
     else:
         return 'Method not allowed!', 404
 

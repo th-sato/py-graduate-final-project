@@ -38,3 +38,7 @@ class LogDto:
     @curv.setter
     def curv(self, new_curv):
         self._curv = new_curv
+
+    def __repr__(self):
+        return "'speed': '", self._speed, "', 'angle': '", self._angle, "', 'dist_center': '", self._dist_center,\
+               "', 'curv': '", self._curv, "'"

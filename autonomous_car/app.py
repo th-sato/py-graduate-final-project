@@ -32,7 +32,13 @@ def video_output():
 @app.route('/get-log', methods=['GET'])
 def get_log():
     log = autonomous_car.get_log_car()
-    return jsonify(log)
+    if log is not None:
+        logs = []
+        for item in log:
+            logs.append(item)
+        return jsonify({'logs': [logs]})
+    else:
+        return log
 
 
 @app.route('/get-image-processed-camera')

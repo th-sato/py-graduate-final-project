@@ -11,7 +11,7 @@ class System:
         self._color = color_street
         self._log = Log()
         self._initial_exec = True
-        self._initial_time = None
+        self._initial_time = 0.0
 
     def output(self, video, img_to_show):
         video_processed, dist_center, curv = self.__video_processing(video)
@@ -70,7 +70,7 @@ class System:
 
     def __store_object_log(self, speed, angle, dist_center, curv):
         try:
-            if self._start_execution:
+            if self._initial_exec:
                 self._initial_time = time.time()
                 self._initial_exec = False
 

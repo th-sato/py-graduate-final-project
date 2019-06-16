@@ -4,3 +4,4 @@ db.sqlite3
 venv-tcc/
 *.pyc
 images-test/
+web-application/static/results/

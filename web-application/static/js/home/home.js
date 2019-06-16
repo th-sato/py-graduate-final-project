@@ -105,3 +105,23 @@ function activate_controller(activate) {
     json = JSON.stringify({ "active": activate })
     requestPostHttp(path, json)
 }
+
+function update_graphics(){
+    qtd_images = 4
+    path_update_images = 'update-graphics'
+    requestGetHttp(path_update_images, false)
+
+    path_get_images = 'get-img-by-id?img_id='
+    for(let i = 0; i < qtd_images; i++) {
+        path_img = path_get_images + i
+        resp = JSON.parse(requestGetHttp(path_img, false))
+        element_id = 'graphics[' + i + ']'
+        document.getElementById(element_id).src = HTML_IMAGE_HEADER + resp["img"]
+    }
+
+}
+
+
+window.onload = function() {
+    update_graphics();
+};

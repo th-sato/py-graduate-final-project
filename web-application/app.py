@@ -1,9 +1,11 @@
+from utils.utils import *
 from flask import Flask, request, render_template, redirect, jsonify
 from flask_cors import CORS, cross_origin
 from env import *
 import logging
 import redis
 import requests
+import json
 
 app = Flask(__name__)
 r = redis.Redis(host=REDIS_IP, port=REDIS_PORT, db=0)
@@ -60,6 +62,25 @@ def get_log():
         return get_method_with_return(url)
     else:
         return 'Method not allowed!', 404
+
+
+@app.route('/update-graphics', methods=['GET'])
+def update_graphics():
+    content, status, _ = get_log()
+    if status == 200 and content is not None:
+        resp = json.loads(content)
+        log_object = []
+        for item in resp['logs']:
+            log_object.append(convert_string_to_dict(item))
+        gen_graphics(log_object)
+    return 'OK', 200
+
+
+@app.route('/get-img-by-id', methods=['GET'])
+def get_img_by_id():
+    img_id = request.args.get('img_id', default=0, type=int)
+    img_base64 = get_base64_img_graphic(img_id)
+    return jsonify({"img": img_base64})
 
 
 @app.route('/get-image-processed-camera', methods=['GET'])

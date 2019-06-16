@@ -14,4 +14,5 @@ class RedisCommunication:
 
     def get_values_by_key(self, key):
         result = self.connection.smembers(key)
+        print result
         return result

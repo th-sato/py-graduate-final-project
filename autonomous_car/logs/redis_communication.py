@@ -1,4 +1,5 @@
 import redis
+import pickle
 from env.constants import REDIS_HOST, REDIS_PORT
 
 
@@ -13,4 +14,7 @@ class RedisCommunication:
         self.connection.delete(key)
 
     def get_values_by_key(self, key):
-        return self.connection.smembers(key)
+        pickled_value = self.connection.smembers(key)
+        if pickled_value is None:
+            return None
+        return pickle.loads(pickled_value)

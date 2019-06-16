@@ -15,7 +15,7 @@ HOST = '0.0.0.0'
 PORT = 5000
 
 # Redis
-REDIS_HOST = 'localhost'
+REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 
 # URL_REDIS_IMAGE = 'http://192.168.1.189:8081/redis-image'

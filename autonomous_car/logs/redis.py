@@ -1,5 +1,5 @@
 import redis
-from env.constants import *
+from env.constants import REDIS_HOST, REDIS_PORT
 
 
 class Redis:

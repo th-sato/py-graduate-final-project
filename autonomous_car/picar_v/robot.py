@@ -46,8 +46,11 @@ class Robot:
     # angle > 0: turn right
     # angle = 0: straight
     def turn(self, angle):
+        if angle < -45:
+            angle = -45
+        elif angle > 45:
+            angle = 45
         angle = STRAIGHT_ANGLE + angle
-        # print("Angle", angle, type(angle))
         self.fw.turn(angle)
 
     def calibration_back_wheel(self, action):

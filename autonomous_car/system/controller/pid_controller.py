@@ -46,7 +46,7 @@ class PIDController:
             self.previous_time = run_time
             angle = self.pid_controller(distance_center, interval)
             # speed = self.pid_controller(radius_curvature, interval)
-            speed = 30
+            speed = 45
             return speed, angle
         except Exception as e:
             print str(e)

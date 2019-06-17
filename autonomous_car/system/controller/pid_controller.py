@@ -44,7 +44,7 @@ class PIDController:
         try:
             interval = run_time - self.previous_time
             self.previous_time = run_time
-            angle = self.pid_controller(distance_center, interval)
+            angle = self.pid_controller(distance_center, 'angle', interval)
             # speed = self.pid_controller(radius_curvature, interval)
             speed = 45
             return speed, angle

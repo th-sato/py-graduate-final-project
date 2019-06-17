@@ -110,6 +110,12 @@ function update_graphics(){
     qtd_images = 6
     path_update_images = 'update-graphics'
     requestGetHttp(path_update_images, false)
+//    correlation = JSON.parse(requestGetHttp(path_update_images, false))
+//    qtd_corr = 2
+//    for (let i = 0; i < qtd_corr; i++) {
+//        element_id = 'corr[' + i + ']'
+//        document.getElementById(element_id).src = correlation['corr'][i]
+//    }
 
     path_get_images = 'get-img-by-id?img_id='
     for(let i = 0; i < qtd_images; i++) {

@@ -78,6 +78,8 @@ def update_graphics():
         for item in resp['logs']:
             log_object.append(convert_string_to_dict(item))
         gen_graphics(log_object)
+        # correlation = gen_graphics(log_object)
+        # return jsonify({"corr": correlation})
     return 'OK', 200
 
 

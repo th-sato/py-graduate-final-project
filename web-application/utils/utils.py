@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
+# from scipy.stats.stats import pearsonr
 import cv2 as cv
 import base64
 import ast
@@ -62,6 +63,7 @@ def gen_scatter_by_values(axis_x, axis_y, name_img, title=u'Título', axis_x_nam
 
 
 def gen_graphics(points):
+    correlation = []
     # order by time
     points = sorted(points, key=lambda k: k['time'])
     data = {'time': gen_data_by_field(points, 'time'), 'speed': gen_data_by_field(points, 'speed'),
@@ -78,7 +80,13 @@ def gen_graphics(points):
     gen_plot_by_values(data['time'], data['angle'], IMG_NAMES[3], title=u'Ângulo x Tempo',
                        axis_x_name=u'Tempo (s)', axis_y_name=u'Ângulo (º)')
 
+    # corr_speed_curv = pearsonr(data['speed'], data['curv'])
+    # corr_angle_distcenter = pearsonr(data['angle'], data['dist_center'])
     gen_scatter_by_values(data['speed'], data['curv'], IMG_NAMES[4], title=u'Raio de Curvatura x Velocidade',
                           axis_x_name=u'Velocidade', axis_y_name=u'Raio de Curvatura (m)')
     gen_scatter_by_values(data['angle'], data['dist_center'], IMG_NAMES[5], title=u'Distância do Centro x Ângulo',
                           axis_x_name=u'Ângulo (º)', axis_y_name=u'Distância do Centro (m)')
+
+    # correlation.append(corr_speed_curv)
+    # correlation.append(corr_angle_distcenter)
+    # return correlation

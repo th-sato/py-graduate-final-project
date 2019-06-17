@@ -1,5 +1,6 @@
 from image_processing.image_processing import *
 from controller.fuzzy_controller import FuzzyController
+from controller.pid_controller import PIDController
 from logs.log_dto import LogDto
 from logs.log import Log
 import time
@@ -10,16 +11,16 @@ class System:
         self._controller = self.__define_controller(controller)
         self._color = color_street
         self._log = Log()
-        self._initial_exec = True
-        self._initial_time = 0.0
+        self._initial_time = time.time()
 
     def output(self, video, img_to_show):
         video_processed, dist_center, curv = self.__video_processing(video)
-        curv_max = self.__set_max(curv, 200.0)
-        dist_center_max = self.__set_max(dist_center, 0.5)
-        speed, angle = self._controller.output(dist_center_max, curv_max)
+        curv_max = self.__set_max(curv, -200.0, 200.0)
+        dist_center_max = self.__set_max(dist_center, -0.5, 0.5)
+        run_time = self.__get_run_time()
+        speed, angle = self._controller.output(dist_center_max, curv_max, run_time)
         # self.__store_object_log(speed, angle, dist_center, curv)
-        self.__store_object_log(speed, angle, dist_center_max, curv_max)
+        self.__store_object_log(speed, angle, dist_center_max, curv_max, run_time)
 
         if img_to_show == STREET_ORIGINAL_IMAGE:
             return video, speed, angle
@@ -63,23 +64,23 @@ class System:
             return video, 0, 0
 
     def reset_log(self):
-        self._initial_exec = True
         self._log.clean_log()
+        self._initial_time = time.time()
+        self._controller.reset(self._initial_time)
 
     def get_log_system(self):
         return self._log.get_log()
 
-    def __store_object_log(self, speed, angle, dist_center, curv):
+    def __store_object_log(self, speed, angle, dist_center, curv, run_time):
         try:
-            if self._initial_exec:
-                self._initial_time = time.time()
-                self._initial_exec = False
-
-            log_object = LogDto(self._initial_time, speed, angle, dist_center, curv)
+            log_object = LogDto(run_time, speed, angle, dist_center, curv)
             log_obj_str = repr(log_object)
             self._log.store_object(log_obj_str)
         except Exception as e:
             print "Error while storing log: ", str(e)
+
+    def __get_run_time(self):
+        return time.time() - self._initial_time
 
     # Define which controller to use
     @staticmethod
@@ -87,12 +88,14 @@ class System:
         if controller == FUZZY_CONTROLLER:
             return FuzzyController()
         elif controller == PROPORCIONAL_CONTROLLER:
-            print "Proporcional Controller"
+            return PIDController()
         else:
             print "Controller not found"
 
     @staticmethod
-    def __set_max(value, max):
-        if value > max:
-            return max
+    def __set_max(value, min_value, max_value):
+        if value > 0 and value > max_value:
+            return max_value
+        if value < 0 and value < min_value:
+            return min_value
         return value

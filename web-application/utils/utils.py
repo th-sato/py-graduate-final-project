@@ -68,17 +68,17 @@ def gen_graphics(points):
             'angle': gen_data_by_field(points, 'angle'), 'dist_center': gen_data_by_field(points, 'dist_center'),
             'curv': gen_data_by_field(points, 'curv')}
 
-    gen_plot_by_values(data['time'], data['speed'], IMG_NAMES[0], title=u'Velocidade x Tempo', axis_x_name=u'Tempo',
+    gen_plot_by_values(data['time'], data['speed'], IMG_NAMES[0], title=u'Velocidade x Tempo', axis_x_name=u'Tempo (s)',
                        axis_y_name=u'Velocidade')
     gen_plot_by_values(data['time'], data['dist_center'], IMG_NAMES[1], title=u'Distância do centro x Tempo',
-                       axis_x_name=u'Tempo', axis_y_name=u'Distância do centro')
+                       axis_x_name=u'Tempo (s)', axis_y_name=u'Distância do centro (m)')
 
     gen_plot_by_values(data['time'], data['curv'], IMG_NAMES[2], title=u'Raio de Curvatura x Tempo',
-                       axis_x_name=u'Tempo', axis_y_name=u'Raio de Curvatura')
+                       axis_x_name=u'Tempo (s)', axis_y_name=u'Raio de Curvatura (m)')
     gen_plot_by_values(data['time'], data['angle'], IMG_NAMES[3], title=u'Ângulo x Tempo',
-                       axis_x_name=u'Tempo', axis_y_name=u'Ângulo')
+                       axis_x_name=u'Tempo (s)', axis_y_name=u'Ângulo (º)')
 
-    gen_scatter_by_values(data['speed'], data['curv'], IMG_NAMES[4], title=u'Curvatura x Velocidade',
-                          axis_x_name=u'Velocidade', axis_y_name=u'Curvatura')
+    gen_scatter_by_values(data['speed'], data['curv'], IMG_NAMES[4], title=u'Raio de Curvatura x Velocidade',
+                          axis_x_name=u'Velocidade', axis_y_name=u'Raio de Curvatura (m)')
     gen_scatter_by_values(data['angle'], data['dist_center'], IMG_NAMES[5], title=u'Distância do Centro x Ângulo',
-                          axis_x_name=u'Ângulo', axis_y_name=u'Distância do Centro')
+                          axis_x_name=u'Ângulo (º)', axis_y_name=u'Distância do Centro (m)')

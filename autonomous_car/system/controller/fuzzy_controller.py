@@ -66,7 +66,10 @@ class FuzzyController:
         control_system = ctrl.ControlSystemSimulation(rules)
         return control_system
 
-    def output(self, distance_center, radius_curvature):
+    def reset(self, now_time):
+        return
+
+    def output(self, distance_center, radius_curvature, run_time):
         try:
             self.angle_control_system.input['distance'] = abs(distance_center)
             self.angle_control_system.compute()

@@ -1,9 +1,7 @@
-import time
-
 
 class LogDto:
-    def __init__(self, initial_time, speed, angle, dist_center, curv):
-        self.time = time.time() - initial_time
+    def __init__(self, time, speed, angle, dist_center, curv):
+        self.time = time
         self.speed = speed
         self.angle = angle
         self.dist_center = dist_center

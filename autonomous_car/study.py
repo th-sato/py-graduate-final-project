@@ -1,6 +1,31 @@
 #####################################################################################################################
 #################################################### Controller #####################################################
 #####################################################################################################################
+from system.controller.pid_controller import PIDController
+import time
+
+
+def main():
+    print "Iniciando..."
+    pid = PIDController()
+    pid.reset(time.time())
+    distance_center = 0.04
+    curvature = 0.0
+
+    speed, angle = pid.output(distance_center, curvature, time.time())
+    print "distance_center: ", distance_center, ", angle:", angle, ", curvature: ", curvature, ", speed: ", speed
+
+    print "Finalizando..."
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+#####################################################################################################################
+#################################################### Controller #####################################################
+#####################################################################################################################
 # from system.controller.fuzzy_controller import *
 # from system.image_processing.image_processing import *
 # import matplotlib.pyplot as plt
@@ -74,61 +99,61 @@ import matplotlib.pyplot as plt
 #     'teste2.jpg',
 # ]
 
-static_path = '../images-test/2019-06-14/'
-image_name = [
-    # 'erro1.jpg',
-    # 'erro2.jpg',
-    # 'erro3.jpg',
-    # 'erro4.jpg',
-    # 'erro5.jpg',
-    # 'erro6.jpg',
-    'erro7.jpg',
-    'erro8.jpg',
-    'erro9.jpg',
-]
-
-
-def detect_street_by_color(video):
-    lower_color, upper_color = np.array([20, 0, 100]), np.array([30, 255, 255])
-    return detect_street(video, lower_color, upper_color)
-
-
-def image_input(name):
-    img_path = os.path.join(os.path.join(os.getcwd(), static_path), name)
-    img = cv.imread(img_path)
-    return img
-
-
-def plot_image(fit, ploty):
-    plt.figure()
-    plt.plot(fit, ploty, color='black')
-
-
-def main():
-    for name in image_name:
-        print "name:", name
-        img = image_input(name)
-        img_processed = detect_street_by_color(img)
-        img_test = img_processed.copy()
-        nonzero = img_test.nonzero()
-        img_test[img_processed == 1] = 255
-        show_image(img_test)
-        left_fit, right_fit, video_shape = fit_lines(img_processed)
-        left_cur, right_cur, left_x, right_x, distance_center = curvature(left_fit, right_fit, video_shape)
-        video_road = draw_lines(img, left_x, right_x)
-        # if left_x is not None:
-        #     plot_image(left_x, plot_y)
-        # if right_x is not None:
-        #     plot_image(right_x, plot_y)
-        # curv = (left_cur + right_cur) / 2
-        # add_text_to_image(video_road, curv, distance_center)
-        curv = (left_cur + right_cur) / 2
-        add_text_to_image(video_road, curv, distance_center)
-        show_image(video_road)
-
-
-if __name__ == "__main__":
-    main()
+# static_path = '../images-test/2019-06-14/'
+# image_name = [
+#     # 'erro1.jpg',
+#     # 'erro2.jpg',
+#     # 'erro3.jpg',
+#     # 'erro4.jpg',
+#     # 'erro5.jpg',
+#     # 'erro6.jpg',
+#     'erro7.jpg',
+#     'erro8.jpg',
+#     'erro9.jpg',
+# ]
+#
+#
+# def detect_street_by_color(video):
+#     lower_color, upper_color = np.array([20, 0, 100]), np.array([30, 255, 255])
+#     return detect_street(video, lower_color, upper_color)
+#
+#
+# def image_input(name):
+#     img_path = os.path.join(os.path.join(os.getcwd(), static_path), name)
+#     img = cv.imread(img_path)
+#     return img
+#
+#
+# def plot_image(fit, ploty):
+#     plt.figure()
+#     plt.plot(fit, ploty, color='black')
+#
+#
+# def main():
+#     for name in image_name:
+#         print "name:", name
+#         img = image_input(name)
+#         img_processed = detect_street_by_color(img)
+#         img_test = img_processed.copy()
+#         nonzero = img_test.nonzero()
+#         img_test[img_processed == 1] = 255
+#         show_image(img_test)
+#         left_fit, right_fit, video_shape = fit_lines(img_processed)
+#         left_cur, right_cur, left_x, right_x, distance_center = curvature(left_fit, right_fit, video_shape)
+#         video_road = draw_lines(img, left_x, right_x)
+#         # if left_x is not None:
+#         #     plot_image(left_x, plot_y)
+#         # if right_x is not None:
+#         #     plot_image(right_x, plot_y)
+#         # curv = (left_cur + right_cur) / 2
+#         # add_text_to_image(video_road, curv, distance_center)
+#         curv = (left_cur + right_cur) / 2
+#         add_text_to_image(video_road, curv, distance_center)
+#         show_image(video_road)
+#
+#
+# if __name__ == "__main__":
+#     main()
 
 
 #####################################################################################################################

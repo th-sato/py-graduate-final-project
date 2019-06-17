@@ -146,8 +146,8 @@ def home():
 @app.before_first_request
 def before_first_request():
     global autonomous_car
-    # autonomous_car = AutonomousCar(FUZZY_CONTROLLER, DETECT_YELLOW)
-    autonomous_car = AutonomousCar(PROPORCIONAL_CONTROLLER, DETECT_YELLOW)
+    autonomous_car = AutonomousCar(FUZZY_CONTROLLER, DETECT_YELLOW)
+    # autonomous_car = AutonomousCar(PROPORCIONAL_CONTROLLER, DETECT_YELLOW)
 
 
 if __name__ == "__main__":

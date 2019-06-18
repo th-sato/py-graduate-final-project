@@ -3,7 +3,7 @@ class PIDController:
     def __init__(self):
         # Constantes do controlador
         # Proporcional
-        self.KP = {'angle': 350.0, 'speed': 5.0}
+        self.KP = {'angle': 300.0, 'speed': 5.0}
         # Integral
         # self.KI = {'angle': 30.0, 'speed': 1.0}
         # Derivative

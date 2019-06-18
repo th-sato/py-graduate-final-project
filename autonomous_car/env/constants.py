@@ -8,7 +8,7 @@ VIDEO_NAME = "autonomous_car/static/output.mp4"
 
 # Controller
 FUZZY_CONTROLLER = "Fuzzy"
-PROPORCIONAL_CONTROLLER = "Proporcional"
+PI_CONTROLLER = "PI"
 
 # Network
 HOST = '0.0.0.0'

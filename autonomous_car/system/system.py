@@ -87,7 +87,7 @@ class System:
     def __define_controller(controller):
         if controller == FUZZY_CONTROLLER:
             return FuzzyController()
-        elif controller == PROPORCIONAL_CONTROLLER:
+        elif controller == PI_CONTROLLER:
             return PIDController()
         else:
             print "Controller not found"

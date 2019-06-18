@@ -3,11 +3,11 @@ class PIDController:
     def __init__(self):
         # Constantes do controlador
         # Proporcional
-        self.KP = {'angle': 5.0, 'speed': 5.0}
+        self.KP = {'angle': 800.0, 'speed': 5.0}
         # Integral
-        self.KI = {'angle': 1.0, 'speed': 1.0}
+        self.KI = {'angle': 30.0, 'speed': 1.0}
         # Derivative
-        self.KD = {'angle': 1.0, 'speed': 1.0}
+        # self.KD = {'angle': 1.0, 'speed': 1.0}
         self.max_error = 100000.0
         self.min_error = -100000.0
         self.previous_i_error = {'angle': 0.0, 'speed': 0.0}
@@ -30,24 +30,24 @@ class PIDController:
         integral_controller = self.KI[variable] * integral_part
         return self.__set_max(integral_controller, self.min_error, self.max_error)
 
-    def derivative(self, error, time_interval, variable):
-        derivative_part = (error - self.previous_d_error[variable]) / time_interval
-        self.previous_d_error[variable] = error
-        derivative_controller = self.KD[variable] * derivative_part
-        return self.__set_max(derivative_controller, self.min_error, self.max_error)
+    # def derivative(self, error, time_interval, variable):
+    #     derivative_part = (error - self.previous_d_error[variable]) / time_interval
+    #     self.previous_d_error[variable] = error
+    #     derivative_controller = self.KD[variable] * derivative_part
+    #     return self.__set_max(derivative_controller, self.min_error, self.max_error)
 
-    def pid_controller(self, error, variable, interval):
+    def pi_controller(self, error, variable, interval):
         p = self.proportional(error, variable)
         i = self.integral(error, interval, variable)
-        d = self.derivative(error, interval, variable)
-        result = p + i + d
+        # d = self.derivative(error, interval, variable)
+        result = p + i
         return result
 
     def output(self, distance_center, radius_curvature, run_time):
         try:
             interval = run_time - self.previous_time
             self.previous_time = run_time
-            angle = self.pid_controller(distance_center, 'angle', interval)
+            angle = self.pi_controller(distance_center, 'angle', interval)
             # speed = self.pid_controller(radius_curvature, interval)
             speed = 45
             return speed, angle

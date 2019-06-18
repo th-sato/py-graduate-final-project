@@ -37,7 +37,7 @@ class PIDController:
     #     derivative_controller = self.KD[variable] * derivative_part
     #     return self.__set_max(derivative_controller, self.min_error, self.max_error)
 
-    def pi_controller(self, error, variable, interval=0.01):
+    def p_controller(self, error, variable, interval=0.01):
         p = self.proportional(error, variable)
         # i = self.integral(error, interval, variable)
         # d = self.derivative(error, interval, variable)

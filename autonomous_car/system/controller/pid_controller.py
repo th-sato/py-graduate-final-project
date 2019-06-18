@@ -3,7 +3,7 @@ class PIDController:
     def __init__(self):
         # Constantes do controlador
         # Proporcional
-        self.KP = {'angle': 450.0, 'speed': 5.0}
+        self.KP = {'angle': 400.0, 'speed': 5.0}
         # Integral
         # self.KI = {'angle': 30.0, 'speed': 1.0}
         # Derivative
@@ -37,7 +37,7 @@ class PIDController:
     #     derivative_controller = self.KD[variable] * derivative_part
     #     return self.__set_max(derivative_controller, self.min_error, self.max_error)
 
-    def p_controller(self, error, variable, interval=0.01):
+    def pi_controller(self, error, variable, interval=0.01):
         p = self.proportional(error, variable)
         # i = self.integral(error, interval, variable)
         # d = self.derivative(error, interval, variable)

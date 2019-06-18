@@ -1,4 +1,4 @@
-from env.constants import FUZZY_CONTROLLER, PI_CONTROLLER, HOST, PORT, DETECT_YELLOW, STREET_ORIGINAL_IMAGE,\
+from env.constants import FUZZY_CONTROLLER, PID_CONTROLLER, HOST, PORT, DETECT_YELLOW, STREET_ORIGINAL_IMAGE,\
     STREET_DETECTING, STREET_LINES_DRAWN, VIDEO_NAME
 from system.image_processing.image_processing import jpgimg_to_base64
 from flask import Flask, request, send_file, jsonify
@@ -146,8 +146,8 @@ def home():
 @app.before_first_request
 def before_first_request():
     global autonomous_car
-    autonomous_car = AutonomousCar(FUZZY_CONTROLLER, DETECT_YELLOW)
-    # autonomous_car = AutonomousCar(PI_CONTROLLER, DETECT_YELLOW)
+    # autonomous_car = AutonomousCar(FUZZY_CONTROLLER, DETECT_YELLOW)
+    autonomous_car = AutonomousCar(PID_CONTROLLER, DETECT_YELLOW)
 
 
 if __name__ == "__main__":

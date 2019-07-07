@@ -5,3 +5,4 @@ venv-tcc/
 *.pyc
 images-test/
 web-application/static/results/
+web-application/static/video-test/

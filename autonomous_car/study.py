@@ -1,115 +1,298 @@
-#####################################################################################################################
-#################################################### Controller #####################################################
-#####################################################################################################################
-from system.controller.pid_controller import PIDController
-import time
+# -*- coding: utf-8 -*-
+import matplotlib.pyplot as plt
+import skfuzzy as fuzzy
+import numpy as np
+from skfuzzy import control as ctrl
+
+
+class FuzzyController:
+
+    def __init__(self):
+        # Auto-membership functions
+        self.distance = self.__auto_membership_distance()
+        self.angle = self.__auto_membership_angle()
+        self.radius_curvature = self.__auto_membership_radius_curvature()
+        self.speed = self.__auto_membership_speed()
+        # Control System
+        self.angle_control_system = self.__angle_rules(self.distance, self.angle)
+        self.speed_control_system = self.__speed_rules(self.radius_curvature, self.speed)
+
+    @staticmethod
+    def __auto_membership_distance():
+        distance = ctrl.Antecedent(np.arange(0, 0.5, 0.001), u'Distância')
+        distance[u'Centro'] = fuzzy.pimf(distance.universe, 0, 0.01, 0.02, 0.03)
+        distance[u'Baixa'] = fuzzy.pimf(distance.universe, 0.02, 0.03, 0.05, 0.1)
+        distance[u'Média'] = fuzzy.trimf(distance.universe, [0.039, 0.10, 0.2])
+        distance[u'Alta'] = fuzzy.pimf(distance.universe, 0.15, 0.2, 0.4, 0.5)
+        return distance
+
+    @staticmethod
+    def __auto_membership_angle():
+        angle = ctrl.Consequent(np.arange(0, 45, 1), u'Ângulo')
+        angle[u'Zero'] = fuzzy.pimf(angle.universe, 0, 2, 5, 7)
+        angle[u'Baixo'] = fuzzy.pimf(angle.universe, 3, 5, 15, 25)
+        angle[u'Médio'] = fuzzy.pimf(angle.universe, 15, 18, 23, 35)
+        angle[u'Alto'] = fuzzy.trimf(angle.universe, [25, 35, 45])
+        return angle
+
+    @staticmethod
+    def __angle_rules(distance, angle):
+        rules = ctrl.ControlSystem([ctrl.Rule(distance[u'Centro'], angle[u'Zero']),
+                                   ctrl.Rule(distance[u'Baixa'], angle[u'Baixo']),
+                                   ctrl.Rule(distance[u'Média'], angle[u'Médio']),
+                                   ctrl.Rule(distance[u'Alta'], angle[u'Alto'])])
+        control_system = ctrl.ControlSystemSimulation(rules)
+        return control_system
+
+    @staticmethod
+    def __auto_membership_radius_curvature():
+        radius_curvature = ctrl.Antecedent(np.arange(-1, 201, 1), u'Raio de Curvatura')
+        radius_curvature[u'Baixo'] = fuzzy.pimf(radius_curvature.universe, -1, 3, 8, 10)
+        radius_curvature[u'Médio'] = fuzzy.pimf(radius_curvature.universe, 5, 30, 80, 130)
+        radius_curvature[u'Alto'] = fuzzy.pimf(radius_curvature.universe, 100, 130, 170, 201)
+        return radius_curvature
+
+    @staticmethod
+    def __auto_membership_speed():
+        speed = ctrl.Consequent(np.arange(25, 75, 1), u'Velocidade')
+        speed[u'Baixa'] = fuzzy.pimf(speed.universe, 25, 32, 35, 45)
+        speed[u'Média'] = fuzzy.pimf(speed.universe, 40, 45, 50, 54)
+        speed[u'Alta'] = fuzzy.pimf(speed.universe, 48, 57, 65, 75)
+        return speed
+
+    @staticmethod
+    def __speed_rules(radius_curvature, speed):
+        rules = ctrl.ControlSystem([ctrl.Rule(radius_curvature[u'Alto'], speed[u'Alta']),
+                                    ctrl.Rule(radius_curvature[u'Médio'], speed[u'Média']),
+                                    ctrl.Rule(radius_curvature[u'Baixo'], speed[u'Baixa'])])
+        control_system = ctrl.ControlSystemSimulation(rules)
+        return control_system
+
+    def reset(self, now_time):
+        return
+
+    def output(self, distance_center, radius_curvature):
+        try:
+            self.angle_control_system.input[u'Distância'] = abs(distance_center)
+            self.angle_control_system.compute()
+            self.speed_control_system.input[u'Raio de Curvatura'] = abs(radius_curvature)
+            self.speed_control_system.compute()
+            angle = self.angle_control_system.output[u'Ângulo']
+            speed = self.speed_control_system.output[u'Velocidade']
+            if distance_center < 0:
+                angle = - angle
+            return speed, angle
+        except Exception as e:
+            print str(e)
+            return 0, 0
 
 
 def main():
     print "Iniciando..."
-    pid = PIDController()
-    pid.reset(time.time())
-    distance_center = 0.04
-    curvature = 0.0
+    fuzzy = FuzzyController()
+    distance_center = 0.18
+    curv = 95
 
-    speed, angle = pid.output(distance_center, curvature, time.time())
-    print "distance_center: ", distance_center, ", angle:", angle, ", curvature: ", curvature, ", speed: ", speed
-
-    print "Finalizando..."
+    angle, speed = fuzzy.output(distance_center, curv)
+    # print "amb: ", distance_center, ", cond:", angle
+    fuzzy.angle.view(sim=fuzzy.angle_control_system)
+    fuzzy.speed.view(sim=fuzzy.speed_control_system)
+    # print "Finalizando..."
 
 
 if __name__ == "__main__":
     main()
-
+    plt.show()
 
 
 #####################################################################################################################
 #################################################### Controller #####################################################
 #####################################################################################################################
-# from system.controller.fuzzy_controller import *
-# from system.image_processing.image_processing import *
+
 # import matplotlib.pyplot as plt
+# import skfuzzy as fuzzy
+# import numpy as np
+# from skfuzzy import control as ctrl
+#
+#
+# class FuzzyController:
+#
+#     def __init__(self):
+#         # Auto-membership functions
+#         self.distance = self.__auto_membership_distance()
+#         self.angle = self.__auto_membership_angle()
+#         # Control System
+#         self.angle_control_system = self.__angle_rules(self.distance, self.angle)
+#
+#     @staticmethod
+#     def __auto_membership_distance():
+#         distance = ctrl.Antecedent(np.arange(0, 40.0, 0.1), u'Temperatura Ambiente (º)')
+#         # distance['Frio'] = fuzzy.trimf(distance.universe, [0.0, 0.1, 20])
+#         distance['Frio'] = fuzzy.pimf(distance.universe, 0.0, 0.1, 15, 25)
+#         distance['Quente'] = fuzzy.pimf(distance.universe, 20, 23, 40, 40)
+#         return distance
+#
+#     @staticmethod
+#     def __auto_membership_angle():
+#         angle = ctrl.Consequent(np.arange(15, 25, 0.1), u'Temperatura do ar condicionado (º)')
+#         angle['Baixa'] = fuzzy.pimf(angle.universe, 15, 17, 20, 21)
+#         angle[u'Média'] = fuzzy.pimf(angle.universe, 20, 21, 23, 25)
+#         return angle
+#
+#     @staticmethod
+#     def __angle_rules(distance, angle):
+#         rules = ctrl.ControlSystem([ctrl.Rule(distance['Frio'], angle[u'Média']),
+#                                     ctrl.Rule(distance['Quente'], angle['Baixa'])
+#                                     ])
+#         control_system = ctrl.ControlSystemSimulation(rules)
+#         return control_system
+#
+#     def output(self, distance_center):
+#         try:
+#             self.angle_control_system.input[u'Temperatura Ambiente (º)'] = abs(distance_center)
+#             self.angle_control_system.compute()
+#             angle = self.angle_control_system.output[u'Temperatura do ar condicionado (º)']
+#
+#             return angle
+#         except Exception as e:
+#             print str(e)
+#             return 0
 #
 #
 # def main():
 #     print "Iniciando..."
 #     fuzzy = FuzzyController()
-#     distance_center = 0.04
-#     curvature = 0.0
 #     fuzzy.distance.view()
-#     # fuzzy.angle.view()
-#     # fuzzy.radius_curvature.view()
-#     # fuzzy.speed.view()
+#     distance_center = 22
 #
-#     # for i in range(550):
-#     #     speed, angle = fuzzy.output((i + 1) / 1000.0, 0)
-#     #     print (i + 1) / 1000.0, speed, angle
-#     # value = 450 / 1000.0
-#
-#     speed, angle = fuzzy.output(distance_center, curvature)
-#     print "distance_center: ", distance_center, ", angle:", angle, ", curvature: ", curvature, ", speed: ", speed
+#     angle = fuzzy.output(distance_center)
+#     print "amb: ", distance_center, ", cond:", angle
 #     fuzzy.angle.view(sim=fuzzy.angle_control_system)
-#     # fuzzy.speed.view(sim=fuzzy.speed_control_system)
 #     print "Finalizando..."
 #
 #
 # if __name__ == "__main__":
 #     main()
 #     plt.show()
+
+
+
+#####################################################################################################################
+#################################################### Controller #####################################################
+#####################################################################################################################
+# from system.controller.pid_controller import PIDController
+# import time
 #
+#
+# def main():
+#     print "Iniciando..."
+#     pid = PIDController()
+#     pid.reset(time.time())
+#     distance_center = 0.02
+#     curvature = 0.0
+#
+#     speed, angle = pid.output(distance_center, curvature, time.time())
+#     print "distance_center: ", distance_center, ", angle:", angle, ", curvature: ", curvature, ", speed: ", speed
+#
+#     print "Finalizando..."
+#
+#
+# if __name__ == "__main__":
+#     main()
+
+
+
+#####################################################################################################################
+#################################################### Controller #####################################################
+#####################################################################################################################
+from system.controller.fuzzy_controller import *
+from system.image_processing.image_processing import *
+import matplotlib.pyplot as plt
+
+#
+# def main():
+#     print "Iniciando..."
+#     fuzzy = FuzzyController()
+#     distance_center = 0.18
+#     curvature = 95.0
+#
+#     # for i in range(550):
+#     #     speed, angle = fuzzy.output((i + 1) / 1000.0, 0)
+#     #     print (i + 1) / 1000.0, speed, angle
+#     # value = 450 / 1000.0
+#
+#     speed, angle = fuzzy.output(distance_center, curvature, 0)
+#     print "distance_center: ", distance_center, ", angle:", angle, ", curvature: ", curvature, ", speed: ", speed
+#     fuzzy.angle.view(sim=fuzzy.angle_control_system)
+#     fuzzy.speed.view(sim=fuzzy.speed_control_system)
+#     print "Finalizando..."
+#
+#
+# if __name__ == "__main__":
+#     main()
+#     plt.show()
+
 
 
 #####################################################################################################################
 ###################################################### Teste 2 ######################################################
 #####################################################################################################################
 
+# # from system.image_processing.image_processing import *
+# # import os
+# # static_path = 'images-test/2019-03-25/'
+# # image_name = 'pista-camera1.jpg'
+#
+# # def get_image():
+# #     img_path = os.path.join(os.getcwd(), static_path)
+# #     return cv.imread(os.path.join(img_path, image_name))
+#
+# from system.controller.fuzzy_controller import FuzzyController
 # from system.image_processing.image_processing import *
-# import os
-# static_path = 'images-test/2019-03-25/'
-# image_name = 'pista-camera1.jpg'
-
-# def get_image():
-#     img_path = os.path.join(os.getcwd(), static_path)
-#     return cv.imread(os.path.join(img_path, image_name))
-
-from system.controller.fuzzy_controller import FuzzyController
-from system.image_processing.image_processing import *
-import matplotlib.pyplot as plt
-
-# static_path = '../images-test/2019-05-04/'
+# import matplotlib.pyplot as plt
+#
+# # static_path = '../images-test/2019-05-04/'
+# # image_name = [
+# #     'carro_fora_pista.jpg',
+# #     'carro_fora_pista_2.jpg',
+# #     'duas_pistas.jpg',
+# #     'duas_pistas_2.jpg',
+# #     'pista_parcial.jpg',
+# #     'uma_pista.jpg',
+# #     'uma_pista_2.jpg'
+# # ]
+#
+# # static_path = '../images-test/2019-05-26/'
+# # image_name = [
+# #     'teste1.png',
+# #     # 'teste2.png',
+# # ]
+#
+# # static_path = '../images-test/2019-06-08/'
+# # image_name = [
+# #     'teste1.jpg',
+# #     'teste2.jpg',
+# # ]
+#
+# # static_path = '../images-test/2019-06-14/'
+# # image_name = [
+# #     # 'erro1.jpg',
+# #     # 'erro2.jpg',
+# #     # 'erro3.jpg',
+# #     # 'erro4.jpg',
+# #     # 'erro5.jpg',
+# #     # 'erro6.jpg',
+# #     'erro7.jpg',
+# #     'erro8.jpg',
+# #     'erro9.jpg',
+# # ]
+#
+# static_path = '../images-test/results/'
 # image_name = [
-#     'carro_fora_pista.jpg',
-#     'carro_fora_pista_2.jpg',
 #     'duas_pistas.jpg',
-#     'duas_pistas_2.jpg',
-#     'pista_parcial.jpg',
-#     'uma_pista.jpg',
-#     'uma_pista_2.jpg'
-# ]
-
-# static_path = '../images-test/2019-05-26/'
-# image_name = [
-#     'teste1.png',
-#     # 'teste2.png',
-# ]
-
-# static_path = '../images-test/2019-06-08/'
-# image_name = [
-#     'teste1.jpg',
-#     'teste2.jpg',
-# ]
-
-# static_path = '../images-test/2019-06-14/'
-# image_name = [
-#     # 'erro1.jpg',
-#     # 'erro2.jpg',
-#     # 'erro3.jpg',
-#     # 'erro4.jpg',
-#     # 'erro5.jpg',
-#     # 'erro6.jpg',
-#     'erro7.jpg',
-#     'erro8.jpg',
-#     'erro9.jpg',
+#     'carro_fora_pista_2.jpg',
+#     'uma_pista.png',
+#     'uma_pista_base.jpg',
 # ]
 #
 #

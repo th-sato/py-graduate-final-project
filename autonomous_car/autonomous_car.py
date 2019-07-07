@@ -19,7 +19,7 @@ class AutonomousCar:
         # self._image_to_show = STREET_ORIGINAL_IMAGE
         self._image_to_show = STREET_LINES_DRAWN
         self._send_commands_robot = True
-        self._camera = Camera(VIDEO_CAPTURE)
+        self._camera = Camera(source=VIDEO_CAPTURE)
         self._system = System(self._controller, self._color_street)
         self._camera.start()
 

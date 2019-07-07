@@ -6,3 +6,4 @@ venv-tcc/
 images-test/
 web-application/static/results/
 web-application/static/video-test/
+autonomous_car/static/output.avi

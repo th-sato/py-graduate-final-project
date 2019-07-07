@@ -1,30 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Oct 03 17:40:15 2017
+@author: Camila Pereda
 
-@author: Camila
+Changed by: Thiago Sato
 """
 
 import os
-os.chdir(r'/home/thiago/Documentos/TCC/Sato')
+os.chdir(r'/home/sato/workspace/TCC/Project/VREP')
 import vrep
 import math
 import time
 import cv2
-from PIL import Image
-import array
-import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 from image_processing import *
-
-#from moviepy.editor import VideoFileClip
-from IPython.display import HTML
-
-import pickle
-import matplotlib.image as mpimg
-# Import everything needed to edit/save/watch video clips
-#from moviepy.editor import VideoFileClip
 
 
 def set_max(value, min_value, max_value):
@@ -35,9 +23,9 @@ def set_max(value, min_value, max_value):
   return value
 
 
-os.chdir(r'/home/thiago/Documentos/TCC/Sato')
+os.chdir(r'/home/sato/workspace/TCC/Project/VREP')
 vrep.simxFinish(-1) # just in case, close all opened connections
-clientID=vrep.simxStart('127.0.0.1',19999,True,True,5000,5) # Connect to V-REP
+clientID=vrep.simxStart('127.0.0.1',19998,True,True,5000,5) # Connect to V-REP
 
 ErrorCode, steeringLeft = vrep.simxGetObjectHandle(clientID,'nakedCar_steeringLeft',vrep.simx_opmode_oneshot_wait)
 ErrorCode, steeringRight = vrep.simxGetObjectHandle(clientID,'nakedCar_steeringRight',vrep.simx_opmode_oneshot_wait)
@@ -80,6 +68,7 @@ k = 1
 # list for data aquisition
 t = []
 m_center = []
+angle_plot = []
 path_size = []
 path_l = []
 path_r = []
@@ -104,10 +93,10 @@ for i in range(100000):
     path_size.append(dt)
     path_l.append(-dt/2)
     path_r.append(dt/2)
-    measure_center = (disL+(dt-disR))/2 - dt/2
+    # measure_center = (disL+(dt-disR))/2 - dt/2
     t.append(i*0.1)
-    m_center.append(measure_center)
-    print ("Center: " + str(measure_center));
+    # m_center.append(measure_center)
+    # print ("Center: " + str(measure_center));
     
     
     try:
@@ -140,12 +129,8 @@ for i in range(100000):
           
         center = dist_center_max
         curve = curv_max
-        
-        # Show image in an external window
-        cv2.imshow('Image', video_road)
-        tecla = cv2.waitKey(10) & 0xFF
-        if tecla == 27: 
-            break
+
+        m_center.append(center)
     
         # control constant
         # k1 = 250.0
@@ -156,7 +141,9 @@ for i in range(100000):
             desiredSteeringAngle = (control)*0.45/abs(control)
         else:   
             desiredSteeringAngle = control
-        
+
+        angle_plot.append(100.0*desiredSteeringAngle)
+
         desiredSteeringAngle = -desiredSteeringAngle
         
         if abs(desiredSteeringAngle) > 0.45:
@@ -168,11 +155,16 @@ for i in range(100000):
             steeringAngleRight = -math.tan(l/(-d+l/math.tan(-desiredSteeringAngle)))
             steeringAngleLeft = -math.atan(l/(d+l/math.tan(-desiredSteeringAngle)))
 
-
         desiredWheelRotSpeed = 10
         vel = desiredWheelRotSpeed*r*3.6
         velocity.append(vel)
-        
+
+        # Show image in an external window
+        cv2.imshow('Image', video_road)
+        tecla = cv2.waitKey(10) & 0xFF
+        if tecla == 27:
+            break
+
         # Send to v-rep the output from control
         vrep.simxSetJointTargetPosition(clientID,steeringLeft,steeringAngleLeft,vrep.simx_opmode_streaming)
         vrep.simxSetJointTargetPosition(clientID,steeringRight,steeringAngleRight,vrep.simx_opmode_streaming)
@@ -194,15 +186,23 @@ cv2.destroyAllWindows()
 # Plot the curves for prior analysis
 
 plt.plot(t,m_center)
-plt.axis([5, t[-1], -0.5, 0.5])
-plt.xlabel('Time (s)')
-plt.ylabel('Distance (m)')
+# plt.axis([5, t[-1], -0.5, 0.5])
+plt.xlabel('Tempo (s)')
+plt.ylabel(u'Distância do centro da pista (m)')
+plt.title(u'Distância x Tempo')
 plt.show()
 
 np.std(m_center)
 
-plt.plot(t,velocity)
-plt.axis([0, t[-1], 5, 11])
-plt.xlabel('Time (s)')
-plt.ylabel('Velocity (m/s)')
+plt.plot(t,angle_plot)
+# plt.axis([0, t[-1], 5, 11])
+plt.xlabel('Tempo (s)')
+plt.ylabel(u'Esterçamento das rodas dianteiras (º)')
+plt.title(u'Esterçamento x Tempo')
 plt.show()
+
+# plt.plot(t,velocity)
+# plt.axis([0, t[-1], 5, 11])
+# plt.xlabel('Tempo (s)')
+# plt.ylabel('Velocidade (m/s)')
+# plt.show()
